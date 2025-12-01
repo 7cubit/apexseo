@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "apexseo-python-worker"
+version = "0.1.0"
+description = "Python worker for ApexSEO crawling and ML tasks"
+authors = ["ApexSEO Team"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+temporalio = "^1.4.0"
+playwright = "^1.40.0"
+beautifulsoup4 = "^4.12.0"
+clickhouse-connect = "^0.7.0"
+python-dotenv = "^1.0.0"
+requests = "^2.31.0"
+
+[tool.poetry.scripts]
+start = "src.main:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

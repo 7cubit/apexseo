@@ -1,80 +1,85 @@
-services:
-  # ClickHouse - Real-time Analytics
-  clickhouse:
-    image: clickhouse/clickhouse-server:latest
-    container_name: apexseo-clickhouse
-    ports:
-      - "8123:8123" # HTTP port
-      - "9000:9000" # Native port
-    volumes:
-      - clickhouse_data:/var/lib/clickhouse
-    ulimits:
-      nofile:
-        soft: 262144
-        hard: 262144
-    healthcheck:
-      test: [ "CMD", "wget", "--spider", "-q", "localhost:8123/ping" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+version: '3.8'
 
-  # Temporal - Workflow Orchestration
+services:
+  app:
+    build:
+      context: .
+      dockerfile: packages/app/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./packages/app:/app/packages/app
+      - ./packages/shared:/app/packages/shared
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: .
+      dockerfile: packages/api/Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+    volumes:
+      - ./packages/api:/app/packages/api
+      - ./packages/shared:/app/packages/shared
+
+  workers:
+    build:
+      context: .
+      dockerfile: packages/workers/Dockerfile
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./packages/workers:/app/packages/workers
+      - ./packages/shared:/app/packages/shared
+    depends_on:
+      - temporal
+
   temporal:
     image: temporalio/auto-setup:latest
-    container_name: apexseo-temporal
     ports:
-      - "7233:7233" # gRPC port
-      - "7233:7233" # gRPC port
+      - "7233:7233"
+      - "8233:8233"
     environment:
       - DB=postgres12
       - DB_PORT=5432
       - POSTGRES_USER=temporal
       - POSTGRES_PWD=temporal
-      - POSTGRES_DB=temporal
-      - POSTGRES_SEEDS=temporal-db
+      - POSTGRES_SEEDS=postgres
     depends_on:
-      - temporal-db
+      - postgres
 
-  temporal-ui:
-    image: temporalio/ui:latest
-    container_name: apexseo-temporal-ui
-    ports:
-      - "8233:8080"
-    environment:
-      - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
-    depends_on:
-      - temporal
-
-  temporal-db:
+  postgres:
     image: postgres:13
-    container_name: apexseo-temporal-db
     environment:
       - POSTGRES_USER=temporal
       - POSTGRES_PASSWORD=temporal
       - POSTGRES_DB=temporal
-    volumes:
-      - temporal_db_data:/var/lib/postgresql/data
-
-  # Neo4j - Graph Database
-  neo4j:
-    image: neo4j:latest
-    container_name: apexseo-neo4j
     ports:
-      - "7474:7474" # HTTP
-      - "7687:7687" # Bolt
-    environment:
-      - NEO4J_AUTH=neo4j/password # Change this in production!
-      - NEO4J_PLUGINS=["apoc"]
-    volumes:
-      - neo4j_data:/data
-    healthcheck:
-      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:7474 || exit 1" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - "5432:5432"
 
-volumes:
-  clickhouse_data:
-  temporal_db_data:
-  neo4j_data:
+  temporal-ui:
+    image: temporalio/ui:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+    depends_on:
+      - temporal
+
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - ./clickhouse-users.xml:/etc/clickhouse-server/users.d/users.xml
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144

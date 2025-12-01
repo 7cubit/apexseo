@@ -1,0 +1,28 @@
+
+> @apexseo/workers@0.0.0 lint
+> eslint .
+
+
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+TypeError: Failed to load plugin 'turbo' declared in '.eslintrc.js » eslint-config-custom » eslint-config-turbo': Cannot convert undefined or null to object
+Referenced from: /Users/davidbalan86gmail.com/apexseo/node_modules/eslint-config-turbo/index.js
+    at Object.entries (<anonymous>)
+    at Ii.generateKey (/Users/davidbalan86gmail.com/apexseo/node_modules/eslint-plugin-turbo/dist/index.js:74:6559)
+    at new Ii (/Users/davidbalan86gmail.com/apexseo/node_modules/eslint-plugin-turbo/dist/index.js:74:6200)
+    at Object.<anonymous> (/Users/davidbalan86gmail.com/apexseo/node_modules/eslint-plugin-turbo/dist/index.js:74:10209)
+    at Module._compile (node:internal/modules/cjs/loader:1760:14)
+    at Object..js (node:internal/modules/cjs/loader:1892:10)
+    at Module.load (node:internal/modules/cjs/loader:1480:32)
+    at Module._load (node:internal/modules/cjs/loader:1299:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+npm error Lifecycle script `lint` failed with error:
+npm error code 2
+npm error path /Users/davidbalan86gmail.com/apexseo/packages/workers
+npm error workspace @apexseo/workers@0.0.0
+npm error location /Users/davidbalan86gmail.com/apexseo/packages/workers
+npm error command failed
+npm error command sh -c eslint .

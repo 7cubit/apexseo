@@ -1,51 +1,63 @@
-# ApexSEO
+# ApexSEO Monorepo
 
-ApexSEO is a comprehensive SEO platform designed to help you analyze, optimize, and track your website's performance.
+This repository contains the source code for the ApexSEO platform, organized as a Turborepo monorepo.
 
-## Features
+## Structure
 
-- **Project Management**: Organize your SEO efforts by project.
-- **Site Graph**: Visualize your website's internal linking structure.
-- **Cluster Analysis**: Identify content clusters and opportunities.
-- **Leaderboard**: Track your TSPR (Topic Sensitive PageRank) ranking.
-- **Recommendations**: Get actionable SEO insights.
-- **Orphan Page Detection**: Find pages that are not linked to from other pages.
-- **One-Click Analysis**: Quickly analyze any page for SEO issues.
-- **Fact Verification**: Verify the accuracy of your content.
-- **UX Simulation**: Simulate user interactions to identify UX issues.
+- **`packages/app`**: Next.js frontend application.
+- **`packages/api`**: Fastify API Gateway.
+- **`packages/workers`**: Temporal workers.
+- **`packages/shared`**: Shared libraries, types, and utilities.
+- **`infra/terraform`**: Infrastructure as Code (Neo4j, ClickHouse, Temporal).
 
 ## Getting Started
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/your-username/apexseo.git
-    cd apexseo
-    ```
+### Prerequisites
 
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
+- Node.js 20+
+- Docker & Docker Compose
+- Terraform (for infra deployment)
 
-3.  **Set up environment variables:**
-    Copy `.env.local.example` to `.env.local` and fill in the required values.
+### Installation
 
-4.  **Run the development server:**
-    ```bash
-    npm run dev
-    ```
+```bash
+npm install
+```
 
-5.  **Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.**
+### Local Development
 
-## Tech Stack
+To start the entire stack (App, API, Workers, Temporal, Databases):
 
-- **Framework**: Next.js 14 (App Router)
-- **Styling**: Tailwind CSS
-- **Database**: Neo4j, ClickHouse
-- **AI**: OpenAI GPT-4o-mini, @xenova/transformers
-- **Visualization**: React Flow, Recharts
-- **State Management**: Zustand
+```bash
+docker-compose up -d
+npm run dev
+```
 
-## License
+- **Frontend**: http://localhost:3000
+- **API**: http://localhost:4000
+- **Temporal UI**: http://localhost:8080
 
-MIT
+### Infrastructure
+
+Provision infrastructure using Terraform:
+
+```bash
+cd infra/terraform
+terraform init
+terraform apply
+```
+
+### CI/CD
+
+GitHub Actions are configured in `.github/workflows`:
+- `ci.yml`: Runs on PRs and push to main (Build, Lint, Test).
+- `deploy.yml`: Deploys to production on push to main.
+
+## Secrets
+
+Copy `.env.example` to `.env` and fill in the required credentials for:
+- OpenAI
+- DataForSEO
+- ClickHouse
+- Neo4j
+- Temporal

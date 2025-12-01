@@ -1,0 +1,87 @@
+
+
+> @apexseo/app@0.1.0 build
+> next build
+
+  [1m[38;2;173;127;168m ▲ Next.js 14.1.0[39m[22m
+   - Environments: .env.local, .env
+
+ [37m[1m [22m[39m Creating an optimized production build ...
+ [32m[1m✓[22m[39m Compiled successfully
+[?25l [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[?25h [37m[1m [22m[39m Linting and checking validity of types     [32m[1m✓[22m[39m Linting and checking validity of types 
+[?25l [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39mInitializing ClickHouse client... { URL: true, USER: true, PASS: true }
+Initializing ClickHouse client... { URL: true, USER: true, PASS: true }
+Initializing ClickHouse client... { URL: true, USER: true, PASS: true }
+Initializing ClickHouse client... { URL: true, USER: true, PASS: true }
+[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39mInitializing ClickHouse client... { URL: true, USER: true, PASS: true }
+[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39mInitializing ClickHouse client... { URL: true, USER: true, PASS: true }
+[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G[?25h [37m[1m [22m[39m Collecting page data     [32m[1m✓[22m[39m Collecting page data 
+[?25l [37m[1m [22m[39m Generating static pages (0/28)  [36m[    ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/28)  [36m[=   ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/28)  [36m[==  ][39m  [37m[1m [22m[39m Generating static pages (7/28) 
+[2K[1G[1A[2K[1G [37m[1m [22m[39m Generating static pages (0/28)  [36m[=== ][39m  [37m[1m [22m[39m Generating static pages (17/28) 
+[2K[1G[1A[2K[1G [37m[1m [22m[39m Generating static pages (0/28)  [36m[ ===][39m  [37m[1m [22m[39m Generating static pages (17/28) 
+[2K[1G[1A[2K[1G [37m[1m [22m[39m Generating static pages (0/28)  [36m[  ==][39m  [37m[1m [22m[39m Generating static pages (27/28) 
+[2K[1G[1A[2K[1G[?25h [32m[1m✓[22m[39m Generating static pages (28/28) 
+[?25l [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[?25l [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G[?25h [37m[1m [22m[39m Collecting build traces     [32m[1m✓[22m[39m Collecting build traces 
+[2K[1G[?25h [37m[1m [22m[39m Finalizing page optimization     [32m[1m✓[22m[39m Finalizing page optimization 
+
+[4mRoute (app)[24m                               [4mSize[24m     [4mFirst Load JS[24m
+┌ ○ /                                     1.84 kB        [37m[1m93.6 kB[22m[39m
+├ ○ /_not-found                           892 B          [37m[1m85.5 kB[22m[39m
+├ ○ /analyze                              4.73 kB        [37m[1m96.5 kB[22m[39m
+├ λ /api/crawl                            0 B                [37m[1m0 B[22m[39m
+├ λ /api/crawl/[url]                      0 B                [37m[1m0 B[22m[39m
+├ λ /api/crawl/[url]/status               0 B                [37m[1m0 B[22m[39m
+├ λ /api/embeddings/[projectId]           0 B                [37m[1m0 B[22m[39m
+├ ○ /api/health                           0 B                [37m[1m0 B[22m[39m
+├ λ /api/projects                         0 B                [37m[1m0 B[22m[39m
+├ λ /api/projects/[id]/analyze            0 B                [37m[1m0 B[22m[39m
+├ λ /api/projects/[id]/backlinks          0 B                [37m[1m0 B[22m[39m
+├ λ /api/projects/[id]/cannibalization    0 B                [37m[1m0 B[22m[39m
+├ λ /api/projects/[id]/graph              0 B                [37m[1m0 B[22m[39m
+├ λ /api/projects/[id]/health-score       0 B                [37m[1m0 B[22m[39m
+├ λ /api/projects/[id]/links              0 B                [37m[1m0 B[22m[39m
+├ λ /api/projects/[id]/orphans            0 B                [37m[1m0 B[22m[39m
+├ λ /api/projects/[id]/rank-history       0 B                [37m[1m0 B[22m[39m
+├ λ /api/projects/[id]/rank-tracking      0 B                [37m[1m0 B[22m[39m
+├ λ /api/projects/[id]/truth              0 B                [37m[1m0 B[22m[39m
+├ λ /api/projects/[id]/tspr               0 B                [37m[1m0 B[22m[39m
+├ λ /api/ux/[projectId]                   0 B                [37m[1m0 B[22m[39m
+├ λ /api/verify/[pageId]                  0 B                [37m[1m0 B[22m[39m
+├ ○ /backlinks                            9.98 kB         [37m[1m188 kB[22m[39m
+├ ○ /cannibalization                      2.97 kB        [37m[1m87.6 kB[22m[39m
+├ ○ /clusters                             183 B          [37m[1m84.8 kB[22m[39m
+├ ○ /dashboard                            2.49 kB         [37m[1m101 kB[22m[39m
+├ ○ /dashboard/new                        186 B          [37m[1m84.8 kB[22m[39m
+├ ○ /graph                                50.1 kB         [37m[1m142 kB[22m[39m
+├ ○ /health-score                         2.72 kB         [37m[1m190 kB[22m[39m
+├ ○ /leaderboard                          3.02 kB        [37m[1m94.8 kB[22m[39m
+├ ○ /linking                              185 B          [37m[1m84.8 kB[22m[39m
+├ ○ /login                                1.79 kB        [37m[1m93.6 kB[22m[39m
+├ ○ /orphans                              3.44 kB        [37m[1m95.2 kB[22m[39m
+├ λ /public/[hash]                        186 B          [37m[1m84.8 kB[22m[39m
+├ ○ /rank-tracker                         4.87 kB         [37m[1m193 kB[22m[39m
+├ ○ /recommendations                      3.15 kB        [37m[1m94.9 kB[22m[39m
+├ ○ /settings                             186 B          [37m[1m84.8 kB[22m[39m
+├ ○ /signup                               197 B          [37m[1m91.6 kB[22m[39m
+├ ○ /sites                                2.49 kB         [37m[1m101 kB[22m[39m
+├ λ /sites/[id]                           3.19 kB         [37m[1m102 kB[22m[39m
+├ λ /sites/[id]/clusters                  197 B          [37m[1m91.6 kB[22m[39m
+├ λ /sites/[id]/linking                   197 B          [37m[1m91.6 kB[22m[39m
+├ λ /sites/[id]/pages/[page_id]           199 B          [37m[1m91.6 kB[22m[39m
+├ λ /sites/[id]/truth                     197 B          [37m[1m91.6 kB[22m[39m
+├ λ /sites/[id]/ux                        197 B          [37m[1m91.6 kB[22m[39m
+├ λ /sites/[id]/ux/sessions/[session_id]  197 B          [37m[1m91.6 kB[22m[39m
+├ ○ /sites/new                            2.65 kB         [37m[1m101 kB[22m[39m
+├ ○ /truth                                2.83 kB        [37m[1m94.6 kB[22m[39m
+├ ○ /ux-lab                               3.08 kB        [37m[1m94.9 kB[22m[39m
+└ ○ /workflows                            186 B          [37m[1m84.8 kB[22m[39m
++ First Load JS shared by all             [37m[1m84.6 kB[22m[39m
+  ├ chunks/1dd3208c-fff0bc2524d01fc2.js   53.4 kB
+  ├ chunks/9997-d767376880572e8f.js       29.1 kB
+  └ other shared chunks (total)           2.15 kB
+
+
+○  (Static)   prerendered as static content
+λ  (Dynamic)  server-rendered on demand using Node.js
+
+[?25h⠙[1G[0K
