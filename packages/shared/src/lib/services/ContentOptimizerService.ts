@@ -169,7 +169,7 @@ export class ContentOptimizerService {
         const pages = await ClickHousePageRepository.getPagesBySite(siteId);
 
         // Calculate average metrics from our own high-performing pages
-        const avgWordCount = pages.reduce((sum: number, p: any) => sum + (p.word_count || 0), 0) / pages.length;
+        const avgWordCount = pages.reduce<number>((sum, p: any) => sum + (Number(p.word_count) || 0), 0) / pages.length;
 
         // Extract common headers from our content
         const commonHeaders = this.extractCommonHeaders(pages);

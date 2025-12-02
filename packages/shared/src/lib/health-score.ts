@@ -42,7 +42,7 @@ export class HealthScoreService {
             const truthRiskInverse = 1 - (truthRiskScore / 100);
 
             const avgBacklinkQuality = pageBacklinks.length > 0
-                ? pageBacklinks.reduce((sum: number, b: any) => sum + (b.domain_relevance || 0), 0) / pageBacklinks.length
+                ? pageBacklinks.reduce<number>((sum, b: any) => sum + (Number(b.domain_relevance) || 0), 0) / pageBacklinks.length
                 : 0;
 
             // Internal links: Placeholder logic as we don't have exact counts in Page struct yet
