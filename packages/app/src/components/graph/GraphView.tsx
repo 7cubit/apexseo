@@ -19,7 +19,7 @@ interface GraphViewProps {
     initialEdges: Edge[];
 }
 
-export function GraphView({ initialNodes, initialEdges }: GraphViewProps) {
+export function GraphView({ initialNodes, initialEdges, highlightedNodes = [], highlightedEdges = [] }: GraphViewProps & { highlightedNodes?: string[], highlightedEdges?: string[] }) {
     const { theme } = useTheme();
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -30,6 +30,12 @@ export function GraphView({ initialNodes, initialEdges }: GraphViewProps) {
     }, [initialNodes, initialEdges, setNodes, setEdges]);
 
     const nodeColor = (node: Node) => {
+        const isHighlighted = highlightedNodes.length > 0 && highlightedNodes.includes(node.id);
+        const isDimmed = highlightedNodes.length > 0 && !highlightedNodes.includes(node.id);
+
+        if (isHighlighted) return '#ffffff'; // Highlight color (white)
+        if (isDimmed) return '#374151'; // Dimmed color (gray-700)
+
         switch (node.data.clusterId) {
             case 'cluster_0': return '#ef4444';
             case 'cluster_1': return '#f97316';

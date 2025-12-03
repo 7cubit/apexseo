@@ -27,10 +27,10 @@ export class HealthScoreService {
             // 1. Content Depth
             // Use first keyword or title as proxy if no keywords
             const targetKeyword = (page.keywords && page.keywords.length > 0) ? page.keywords[0] : (page.title || '');
-            const contentDepthScore = await ContentDepthService.calculateContentDepth(targetKeyword, page.text || '');
+            const contentDepthScore = await ContentDepthService.calculateContentDepth(targetKeyword, page.content || '');
 
             // 2. Truth Risk
-            const truthRiskScore = await TruthRiskService.calculateTruthRisk(siteId, page.page_id, page.text || '');
+            const truthRiskScore = await TruthRiskService.calculateTruthRisk(siteId, page.page_id, page.content || '');
 
             // 3. UX Friction
             const uxFrictionScore = await UXFrictionService.calculateUXFriction(siteId, page.url);

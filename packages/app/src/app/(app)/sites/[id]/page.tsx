@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { StatsCard } from '@/components/dashboard/StatsCard';
 import { CheckCircle2 } from 'lucide-react';
+import { SiteNetwork } from '@/components/graph/SiteNetwork';
 
 // Dynamically import charts with SSR disabled to prevent "r.nmd is not a function" error
 const SiteOverviewCharts = dynamic(
@@ -100,6 +101,12 @@ export default function SiteOverviewPage() {
 
             {/* Charts Row (Dynamically Loaded) */}
             <SiteOverviewCharts />
+
+            {/* Site Network Graph */}
+            <div className="mb-8">
+                <h3 className="text-xl font-bold text-white mb-4">Site Network</h3>
+                <SiteNetwork projectId="1" />
+            </div>
 
             {/* Page Analysis Table */}
             <Card className="bg-[#151923] border-gray-800/50">
