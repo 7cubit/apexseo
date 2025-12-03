@@ -12,23 +12,19 @@ export interface Page {
     site_id: string;
     page_id: string;
     url: string;
-    status?: string;
     title?: string;
     h1?: string;
-    text?: string;
+    content?: string; // Changed from text to content to match schema if needed, but schema says content, repo said text. Let's align to schema: content.
     word_count?: number;
-    cluster_id?: string;
-    pr?: number;
-    tspr?: number;
-    semantic_orphan?: number;
-    max_claim_risk?: number;
-    high_risk_claim_count?: number;
+    status?: string;
+    crawled_at?: string; // DateTime string
     content_score?: number;
-    is_orphan?: number; // 0 or 1
+    is_orphan?: number;
     canonical_id?: string;
     link_count_internal?: number;
     link_count_external?: number;
     keywords?: string[];
+    tspr?: number;
 }
 
 export class ClickHousePageRepository {
@@ -42,55 +38,8 @@ export class ClickHousePageRepository {
     }
 
     static async createTable() {
-        if (!client) return;
-        await client.command({
-            query: `
-                CREATE TABLE IF NOT EXISTS pages (
-                    site_id String,
-                    page_id String,
-                    url String,
-                    status String,
-                    title String,
-                    h1 String,
-                    text String,
-                    word_count UInt32,
-                    cluster_id String,
-                    pr Float32,
-                    tspr Float32,
-                    semantic_orphan UInt8,
-                    max_claim_risk Float32,
-                    high_risk_claim_count UInt32,
-                    content_score Float32,
-                    is_orphan UInt8,
-                    canonical_id String,
-                    link_count_internal UInt32,
-                    link_count_external UInt32,
-                    embedding Array(Float32),
-                    keywords Array(String)
-                ) ENGINE = MergeTree()
-                ORDER BY (site_id, page_id)
-            `
-        });
-
-        // Ensure new columns exist
-        const columns = [
-            'content_score Float32',
-            'is_orphan UInt8',
-            'canonical_id String',
-            'link_count_internal UInt32',
-            'link_count_external UInt32',
-            'keywords Array(String)'
-        ];
-
-        for (const col of columns) {
-            try {
-                await client.command({
-                    query: `ALTER TABLE pages ADD COLUMN IF NOT EXISTS ${col}`
-                });
-            } catch (e) {
-                // Ignore
-            }
-        }
+        // Table creation handled by schema script now.
+        // Keeping this for reference or removal.
     }
 
     static async createPage(page: Page) {
@@ -98,7 +47,19 @@ export class ClickHousePageRepository {
         try {
             await client.insert({
                 table: 'pages',
-                values: [page],
+                values: [{
+                    ...page,
+                    // Ensure defaults if missing
+                    content: page.content || '',
+                    word_count: page.word_count || 0,
+                    status: page.status || '200',
+                    crawled_at: page.crawled_at || new Date().toISOString().replace('T', ' ').split('.')[0],
+                    content_score: page.content_score || 0,
+                    is_orphan: page.is_orphan || 0,
+                    link_count_internal: page.link_count_internal || 0,
+                    link_count_external: page.link_count_external || 0,
+                    keywords: page.keywords || []
+                }],
                 format: 'JSONEachRow',
             });
         } catch (error) {
@@ -117,7 +78,7 @@ export class ClickHousePageRepository {
         return await result.json();
     }
 
-    static async getPageById(pageId: string) {
+    static async getPageById(pageId: string): Promise<Page | null> {
         if (!client) return null;
         const result = await client.query({
             query: `SELECT * FROM pages WHERE page_id = {pageId:String} LIMIT 1`,
@@ -125,7 +86,7 @@ export class ClickHousePageRepository {
             format: 'JSONEachRow',
         });
         const rows = await result.json();
-        return rows.length > 0 ? rows[0] : null;
+        return rows.length > 0 ? (rows[0] as Page) : null;
     }
 
     static async getPageIdByUrl(siteId: string, url: string): Promise<string | null> {
@@ -208,5 +169,70 @@ export class ClickHousePageRepository {
             format: 'JSONEachRow',
         });
         return await result.json();
+    }
+    static async getProjectOverview(domain: string): Promise<{ totalPages: number; avgContentScore: number; lastCrawl: string | null }> {
+        if (!client) return { totalPages: 0, avgContentScore: 0, lastCrawl: null };
+        const result = await client.query({
+            query: `
+                SELECT 
+                    count() as totalPages,
+                    avg(content_score) as avgContentScore,
+                    max(crawled_at) as lastCrawl
+                FROM pages
+                WHERE site_id = {domain:String}
+            `,
+            query_params: { domain },
+            format: 'JSONEachRow'
+        });
+        const rows = await result.json();
+        const row = rows[0] as any;
+        return {
+            totalPages: row.totalPages,
+            avgContentScore: row.avgContentScore,
+            lastCrawl: row.lastCrawl
+        };
+    }
+
+    static async getPages(domain: string, limit: number, offset: number): Promise<{ pages: Page[]; total: number }> {
+        if (!client) return { pages: [], total: 0 };
+        const [pagesResult, countResult] = await Promise.all([
+            client.query({
+                query: `
+                    SELECT * FROM pages 
+                    WHERE site_id = {domain:String}
+                    ORDER BY crawled_at DESC
+                    LIMIT {limit:UInt32} OFFSET {offset:UInt32}
+                `,
+                query_params: { domain, limit, offset },
+                format: 'JSONEachRow'
+            }),
+            client.query({
+                query: `SELECT count() as total FROM pages WHERE site_id = {domain:String}`,
+                query_params: { domain },
+                format: 'JSONEachRow'
+            })
+        ]);
+
+        const pages = await pagesResult.json() as Page[];
+        const countRows = await countResult.json() as any[];
+        return {
+            pages,
+            total: countRows[0].total
+        };
+    }
+
+    static async getPageAudit(domain: string, pageId: string): Promise<Page | null> {
+        if (!client) return null;
+        const result = await client.query({
+            query: `
+                SELECT * FROM pages 
+                WHERE site_id = {domain:String} AND page_id = {pageId:String}
+                LIMIT 1
+            `,
+            query_params: { domain, pageId },
+            format: 'JSONEachRow'
+        });
+        const rows = await result.json() as Page[];
+        return rows.length > 0 ? rows[0] : null;
     }
 }
