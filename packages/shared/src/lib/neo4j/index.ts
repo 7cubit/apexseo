@@ -8,7 +8,7 @@ let driver: any;
 
 if (uri && user && password) {
     try {
-        driver = neo4j.driver(uri, neo4j.auth.basic(user, password));
+        driver = neo4j.driver(uri, neo4j.auth.basic(user, password), { disableLosslessIntegers: true });
     } catch (error) {
         console.error("Failed to create Neo4j driver:", error);
     }

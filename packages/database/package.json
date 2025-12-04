@@ -1,0 +1,20 @@
+{
+    "name": "@apexseo/database",
+    "version": "0.0.0",
+    "main": "index.ts",
+    "scripts": {
+        "init:neo4j": "ts-node scripts/init-neo4j-schema.ts",
+        "init:clickhouse": "ts-node scripts/init-clickhouse-schema.ts",
+        "migrate": "ts-node src/migrate.ts",
+        "seed": "ts-node src/seed.ts"
+    },
+    "dependencies": {
+        "@apexseo/shared": "*",
+        "csv-parse": "^6.1.0",
+        "dotenv": "^16.0.0"
+    },
+    "devDependencies": {
+        "ts-node": "^10.9.1",
+        "typescript": "^5.0.0"
+    }
+}

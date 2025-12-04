@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClickHouseAlertRepository = void 0;
-const client_1 = require("../../client");
+const client_1 = require("../client");
 class ClickHouseAlertRepository {
     static async createTable() {
         if (!client_1.client)

@@ -1,16 +1,28 @@
 import { Client, Connection } from '@temporalio/client';
-import { ClickHouseProjectRepository, ClickHouseScheduleRepository } from '@apexseo/shared';
 import { AGENT_SCHEDULES } from '../schedules';
 import dotenv from 'dotenv';
+import * as path from 'path';
+import * as fs from 'fs';
 
-dotenv.config();
+// Load .env.local manually to ensure Cloud credentials are used
+const envPath = path.resolve(process.cwd(), '.env.local');
+if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath, override: true });
+} else {
+    dotenv.config();
+}
 
 async function main() {
+    // Dynamically import shared modules after env vars are loaded
+    const { ClickHouseProjectRepository, ClickHouseScheduleRepository, createTemporalClient } = await import('@apexseo/shared');
+
     console.log('Starting schedule sync...');
 
     // Connect to Temporal
-    const connection = await Connection.connect({ address: process.env.TEMPORAL_ADDRESS || 'localhost:7233' });
-    const client = new Client({ connection });
+    const client = await createTemporalClient();
+    if (!client) {
+        throw new Error("Failed to create Temporal client");
+    }
 
     // Ensure schedules table exists
     await ClickHouseScheduleRepository.createTable();

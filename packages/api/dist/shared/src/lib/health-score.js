@@ -25,9 +25,9 @@ class HealthScoreService {
             // 1. Content Depth
             // Use first keyword or title as proxy if no keywords
             const targetKeyword = (page.keywords && page.keywords.length > 0) ? page.keywords[0] : (page.title || '');
-            const contentDepthScore = await ContentDepthService_1.ContentDepthService.calculateContentDepth(targetKeyword, page.text || '');
+            const contentDepthScore = await ContentDepthService_1.ContentDepthService.calculateContentDepth(targetKeyword, page.content || '');
             // 2. Truth Risk
-            const truthRiskScore = await TruthRiskService_1.TruthRiskService.calculateTruthRisk(siteId, page.page_id, page.text || '');
+            const truthRiskScore = await TruthRiskService_1.TruthRiskService.calculateTruthRisk(siteId, page.page_id, page.content || '');
             // 3. UX Friction
             const uxFrictionScore = await UXFrictionService_1.UXFrictionService.calculateUXFriction(siteId, page.url);
             // Calculate components
@@ -36,7 +36,7 @@ class HealthScoreService {
             const uxFrictionInverse = 1 - (uxFrictionScore / 100);
             const truthRiskInverse = 1 - (truthRiskScore / 100);
             const avgBacklinkQuality = pageBacklinks.length > 0
-                ? pageBacklinks.reduce((sum, b) => sum + (b.domain_relevance || 0), 0) / pageBacklinks.length
+                ? pageBacklinks.reduce((sum, b) => sum + (Number(b.domain_relevance) || 0), 0) / pageBacklinks.length
                 : 0;
             // Internal links: Placeholder logic as we don't have exact counts in Page struct yet
             // Assuming 'expected' is based on some heuristic or graph analysis

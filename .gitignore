@@ -29,3 +29,15 @@ yarn-error.log*
 # TypeScript
 *.tsbuildinfo
 .turbo
+
+*storybook.log
+storybook-static
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+gcp_key
+gcp_key.pub

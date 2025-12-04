@@ -1,0 +1,200 @@
+openapi: 3.0.0
+info:
+  title: ApexSEO API
+  description: API for ApexSEO Platform (Analysis, Projects, Sites)
+  version: 1.0.0
+servers:
+  - url: http://localhost:4000
+    description: Local Development Server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
+
+paths:
+  /health:
+    get:
+      summary: Health Check
+      description: Returns the health status of the API.
+      security: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /projects:
+    get:
+      summary: List Projects
+      tags: [Projects]
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+    post:
+      summary: Create Project
+      tags: [Projects]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - domain
+              properties:
+                name:
+                  type: string
+                domain:
+                  type: string
+      responses:
+        '201':
+          description: Project created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+
+  /projects/{id}:
+    get:
+      summary: Get Project Details
+      tags: [Projects]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Project details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+
+  /sites/{projectId}/sites:
+    get:
+      summary: List Sites for Project
+      tags: [Sites]
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of sites
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Site'
+
+  /analysis/crawl:
+    post:
+      summary: Trigger Site Crawl
+      tags: [Analysis]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - siteId
+                - startUrl
+              properties:
+                siteId:
+                  type: string
+                startUrl:
+                  type: string
+                depth:
+                  type: integer
+                  default: 2
+      responses:
+        '202':
+          description: Crawl started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  workflowId:
+                    type: string
+
+  /analysis/analyze:
+    post:
+      summary: Trigger Full Analysis
+      tags: [Analysis]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - projectId
+              properties:
+                projectId:
+                  type: string
+      responses:
+        '202':
+          description: Analysis started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  workflowId:
+                    type: string
+
+components:
+  schemas:
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        domain:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        user_id:
+          type: string
+
+    Site:
+      type: object
+      properties:
+        id:
+          type: string
+        domain:
+          type: string
+        project_id:
+          type: string

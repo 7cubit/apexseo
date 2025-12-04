@@ -10,6 +10,7 @@
     },
     "dependencies": {
         "@apexseo/shared": "*",
+        "@fastify/cookie": "^11.0.2",
         "@fastify/cors": "^11.1.0",
         "@fastify/jwt": "^10.0.0",
         "@fastify/rate-limit": "^10.3.0",
@@ -18,7 +19,9 @@
         "@temporalio/client": "^1.0.0",
         "dotenv": "^16.0.0",
         "fastify": "^5.6.2",
-        "fastify-plugin": "^5.1.0"
+        "fastify-plugin": "^5.1.0",
+        "fastify-type-provider-zod": "^6.1.0",
+        "zod": "^4.1.13"
     },
     "devDependencies": {
         "@types/node": "^20.0.0",

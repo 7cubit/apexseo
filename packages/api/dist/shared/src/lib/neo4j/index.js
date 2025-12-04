@@ -16,7 +16,7 @@ const password = process.env.NEO4J_PASSWORD;
 let driver;
 if (uri && user && password) {
     try {
-        driver = neo4j_driver_1.default.driver(uri, neo4j_driver_1.default.auth.basic(user, password));
+        driver = neo4j_driver_1.default.driver(uri, neo4j_driver_1.default.auth.basic(user, password), { disableLosslessIntegers: true });
     }
     catch (error) {
         console.error("Failed to create Neo4j driver:", error);

@@ -6,14 +6,8 @@ const scheduleRoutes = async (fastify, opts) => {
     fastify.get('/projects/:id/schedules', async (request, reply) => {
         const { id } = request.params;
         try {
-            console.log(`API: Querying for ${id}`);
-            const result = await shared_1.client.query({
-                query: `SELECT * FROM schedules WHERE project_id = {projectId:String}`,
-                query_params: { projectId: id },
-            });
-            const data = await result.json();
-            console.log('API: Data:', JSON.stringify(data));
-            return { schedules: data.data, raw: data };
+            const schedules = await shared_1.ClickHouseScheduleRepository.getSchedules(id);
+            return { schedules };
         }
         catch (error) {
             request.log.error(error);

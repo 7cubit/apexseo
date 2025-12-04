@@ -17,7 +17,11 @@ export * from './lib/clickhouse/repositories/ClickHouseClaimStore';
 export * from './lib/clickhouse/repositories/ClickHouseCrawlLogRepository';
 export * from './lib/types';
 export * from './lib/health-score';
-export * from './logger';
+export * from './lib/utils/logger';
+export * from './lib/utils/date';
+export * from './lib/utils/validation';
+// export * from './lib/clickhouse'; // Removed to avoid conflict with specific exports
+// export * from './lib/neo4j/driver'; // Already exported by neo4j/index
 export * from './lib/services/TSPRService';
 export * from './lib/services/ClusteringService';
 export * from './lib/services/ContentDepthService';
@@ -34,4 +38,13 @@ export * from './lib/clickhouse/repositories/ClickHouseAlertRepository';
 export * from './lib/clickhouse/repositories/ClickHouseScheduleRepository';
 export * from './lib/services/AlertService';
 export * from './lib/services/CircuitBreaker';
+export * from './lib/temporal';
+export * from './lib/auth/rbac';
+export * from './lib/clickhouse/repositories/ClickHouseContentAuditRepository';
+export * from './lib/utils/VectorMath';
+export * from './lib/nlp/EntityExtractor';
+export * from './lib/neo4j/user-repository';
+export * from './lib/neo4j/admin-repository';
+export * from './lib/neo4j/account-repository';
+export * from './lib/neo4j/subscription-repository';
 // Export other shared modules as needed

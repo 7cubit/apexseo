@@ -111,7 +111,7 @@ class ContentOptimizerService {
         // Using our semantic clustering to find related content
         const pages = await ClickHousePageRepository_1.ClickHousePageRepository.getPagesBySite(siteId);
         // Calculate average metrics from our own high-performing pages
-        const avgWordCount = pages.reduce((sum, p) => sum + (p.word_count || 0), 0) / pages.length;
+        const avgWordCount = pages.reduce((sum, p) => sum + (Number(p.word_count) || 0), 0) / pages.length;
         // Extract common headers from our content
         const commonHeaders = this.extractCommonHeaders(pages);
         // Use TF-IDF to find common terms (simplified version)

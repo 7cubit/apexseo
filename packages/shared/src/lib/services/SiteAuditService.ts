@@ -1,5 +1,3 @@
-import { ClickHousePageRepository } from '../clickhouse/repositories/ClickHousePageRepository';
-
 export interface SiteAuditIssue {
     type: string;
     severity: 'critical' | 'warning' | 'notice';
@@ -23,13 +21,20 @@ export interface SiteAuditResult {
     };
 }
 
+export interface IPageRepository {
+    getPagesBySite(siteId: string): Promise<any[]>;
+    getSemanticOrphans(siteId: string): Promise<any[]>;
+}
+
 export class SiteAuditService {
-    /**
-     * Run comprehensive site audit using our existing page data
-     * This leverages our crawler data instead of making new API calls
-     */
-    static async runAudit(siteId: string): Promise<SiteAuditResult> {
-        const pages = await ClickHousePageRepository.getPagesBySite(siteId) as any[];
+    private pageRepo: IPageRepository;
+
+    constructor(pageRepo: IPageRepository) {
+        this.pageRepo = pageRepo;
+    }
+
+    async runAudit(siteId: string): Promise<SiteAuditResult> {
+        const pages = await this.pageRepo.getPagesBySite(siteId);
         const issues: SiteAuditIssue[] = [];
 
         // 1. Broken Links (4xx, 5xx status codes)
@@ -91,7 +96,7 @@ export class SiteAuditService {
         }
 
         // 5. Orphan Pages (using our existing detection)
-        const orphans = await ClickHousePageRepository.getSemanticOrphans(siteId) as any[];
+        const orphans = await this.pageRepo.getSemanticOrphans(siteId);
         if (orphans.length > 0) {
             issues.push({
                 type: 'orphan_pages',

@@ -13,55 +13,8 @@ class ClickHousePageRepository {
         });
     }
     static async createTable() {
-        if (!clickhouse_1.client)
-            return;
-        await clickhouse_1.client.command({
-            query: `
-                CREATE TABLE IF NOT EXISTS pages (
-                    site_id String,
-                    page_id String,
-                    url String,
-                    status String,
-                    title String,
-                    h1 String,
-                    text String,
-                    word_count UInt32,
-                    cluster_id String,
-                    pr Float32,
-                    tspr Float32,
-                    semantic_orphan UInt8,
-                    max_claim_risk Float32,
-                    high_risk_claim_count UInt32,
-                    content_score Float32,
-                    is_orphan UInt8,
-                    canonical_id String,
-                    link_count_internal UInt32,
-                    link_count_external UInt32,
-                    embedding Array(Float32),
-                    keywords Array(String)
-                ) ENGINE = MergeTree()
-                ORDER BY (site_id, page_id)
-            `
-        });
-        // Ensure new columns exist
-        const columns = [
-            'content_score Float32',
-            'is_orphan UInt8',
-            'canonical_id String',
-            'link_count_internal UInt32',
-            'link_count_external UInt32',
-            'keywords Array(String)'
-        ];
-        for (const col of columns) {
-            try {
-                await clickhouse_1.client.command({
-                    query: `ALTER TABLE pages ADD COLUMN IF NOT EXISTS ${col}`
-                });
-            }
-            catch (e) {
-                // Ignore
-            }
-        }
+        // Table creation handled by schema script now.
+        // Keeping this for reference or removal.
     }
     static async createPage(page) {
         if (!clickhouse_1.client)
@@ -69,7 +22,19 @@ class ClickHousePageRepository {
         try {
             await clickhouse_1.client.insert({
                 table: 'pages',
-                values: [page],
+                values: [{
+                        ...page,
+                        // Ensure defaults if missing
+                        content: page.content || '',
+                        word_count: page.word_count || 0,
+                        status: page.status || '200',
+                        crawled_at: page.crawled_at || new Date().toISOString().replace('T', ' ').split('.')[0],
+                        content_score: page.content_score || 0,
+                        is_orphan: page.is_orphan || 0,
+                        link_count_internal: page.link_count_internal || 0,
+                        link_count_external: page.link_count_external || 0,
+                        keywords: page.keywords || []
+                    }],
                 format: 'JSONEachRow',
             });
         }
@@ -177,6 +142,71 @@ class ClickHousePageRepository {
             format: 'JSONEachRow',
         });
         return await result.json();
+    }
+    static async getProjectOverview(domain) {
+        if (!clickhouse_1.client)
+            return { totalPages: 0, avgContentScore: 0, lastCrawl: null };
+        const result = await clickhouse_1.client.query({
+            query: `
+                SELECT 
+                    count() as totalPages,
+                    avg(content_score) as avgContentScore,
+                    max(crawled_at) as lastCrawl
+                FROM pages
+                WHERE site_id = {domain:String}
+            `,
+            query_params: { domain },
+            format: 'JSONEachRow'
+        });
+        const rows = await result.json();
+        const row = rows[0];
+        return {
+            totalPages: row.totalPages,
+            avgContentScore: row.avgContentScore,
+            lastCrawl: row.lastCrawl
+        };
+    }
+    static async getPages(domain, limit, offset) {
+        if (!clickhouse_1.client)
+            return { pages: [], total: 0 };
+        const [pagesResult, countResult] = await Promise.all([
+            clickhouse_1.client.query({
+                query: `
+                    SELECT * FROM pages 
+                    WHERE site_id = {domain:String}
+                    ORDER BY crawled_at DESC
+                    LIMIT {limit:UInt32} OFFSET {offset:UInt32}
+                `,
+                query_params: { domain, limit, offset },
+                format: 'JSONEachRow'
+            }),
+            clickhouse_1.client.query({
+                query: `SELECT count() as total FROM pages WHERE site_id = {domain:String}`,
+                query_params: { domain },
+                format: 'JSONEachRow'
+            })
+        ]);
+        const pages = await pagesResult.json();
+        const countRows = await countResult.json();
+        return {
+            pages,
+            total: countRows[0].total
+        };
+    }
+    static async getPageAudit(domain, pageId) {
+        if (!clickhouse_1.client)
+            return null;
+        const result = await clickhouse_1.client.query({
+            query: `
+                SELECT * FROM pages 
+                WHERE site_id = {domain:String} AND page_id = {pageId:String}
+                LIMIT 1
+            `,
+            query_params: { domain, pageId },
+            format: 'JSONEachRow'
+        });
+        const rows = await result.json();
+        return rows.length > 0 ? rows[0] : null;
     }
 }
 exports.ClickHousePageRepository = ClickHousePageRepository;

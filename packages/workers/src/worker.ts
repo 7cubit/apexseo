@@ -1,11 +1,11 @@
 import { Worker } from '@temporalio/worker';
 import * as activities from './activities';
 import dotenv from 'dotenv';
-import { logger, initTelemetry } from '@apexseo/shared';
+import { logger } from '@apexseo/shared';
 
 dotenv.config();
 
-initTelemetry('temporal-worker');
+// initTelemetry('temporal-worker');
 
 async function run() {
     logger.info('Starting Temporal worker...');

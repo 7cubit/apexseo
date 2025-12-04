@@ -1,15 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SiteAuditService = void 0;
-const ClickHousePageRepository_1 = require("../clickhouse/repositories/ClickHousePageRepository");
 class SiteAuditService {
-    /**
-     * Run comprehensive site audit using our existing page data
-     * This leverages our crawler data instead of making new API calls
-     */
-    static async runAudit(siteId) {
+    constructor(pageRepo) {
+        this.pageRepo = pageRepo;
+    }
+    async runAudit(siteId) {
         var _a;
-        const pages = await ClickHousePageRepository_1.ClickHousePageRepository.getPagesBySite(siteId);
+        const pages = await this.pageRepo.getPagesBySite(siteId);
         const issues = [];
         // 1. Broken Links (4xx, 5xx status codes)
         const brokenPages = pages.filter(p => p.status_code >= 400);
@@ -66,7 +64,7 @@ class SiteAuditService {
             });
         }
         // 5. Orphan Pages (using our existing detection)
-        const orphans = await ClickHousePageRepository_1.ClickHousePageRepository.getSemanticOrphans(siteId);
+        const orphans = await this.pageRepo.getSemanticOrphans(siteId);
         if (orphans.length > 0) {
             issues.push({
                 type: 'orphan_pages',

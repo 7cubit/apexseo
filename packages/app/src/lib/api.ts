@@ -1,28 +1,45 @@
-import { getSession } from "next-auth/react";
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
-export async function apiClient(endpoint: string, options: RequestInit = {}) {
-    const session = await getSession();
-    const token = (session as any)?.user?.id; // Using ID as token for now, or use JWT if available
+export const api = axios.create({
+    baseURL: API_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
 
-    const headers = {
-        "Content-Type": "application/json",
-        ...options.headers,
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    };
-
-    const response = await fetch(`${API_URL}${endpoint}`, {
-        ...options,
-        headers,
-    });
-
-    if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: "Unknown error" }));
-        throw new Error(error.error || `API Error: ${response.status}`);
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
     }
+    return config;
+});
 
-    return response.json();
-}
+api.interceptors.response.use(
+    (response) => response,
+    (error: AxiosError) => {
+        if (error.response?.status === 401) {
+            // Handle unauthorized access (e.g., redirect to login)
+            localStorage.removeItem('token');
+            if (typeof window !== 'undefined') {
+                window.location.href = '/login';
+            }
+        }
+        return Promise.reject(error);
+    }
+);
 
-export const fetcher = (url: string) => apiClient(url);
+export const fetcher = (url: string) => api.get(url).then((res) => res.data);
+
+export const apiClient = async (url: string, options: any = {}) => {
+    const { method = 'GET', body, ...rest } = options;
+    const response = await api.request({
+        url,
+        method,
+        data: body,
+        ...rest,
+    });
+    return response.data;
+};

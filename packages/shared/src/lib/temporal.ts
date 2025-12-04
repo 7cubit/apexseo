@@ -13,7 +13,7 @@ export async function createTemporalClient() {
     const connection = await Connection.connect({
         address,
         apiKey, // Pass API key directly if using Temporal Cloud with API Key auth
-        tls: true, // Required for Temporal Cloud
+        tls: !!apiKey, // Enable TLS if API Key is present (Cloud), otherwise assume plaintext/local unless configured
     });
 
     const client = new Client({

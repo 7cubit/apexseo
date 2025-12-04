@@ -37,7 +37,11 @@ __exportStar(require("./lib/clickhouse/repositories/ClickHouseClaimStore"), expo
 __exportStar(require("./lib/clickhouse/repositories/ClickHouseCrawlLogRepository"), exports);
 __exportStar(require("./lib/types"), exports);
 __exportStar(require("./lib/health-score"), exports);
-__exportStar(require("./logger"), exports);
+__exportStar(require("./lib/utils/logger"), exports);
+__exportStar(require("./lib/utils/date"), exports);
+__exportStar(require("./lib/utils/validation"), exports);
+// export * from './lib/clickhouse'; // Removed to avoid conflict with specific exports
+__exportStar(require("./lib/neo4j/driver"), exports);
 __exportStar(require("./lib/services/TSPRService"), exports);
 __exportStar(require("./lib/services/ClusteringService"), exports);
 __exportStar(require("./lib/services/ContentDepthService"), exports);
@@ -54,4 +58,6 @@ __exportStar(require("./lib/clickhouse/repositories/ClickHouseAlertRepository"),
 __exportStar(require("./lib/clickhouse/repositories/ClickHouseScheduleRepository"), exports);
 __exportStar(require("./lib/services/AlertService"), exports);
 __exportStar(require("./lib/services/CircuitBreaker"), exports);
+__exportStar(require("./lib/temporal"), exports);
+__exportStar(require("./lib/auth/rbac"), exports);
 // Export other shared modules as needed

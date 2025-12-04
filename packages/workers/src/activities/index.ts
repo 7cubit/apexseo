@@ -1,5 +1,8 @@
 export * from './legacy';
-export * from './graph-writer';
+export * from './reporting';
+export * from './legacy';
+export * from './reporting';
+// export * from './activities'; // Removed conflicting export
 export * from './link-optimizer';
 export * from './site-doctor';
 export * from './http/FetchRobotsTxtActivity';

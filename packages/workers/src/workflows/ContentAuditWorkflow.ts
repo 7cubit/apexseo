@@ -1,4 +1,4 @@
-import { proxyActivities } from '@temporalio/workflow';
+import { proxyActivities, patched } from '@temporalio/workflow';
 import type * as activities from '../activities';
 
 const { calculateContentScore } = proxyActivities<typeof activities>({
@@ -17,4 +17,10 @@ export async function ContentAuditWorkflow(input: ContentAuditWorkflowInput): Pr
         pageId: input.pageId,
         keyword: input.keyword,
     });
+
+    // Versioning Example: Add cleanup step for v2
+    if (patched('v2')) {
+        // await cleanupAuditResources({ pageId: input.pageId });
+        console.log('Cleanup resources for v2');
+    }
 }

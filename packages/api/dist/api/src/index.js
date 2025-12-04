@@ -30,7 +30,7 @@ else {
 const fastify = (0, fastify_1.default)({
     logger: false // Use our custom logger
 });
-(0, shared_1.initTelemetry)('api-gateway');
+// initTelemetry('api-gateway');
 // Register Plugins
 const rate_limit_1 = __importDefault(require("@fastify/rate-limit"));
 const swagger_1 = __importDefault(require("./plugins/swagger"));
@@ -40,10 +40,16 @@ fastify.register(cors_1.default, {
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true
 });
+const fastify_type_provider_zod_1 = require("fastify-type-provider-zod");
+const error_handler_1 = __importDefault(require("./plugins/error-handler"));
+// ...
+fastify.setValidatorCompiler(fastify_type_provider_zod_1.validatorCompiler);
+fastify.setSerializerCompiler(fastify_type_provider_zod_1.serializerCompiler);
 fastify.register(rate_limit_1.default, {
     max: 100,
     timeWindow: '1 minute'
 });
+fastify.register(error_handler_1.default);
 fastify.register(swagger_1.default);
 fastify.register(auth_1.default);
 fastify.register(tenancy_1.default);
@@ -61,8 +67,12 @@ fastify.get('/health', async (request, reply) => {
     shared_1.logger.info('Health check requested');
     return { status: 'ok', timestamp: new Date().toISOString() };
 });
+// import { graphRoutes } from './routes/graph'; // Removed duplicate
+// ... existing code ...
 const start = async () => {
     try {
+        await fastify.register(graph_1.default, { prefix: '/graph' });
+        // ... existing code ...
         await fastify.listen({ port: 4000, host: '0.0.0.0' });
         shared_1.logger.info('API Gateway listening on port 4000');
     }

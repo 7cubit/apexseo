@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "target": "es2019",
+        "module": "commonjs",
+        "outDir": "./dist",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "baseUrl": ".",
+        "paths": {
+            "@apexseo/shared": [
+                "../shared/src/index.ts"
+            ],
+            "@apexseo/shared/*": [
+                "../shared/src/*"
+            ]
+        }
+    },
+    "include": [
+        "scripts/**/*",
+        "clickhouse/**/*",
+        "src/**/*"
+    ]
+}
