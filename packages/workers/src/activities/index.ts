@@ -5,6 +5,7 @@ export * from './reporting';
 // export * from './activities'; // Removed conflicting export
 export * from './link-optimizer';
 export * from './site-doctor';
+export * from './scoring';
 export * from './http/FetchRobotsTxtActivity';
 export * from './http/CrawlPageActivity';
 export * from './db/WritePageToClickHouseActivity';

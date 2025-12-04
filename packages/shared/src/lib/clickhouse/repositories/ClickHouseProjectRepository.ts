@@ -112,4 +112,59 @@ export class ClickHouseProjectRepository {
             query_params: { id }
         });
     }
+    static async getMetrics(projectId: string): Promise<{ pages: number; errors: number; avg_time: number }> {
+        if (!client) return { pages: 0, errors: 0, avg_time: 0 };
+
+        try {
+            // Assuming 'pages' table has site_id which maps to project_id (or we use project_id directly if schema allows)
+            // Based on schema.sql, pages table has site_id. Assuming site_id == project_id for now.
+            const result = await client.query({
+                query: `
+                    SELECT 
+                        count() as pages,
+                        countIf(status != '200') as errors,
+                        0 as avg_time -- Placeholder as duration is not in pages table schema
+                    FROM pages
+                    WHERE site_id = {projectId:String}
+                `,
+                query_params: { projectId },
+                format: 'JSONEachRow'
+            });
+
+            const rows = await result.json() as any[];
+            return rows[0] || { pages: 0, errors: 0, avg_time: 0 };
+        } catch (error) {
+            console.error('Failed to get project metrics:', error);
+            return { pages: 0, errors: 0, avg_time: 0 };
+        }
+    }
+
+    static async getCrawlLogs(projectId: string, limit: number = 20): Promise<any[]> {
+        if (!client) return [];
+
+        try {
+            // Using api_usage_logs as a proxy for crawl logs for now, or we could create a dedicated crawl_logs table.
+            // For this implementation, let's assume we might log crawl events to a new table or just return empty if not exists.
+            // Let's return empty for now and rely on Temporal for live status, 
+            // or query pages table for recent crawls.
+            const result = await client.query({
+                query: `
+                    SELECT 
+                        url, 
+                        status, 
+                        crawled_at as timestamp 
+                    FROM pages 
+                    WHERE site_id = {projectId:String} 
+                    ORDER BY crawled_at DESC 
+                    LIMIT {limit:UInt32}
+                `,
+                query_params: { projectId, limit },
+                format: 'JSONEachRow'
+            });
+            return await result.json() as any[];
+        } catch (error) {
+            console.error('Failed to get crawl logs:', error);
+            return [];
+        }
+    }
 }

@@ -1,25 +1,27 @@
-import { proxyActivities } from '@temporalio/workflow';
-import type * as activities from '../activities';
+import { proxyActivities, log } from '@temporalio/workflow';
+import type * as activities from '../activities/rank-tracker'; // Need to create this
 
-const {
-    fetchRankDataActivity,
-    storeRankHistoryActivity,
-    detectRankVolatilityActivity
-} = proxyActivities<typeof activities>({
-    startToCloseTimeout: '10 minutes',
+const { fetchTrackedKeywords, checkRankings, saveRankings } = proxyActivities<typeof activities>({
+    startToCloseTimeout: '30 minutes', // API calls might take time
 });
 
-export async function RankTrackerWorkflow(siteId: string, keywords: string[]): Promise<void> {
-    console.log(`Starting RankTracker workflow for ${siteId}`);
+export async function RankTrackerWorkflow(): Promise<void> {
+    log.info('RankTrackerWorkflow started');
 
-    // 1. Fetch Rank Data
-    const rankData = await fetchRankDataActivity(siteId, keywords);
+    // 1. Fetch all tracked keywords
+    const keywords = await fetchTrackedKeywords();
+    log.info(`Found ${keywords.length} keywords to track`);
 
-    // 2. Store Rank History
-    await storeRankHistoryActivity(siteId, rankData);
+    if (keywords.length === 0) {
+        return;
+    }
 
-    // 3. Detect Volatility
-    await detectRankVolatilityActivity(siteId);
+    // 2. Check rankings (batch processing recommended)
+    // For MVP, we pass all keywords. In production, we'd batch or iterate.
+    const rankings = await checkRankings(keywords);
 
-    console.log(`RankTracker workflow completed for ${siteId}`);
+    // 3. Save history
+    await saveRankings(rankings);
+
+    log.info('RankTrackerWorkflow completed');
 }

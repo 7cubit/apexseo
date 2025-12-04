@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Table,
     TableBody,
@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, ExternalLink } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Check, X, ExternalLink, Edit2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface Suggestion {
@@ -31,11 +32,17 @@ interface ReviewTableProps {
 }
 
 export function ReviewTable({ suggestions, onAccept, onReject }: ReviewTableProps) {
-    const handleAccept = async (suggestion: Suggestion) => {
+    // State to track edited anchors: { [suggestionIndex]: "new anchor text" }
+    const [editedAnchors, setEditedAnchors] = useState<{ [key: number]: string }>({});
+
+    const handleAccept = async (suggestion: Suggestion, index: number) => {
         try {
             // Construct ID as source:target for API
             const id = `${suggestion.source_page_id}:${suggestion.target_page_id}`;
-            await onAccept(id, suggestion.suggested_anchor);
+            // Use edited anchor if available, otherwise default
+            const anchorToUse = editedAnchors[index] || suggestion.suggested_anchor;
+
+            await onAccept(id, anchorToUse);
             toast.success("Suggestion accepted");
         } catch (error) {
             toast.error("Failed to accept suggestion");
@@ -85,12 +92,18 @@ export function ReviewTable({ suggestions, onAccept, onReject }: ReviewTableProp
                                         {(suggestion.similarity_score * 100).toFixed(0)}%
                                     </Badge>
                                 </TableCell>
-                                <TableCell>{suggestion.suggested_anchor}</TableCell>
+                                <TableCell>
+                                    <Input
+                                        value={editedAnchors[idx] !== undefined ? editedAnchors[idx] : suggestion.suggested_anchor}
+                                        onChange={(e) => setEditedAnchors(prev => ({ ...prev, [idx]: e.target.value }))}
+                                        className="h-8 w-[250px]"
+                                    />
+                                </TableCell>
                                 <TableCell className="text-right space-x-2">
                                     <Button size="sm" variant="outline" className="h-8 w-8 p-0" onClick={() => handleReject(suggestion)}>
                                         <X className="h-4 w-4 text-red-500" />
                                     </Button>
-                                    <Button size="sm" variant="outline" className="h-8 w-8 p-0" onClick={() => handleAccept(suggestion)}>
+                                    <Button size="sm" variant="outline" className="h-8 w-8 p-0" onClick={() => handleAccept(suggestion, idx)}>
                                         <Check className="h-4 w-4 text-green-500" />
                                     </Button>
                                 </TableCell>

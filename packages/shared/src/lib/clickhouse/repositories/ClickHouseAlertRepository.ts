@@ -25,7 +25,7 @@ export class ClickHouseAlertRepository {
                     status String,
                     created_at DateTime DEFAULT now()
                 ) ENGINE = MergeTree()
-                ORDER BY (site_id, created_at DESC)
+                ORDER BY (site_id, created_at)
             `
         });
     }

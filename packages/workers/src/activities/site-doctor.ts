@@ -1,32 +1,18 @@
-import { ClickHouseAlertRepository, ClickHousePageRepository, Alert } from '@apexseo/shared';
+import { ClickHousePageRepository } from '@apexseo/shared';
 
-export async function checkHealthRegressionActivity(siteId: string): Promise<void> {
-    console.log(`Checking health regression for ${siteId}`);
+export async function fetchPriorityPages(): Promise<any[]> {
+    console.log('Fetching priority pages for Site Doctor...');
+    // Mock implementation: return top 10 pages sorted by last_crawled_at
+    // In real app: ClickHousePageRepository.getPriorityPages()
+    return [
+        { url: 'https://example.com/page1', project_id: 'p1' },
+        { url: 'https://example.com/page2', project_id: 'p1' }
+    ];
+}
 
-    // Get latest health score
-    // This assumes we have a way to get the latest score. 
-    // ClickHousePageRepository has page scores, but we might want an aggregate site score.
-    // For now, let's check for pages with significant score drops if we had history, 
-    // or just check for critical health issues (score < 50).
-
-    try {
-        const pages = await ClickHousePageRepository.getPagesBySite(siteId);
-        const criticalPages = pages.filter((p: any) => p.content_score < 40); // Threshold
-
-        if (criticalPages.length > 5) { // Threshold
-            const alert: Alert = {
-                site_id: siteId,
-                type: 'health_regression',
-                severity: 'high',
-                message: `Found ${criticalPages.length} pages with critical health scores (< 40).`,
-                details: `Pages: ${criticalPages.slice(0, 5).map((p: any) => p.url).join(', ')}...`,
-                status: 'new'
-            };
-
-            await ClickHouseAlertRepository.createTable();
-            await ClickHouseAlertRepository.createAlert(alert);
-        }
-    } catch (error) {
-        console.error(`Failed to check health regression for ${siteId}`, error);
-    }
+export async function reCrawlPage(url: string): Promise<any> {
+    console.log(`Re-crawling page: ${url}`);
+    // Trigger Python worker activity or use local logic
+    // For now, mock success
+    return { status: 'crawled', url };
 }

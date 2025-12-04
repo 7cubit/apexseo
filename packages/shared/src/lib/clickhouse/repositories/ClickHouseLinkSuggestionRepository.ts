@@ -35,7 +35,7 @@ export class ClickHouseLinkSuggestionRepository {
                     status String,
                     created_at DateTime DEFAULT now()
                 ) ENGINE = MergeTree()
-                ORDER BY (site_id, status, similarity_score DESC)
+                ORDER BY (site_id, similarity_score)
             `
         });
     }

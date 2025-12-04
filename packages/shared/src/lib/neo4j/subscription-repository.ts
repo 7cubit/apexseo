@@ -139,4 +139,115 @@ export class SubscriptionRepository {
             await session.close();
         }
     }
+    async changePlan(accountId: string, newPlanId: string): Promise<Subscription> {
+        // Reuse subscribe logic which handles cancelling old active subscription
+        return this.subscribe(accountId, newPlanId);
+    }
+
+    // Billing Enhancements
+
+    async addCredit(accountId: string, amount: number, note: string): Promise<void> {
+        const session = this.getSession();
+        try {
+            await session.run(
+                `
+                MATCH (a:Account {id: $accountId})
+                CREATE (c:Credit {
+                    id: randomUUID(),
+                    amount: $amount,
+                    note: $note,
+                    created_at: datetime()
+                })
+                CREATE (a)-[:HAS_CREDIT]->(c)
+                `,
+                { accountId, amount, note }
+            );
+        } finally {
+            await session.close();
+        }
+    }
+
+    async getInvoiceHistory(accountId: string): Promise<any[]> {
+        const session = this.getSession();
+        try {
+            // Mocking invoices for now as we don't have a real payment provider integration in this demo
+            // In a real app, this would fetch from Stripe or a local Invoice node
+            const result = await session.run(
+                `
+                MATCH (a:Account {id: $accountId})
+                OPTIONAL MATCH (a)-[:HAS_INVOICE]->(i:Invoice)
+                RETURN i
+                ORDER BY i.created_at DESC
+                `,
+                { accountId }
+            );
+            return result.records
+                .map(r => r.get('i')?.properties)
+                .filter(Boolean);
+        } finally {
+            await session.close();
+        }
+    }
+
+    async createMockInvoice(accountId: string, amount: number, status: string = 'PAID'): Promise<void> {
+        const session = this.getSession();
+        try {
+            await session.run(
+                `
+                MATCH (a:Account {id: $accountId})
+                CREATE (i:Invoice {
+                    id: randomUUID(),
+                    amount: $amount,
+                    status: $status,
+                    created_at: datetime()
+                })
+                CREATE (a)-[:HAS_INVOICE]->(i)
+                `,
+                { accountId, amount, status }
+            );
+        } finally {
+            await session.close();
+        }
+    }
+
+    async refundInvoice(invoiceId: string): Promise<void> {
+        const session = this.getSession();
+        try {
+            await session.run(
+                `
+                MATCH (i:Invoice {id: $invoiceId})
+                SET i.status = 'REFUNDED', i.refunded_at = datetime()
+                `,
+                { invoiceId }
+            );
+        } finally {
+            await session.close();
+        }
+    }
+
+    async redeemLTDCode(accountId: string, code: string): Promise<boolean> {
+        const session = this.getSession();
+        try {
+            // Mock LTD code validation
+            if (!code.startsWith('LTD-')) return false;
+
+            const result = await session.run(
+                `
+                MATCH (a:Account {id: $accountId})
+                MERGE (l:LTDRedemption {code: $code})
+                ON CREATE SET l.redeemed_at = datetime(), l.valid = true
+                ON MATCH SET l.valid = false // Prevent double usage if we were tracking globally
+                
+                WITH a, l
+                WHERE l.valid = true
+                CREATE (a)-[:REDEEMED]->(l)
+                RETURN l
+                `,
+                { accountId, code }
+            );
+            return result.records.length > 0;
+        } finally {
+            await session.close();
+        }
+    }
 }

@@ -73,4 +73,14 @@ export class LinkOptimizerService {
         // 3. Update status in ClickHouse
         await ClickHouseLinkSuggestionRepository.updateStatus(siteId, sourceId, targetId, 'accepted');
     }
+
+    static async rejectSuggestion(siteId: string, suggestionId: string, reason: string) {
+        const [sourceId, targetId] = suggestionId.split(':');
+        if (!sourceId || !targetId) throw new Error("Invalid suggestion ID format");
+
+        // Update status in ClickHouse to 'rejected'
+        // We could also store the reason, but our updateStatus method currently only takes status.
+        // Ideally we'd update the repo to accept reason, but for now let's just mark as rejected.
+        await ClickHouseLinkSuggestionRepository.updateStatus(siteId, sourceId, targetId, 'rejected');
+    }
 }

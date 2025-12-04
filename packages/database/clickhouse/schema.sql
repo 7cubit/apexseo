@@ -112,3 +112,21 @@ SELECT
     avg(content_score) as avg_content_score
 FROM pages
 GROUP BY site_id, date;
+
+-- API Usage Logs
+CREATE TABLE IF NOT EXISTS api_usage_logs (
+    request_id String,
+    account_id String,
+    api_key_id String,
+    endpoint String,
+    method String,
+    status_code UInt16,
+    duration_ms UInt32,
+    timestamp DateTime,
+    ip_address String,
+    user_agent String
+) ENGINE = MergeTree()
+PARTITION BY toYYYYMM(timestamp)
+ORDER BY (account_id, timestamp)
+TTL timestamp + INTERVAL 90 DAY
+SETTINGS index_granularity = 8192;

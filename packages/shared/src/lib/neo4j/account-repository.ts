@@ -93,6 +93,85 @@ export class AccountRepository {
         }
     }
 
+    async listWithSubscription(limit: number = 10, offset: number = 0, search?: string): Promise<any[]> {
+        const session = this.getSession();
+        try {
+            let query = `MATCH (a:Account)`;
+            const params: any = { limit: neo4j.int(limit), offset: neo4j.int(offset) };
+
+            if (search) {
+                query += ` WHERE toLower(a.name) CONTAINS toLower($search)`;
+                params.search = search;
+            }
+
+            query += `
+                OPTIONAL MATCH (a)-[:HAS_SUBSCRIPTION]->(s:Subscription)-[:IS_ON_PLAN]->(p:Plan)
+                WHERE s.status = 'ACTIVE'
+                RETURN a, s, p
+                ORDER BY a.created_at DESC
+                SKIP $offset
+                LIMIT $limit
+            `;
+
+            const result = await session.run(query, params);
+            return result.records.map((record: any) => ({
+                ...record.get('a').properties,
+                subscription: record.get('s')?.properties,
+                plan: record.get('p')?.properties
+            }));
+        } finally {
+            await session.close();
+        }
+    }
+
+    async getDetails(id: string): Promise<any | null> {
+        const session = this.getSession();
+        try {
+            const result = await session.run(
+                `
+                MATCH (a:Account {id: $id})
+                OPTIONAL MATCH (u:User)-[r:BELONGS_TO]->(a)
+                OPTIONAL MATCH (a)-[:HAS_SUBSCRIPTION]->(s:Subscription)-[:IS_ON_PLAN]->(p:Plan)
+                // Get all subscriptions (history)
+                OPTIONAL MATCH (a)-[:HAS_SUBSCRIPTION]->(sh:Subscription)-[:IS_ON_PLAN]->(ph:Plan)
+                RETURN a, 
+                       collect(DISTINCT {user: u, role: r.role}) as users,
+                       head(collect(DISTINCT {subscription: s, plan: p})) as current_subscription,
+                       collect(DISTINCT {subscription: sh, plan: ph}) as subscription_history
+                `,
+                { id }
+            );
+            if (result.records.length === 0) return null;
+
+            const record = result.records[0];
+            const currentSub = record.get('current_subscription');
+
+            // Filter out nulls from history if no history exists
+            const history = record.get('subscription_history')
+                .filter((h: any) => h.subscription)
+                .map((h: any) => ({
+                    ...h.subscription.properties,
+                    plan: h.plan.properties
+                }))
+                .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+            return {
+                ...record.get('a').properties,
+                users: record.get('users').map((u: any) => ({
+                    ...u.user.properties,
+                    role: u.role
+                })).filter((u: any) => u.id), // Filter out nulls
+                current_subscription: currentSub?.subscription ? {
+                    ...currentSub.subscription.properties,
+                    plan: currentSub.plan.properties
+                } : null,
+                subscription_history: history
+            };
+        } finally {
+            await session.close();
+        }
+    }
+
     async addUserToAccount(userId: string, accountId: string, role: string = 'MEMBER'): Promise<void> {
         const session = this.getSession();
         try {

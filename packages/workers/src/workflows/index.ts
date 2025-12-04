@@ -7,3 +7,4 @@ export { SERPAnalysisWorkflow } from './SERPAnalysisWorkflow';
 export { EmbeddingGenerationWorkflow } from './EmbeddingGenerationWorkflow';
 export { RankTrackerWorkflow } from './RankTrackerWorkflow';
 export { LinkOptimizerWorkflow } from './LinkOptimizerWorkflow';
+export { ScoringWorkflow } from './ScoringWorkflow';

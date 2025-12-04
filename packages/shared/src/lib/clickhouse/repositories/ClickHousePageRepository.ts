@@ -38,8 +38,37 @@ export class ClickHousePageRepository {
     }
 
     static async createTable() {
-        // Table creation handled by schema script now.
-        // Keeping this for reference or removal.
+        if (!client) return;
+        try {
+            await client.command({
+                query: `
+                CREATE TABLE IF NOT EXISTS pages (
+                    site_id String,
+                    page_id String,
+                    url String,
+                    title String,
+                    h1 String,
+                    content String,
+                    word_count UInt32,
+                    status String,
+                    crawled_at DateTime,
+                    content_score Float32,
+                    is_orphan UInt8,
+                    canonical_id String,
+                    link_count_internal UInt32,
+                    link_count_external UInt32,
+                    keywords Array(String),
+                    tspr Float32,
+                    embedding Array(Float32),
+                    cluster_id UInt32
+                ) ENGINE = MergeTree()
+                ORDER BY (site_id, crawled_at)
+                `
+            });
+            console.log("ClickHouse pages table initialized.");
+        } catch (error) {
+            console.error("Failed to create pages table:", error);
+        }
     }
 
     static async createPage(page: Page) {

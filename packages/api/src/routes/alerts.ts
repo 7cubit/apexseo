@@ -1,40 +1,40 @@
 import { FastifyPluginAsync } from 'fastify';
-import { ClickHouseAlertRepository } from '@apexseo/shared';
+import { AlertService } from '@apexseo/shared';
 
 const alertRoutes: FastifyPluginAsync = async (fastify, opts) => {
-    // Get alerts for a project
-    fastify.get<{ Params: { id: string }, Querystring: { status?: string } }>('/projects/:id/alerts', async (request, reply) => {
-        const { id } = request.params;
-        const { status } = request.query;
+    // GET /alerts
+    fastify.get<{ Querystring: { siteId: string; limit?: number } }>('/', async (request, reply) => {
+        const { siteId, limit = 50 } = request.query;
+        // Mock siteId if not provided (for MVP)
+        const effectiveSiteId = siteId || 'example.com';
+
         try {
-            const alerts = await ClickHouseAlertRepository.getAlerts(id, status);
-            return { alerts };
+            const alerts = await AlertService.getAlerts(effectiveSiteId, limit);
+            return alerts;
         } catch (error) {
             request.log.error(error);
             reply.status(500).send({ error: 'Failed to fetch alerts' });
         }
     });
 
-    // Update alert status
-    fastify.patch<{ Params: { id: string, alertId: string }, Body: { status: string } }>(
-        '/projects/:id/alerts/:alertId',
-        async (request, reply) => {
-            const { id, alertId } = request.params;
-            const { status } = request.body;
+    // POST /alerts/:id/read
+    fastify.post<{ Params: { id: string }; Body: { siteId: string } }>('/:id/read', async (request, reply) => {
+        const { id } = request.params;
+        const { siteId } = request.body;
 
-            if (!['new', 'acknowledged', 'resolved'].includes(status)) {
-                return reply.status(400).send({ error: 'Invalid status' });
-            }
-
-            try {
-                await ClickHouseAlertRepository.updateAlertStatus(id, alertId, status);
-                return { success: true, message: `Alert status updated to ${status}` };
-            } catch (error) {
-                request.log.error(error);
-                reply.status(500).send({ error: 'Failed to update alert status' });
-            }
+        if (!siteId) {
+            reply.status(400).send({ error: 'siteId is required' });
+            return;
         }
-    );
+
+        try {
+            await AlertService.markAsReadWithSiteId(siteId, id);
+            return { success: true };
+        } catch (error) {
+            request.log.error(error);
+            reply.status(500).send({ error: 'Failed to mark alert as read' });
+        }
+    });
 };
 
 export default alertRoutes;
