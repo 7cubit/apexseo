@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eeat-worker-priority
+  namespace: default
+  labels:
+    app: eeat-worker-priority
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eeat-worker-priority
+  template:
+    metadata:
+      labels:
+        app: eeat-worker-priority
+    spec:
+      containers:
+        - name: worker
+          image: apexseo/worker:latest
+          command: ["npm", "run", "start:worker"]
+          env:
+            - name: TEMPORAL_ADDRESS
+              value: "temporal-frontend.default.svc.cluster.local:7233"
+            - name: TASK_QUEUE
+              value: "priority-queue"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: DATABASE_URL
+          resources:
+            requests:
+              cpu: "1000m"
+              memory: "1Gi"
+            limits:
+              cpu: "2000m"
+              memory: "2Gi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eeat-worker-standard
+  namespace: default
+  labels:
+    app: eeat-worker-standard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eeat-worker-standard
+  template:
+    metadata:
+      labels:
+        app: eeat-worker-standard
+    spec:
+      containers:
+        - name: worker
+          image: apexseo/worker:latest
+          command: ["npm", "run", "start:worker"]
+          env:
+            - name: TEMPORAL_ADDRESS
+              value: "temporal-frontend.default.svc.cluster.local:7233"
+            - name: TASK_QUEUE
+              value: "standard-queue"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: DATABASE_URL
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"

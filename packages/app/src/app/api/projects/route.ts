@@ -1,50 +1,99 @@
-import { NextResponse } from "next/server";
-import { ProjectRepository } from "@/lib/neo4j/repositories/ProjectRepository";
-import { SiteRepository } from "@/lib/neo4j/repositories/SiteRepository";
+import { NextResponse } from 'next/server';
+import { ProjectRepository, Project } from '@/lib/neo4j/repositories/ProjectRepository';
+import { SiteRepository } from '@/lib/neo4j/repositories/SiteRepository';
+import { driver, DATABASE } from '@/lib/neo4j/driver';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { name, description, domain, types } = body;
+        const { name, siteId: existingSiteId, markets, identity, archetypes, knowledgeGraph, settings } = body;
 
-        // Generate a simple ID from name if not provided (or use UUID in real app)
-        const projectId = name.toLowerCase().replace(/[^a-z0-9]/g, "-");
-        const timestamp = new Date().toISOString();
-
-        // 1. Create Project Node
-        await ProjectRepository.createProject({
-            id: projectId,
-            name,
-            description,
-            types: types || [],
-            createdAt: timestamp
-        });
-
-        // 2. If domain is provided, create Site and link it
-        if (domain) {
-            // Ensure domain is a valid URL format for the ID or storage
-            // For simplicity, we assume domain is like "example.com"
-            // We might want to prepend https:// if missing for the URL field
-            const url = domain.startsWith('http') ? domain : `https://${domain}`;
-            const siteId = domain.replace(/[^a-zA-Z0-9]/g, "-");
-
-            await SiteRepository.createOrUpdateSite({
-                id: siteId,
-                url: url,
-                projectId: projectId // This might be redundant if we link explicitly, but good for reference
-            });
-
-            await ProjectRepository.linkSiteToProject(projectId, siteId);
+        if (!name || !markets || markets.length === 0) {
+            return NextResponse.json({ error: 'Name and at least one Market are required' }, { status: 400 });
         }
 
-        return NextResponse.json({ message: "Project created", projectId });
+        // 1. Create or Get Site
+        let siteId = existingSiteId;
+        if (!siteId) {
+            siteId = uuidv4();
+            // Use the first market's domain/url logic or a provided homeUrl if we had one.
+            // For V3, let's assume the first market defines the primary URL context or we pass it explicitly.
+            // Simplified: Use a placeholder or derive from identity/market.
+            await SiteRepository.createOrUpdateSite({
+                id: siteId,
+                url: `https://${identity.name.toLowerCase().replace(/\s+/g, '')}.com`, // Fallback
+                projectId: '',
+                lastCrawled: new Date().toISOString()
+            });
+        }
+
+        // 2. Create Project
+        const projectId = uuidv4();
+        const newProject: Project = {
+            id: projectId,
+            name,
+            siteId,
+            settings: settings || { crawlFrequency: 'Weekly', trackCompetitors: true },
+            markets: markets || [],
+            identity: identity || { name, colors: { primary: '#000', secondary: '#fff', accent: '#3b82f6' }, bannedWords: [], boilerplate: '' },
+            archetypes: archetypes || [],
+            knowledgeGraph: knowledgeGraph || { products: [], usps: [], personnel: [] },
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+
+        await ProjectRepository.createProject(newProject);
+
+        // 3. Update Site with Project ID
+        await SiteRepository.createOrUpdateSite({
+            id: siteId,
+            url: `https://${identity.name.toLowerCase().replace(/\s+/g, '')}.com`,
+            projectId: projectId
+        });
+
+        return NextResponse.json(newProject);
     } catch (error) {
-        console.error("Error creating project:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        console.error('Error creating project:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
 
 export async function GET(request: Request) {
-    // TODO: Fetch from Neo4j
-    return NextResponse.json({ projects: [] });
+    const { searchParams } = new URL(request.url);
+    const siteId = searchParams.get('siteId');
+
+    if (siteId) {
+        const project = await ProjectRepository.findProjectBySiteId(siteId);
+        return NextResponse.json(project || {});
+    }
+
+    // List all projects
+    if (!driver) return NextResponse.json([]);
+    const session = driver.session({ database: DATABASE });
+    try {
+        const result = await session.run(`
+            MATCH (p:Project)
+            RETURN p
+            ORDER BY p.created_at DESC
+        `);
+
+        const projects = result.records.map(record => {
+            const props = record.get('p').properties;
+            return {
+                ...props,
+                branding: props.branding ? JSON.parse(props.branding) : {},
+                settings: props.settings ? JSON.parse(props.settings) : {},
+                createdAt: props.created_at.toString(),
+                updatedAt: props.updated_at.toString()
+            };
+        });
+
+        return NextResponse.json(projects);
+    } catch (error) {
+        console.error('Error fetching projects:', error);
+        return NextResponse.json([], { status: 500 });
+    } finally {
+        await session.close();
+    }
 }

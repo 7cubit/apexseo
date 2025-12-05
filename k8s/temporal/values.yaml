@@ -1,0 +1,32 @@
+server:
+  replicaCount: 2
+  config:
+    persistence:
+      default:
+        driver: "sql"
+        sql:
+          driver: "postgres"
+          host: "postgres.default.svc.cluster.local"
+          port: 5432
+          database: "temporal"
+          user: "temporal"
+          password: "temporal-password"
+      visibility:
+        driver: "sql"
+        sql:
+          driver: "postgres"
+          host: "postgres.default.svc.cluster.local"
+          port: 5432
+          database: "temporal_visibility"
+          user: "temporal"
+          password: "temporal-password"
+
+admintools:
+  enabled: true
+
+web:
+  enabled: true
+  ingress:
+    enabled: true
+    hosts:
+      - "temporal.apexseo.com"

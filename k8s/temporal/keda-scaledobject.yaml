@@ -1,0 +1,37 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: eeat-priority-scaler
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: eeat-worker-priority
+  minReplicaCount: 1
+  maxReplicaCount: 50
+  cooldownPeriod: 60
+  triggers:
+    - type: temporal
+      metadata:
+        namespace: default
+        taskQueue: priority-queue
+        endpoint: temporal-frontend.default.svc.cluster.local:7233
+        threshold: "5"
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: eeat-standard-scaler
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: eeat-worker-standard
+  minReplicaCount: 0
+  maxReplicaCount: 20
+  cooldownPeriod: 300
+  triggers:
+    - type: temporal
+      metadata:
+        namespace: default
+        taskQueue: standard-queue
+        endpoint: temporal-frontend.default.svc.cluster.local:7233
+        threshold: "20"

@@ -11,8 +11,9 @@ export default withAuth({
             return true;
         },
     },
+    secret: process.env.NEXTAUTH_SECRET || "secret",
 });
 
 export const config = {
-    matcher: ["/dashboard/:path*", "/projects/:path*", "/settings/:path*"],
+    matcher: ["/projects/:path*", "/settings/:path*"],
 };

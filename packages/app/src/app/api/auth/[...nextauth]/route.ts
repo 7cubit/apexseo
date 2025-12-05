@@ -45,8 +45,9 @@ const handler = NextAuth({
         },
     },
     pages: {
-        signIn: '/auth/signin', // Custom sign-in page if needed, or default
-    }
+        signIn: '/login', // Correct login page
+    },
+    secret: process.env.NEXTAUTH_SECRET || "secret",
 });
 
 export { handler as GET, handler as POST };
