@@ -18,7 +18,8 @@ export async function POST(req: Request) {
             category: category || 'General',
             audienceLevel: audienceLevel || 'Intermediate',
             perspective: perspective || 'Second Person (You)',
-            providers: providers || { research: 'perplexity', drafting: 'openai' }
+            providers: providers || { research: 'perplexity', drafting: 'openai' },
+            projectId: body.projectId // Pass projectId
         }, apiKeys);
 
         return NextResponse.json(result);

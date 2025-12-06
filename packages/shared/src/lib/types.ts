@@ -1,7 +1,16 @@
 export interface Project {
     id: string;
-    url: string;
-    createdAt: string;
+    name: string;
+    domain: string;
+    user_id: string;
+    created_at: string;
+    site_doctor_enabled?: boolean;
+    site_doctor_cron?: string;
+    rank_tracker_enabled?: boolean;
+    rank_tracker_cron?: string;
+    // Legacy fields for compatibility if needed
+    url?: string;
+    createdAt?: string;
 }
 
 export interface GraphNode {

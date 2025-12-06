@@ -5,7 +5,7 @@ const user = process.env.NEO4J_USER;
 const password = process.env.NEO4J_PASSWORD;
 export const DATABASE = process.env.NEO4J_DATABASE || 'neo4j';
 
-let driver: any;
+export let driver: any;
 
 if (uri && user && password) {
     try {

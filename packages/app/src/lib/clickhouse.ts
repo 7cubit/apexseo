@@ -1,12 +1,12 @@
 import { createClient } from '@clickhouse/client';
 
-const CLICKHOUSE_URL = process.env.CLICKHOUSE_URL;
+const CLICKHOUSE_URL = process.env.CLICKHOUSE_URL || process.env.CLICKHOUSE_HOST;
 const CLICKHOUSE_USER = process.env.CLICKHOUSE_USER || 'default';
-const CLICKHOUSE_PASSWORD = process.env.CLICKHOUSE_PASSWORD;
+const CLICKHOUSE_PASSWORD = process.env.CLICKHOUSE_PASSWORD || '';
 
 console.log("Initializing ClickHouse client...", { URL: !!CLICKHOUSE_URL, USER: !!CLICKHOUSE_USER, PASS: !!CLICKHOUSE_PASSWORD });
 
-export const client = (CLICKHOUSE_URL && CLICKHOUSE_PASSWORD)
+export const client = (CLICKHOUSE_URL)
     ? createClient({
         url: CLICKHOUSE_URL,
         username: CLICKHOUSE_USER,

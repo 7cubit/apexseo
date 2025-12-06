@@ -7,10 +7,20 @@ export async function fetchTrackedKeywords(): Promise<string[]> {
 export async function checkRankings(keywords: string[]): Promise<any[]> {
     console.log(`Checking rankings for ${keywords.length} keywords...`);
     // Mock: Call DataForSEO API
-    return keywords.map(k => ({ keyword: k, rank: Math.floor(Math.random() * 100) + 1 }));
+    // GEO Update: Simulate AI Overview detection
+    return keywords.map(k => {
+        const hasAiOverview = Math.random() > 0.7; // 30% chance of AI Overview
+        return {
+            keyword: k,
+            rank: Math.floor(Math.random() * 100) + 1,
+            has_ai_overview: hasAiOverview,
+            ai_citation_urls: hasAiOverview ? ['https://example.com/source1', 'https://example.com/source2'] : []
+        };
+    });
 }
 
 export async function saveRankings(rankings: any[]): Promise<void> {
-    console.log(`Saving ${rankings.length} ranking records...`);
+    const aiCount = rankings.filter(r => r.has_ai_overview).length;
+    console.log(`Saving ${rankings.length} ranking records. AI Overviews detected: ${aiCount}`);
     // Mock: Insert into ClickHouse
 }

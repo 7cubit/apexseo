@@ -9,6 +9,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
+      - TEMPORAL_ADDRESS=temporal:7233
     volumes:
       - ./packages/app:/app/packages/app
       - ./packages/shared:/app/packages/shared
@@ -34,9 +35,35 @@ services:
       dockerfile: packages/workers/Dockerfile
     environment:
       - NODE_ENV=development
+      - TEMPORAL_ADDRESS=temporal:7233
+      - SERPER_API_KEY=${SERPER_API_KEY}
     volumes:
       - ./packages/workers:/app/packages/workers
       - ./packages/shared:/app/packages/shared
+    depends_on:
+      - temporal
+
+  data-worker:
+    build:
+      context: .
+      dockerfile: services/data-worker/Dockerfile
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - CLICKHOUSE_ADDR=clickhouse:9000
+      - NEO4J_URI=bolt://neo4j:7687
+      - SERPER_API_KEY=${SERPER_API_KEY}
+    depends_on:
+      - temporal
+      - clickhouse
+      - neo4j
+
+  compute-worker:
+    build:
+      context: .
+      dockerfile: services/compute-worker/Dockerfile
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - SERPER_API_KEY=${SERPER_API_KEY}
     depends_on:
       - temporal
 

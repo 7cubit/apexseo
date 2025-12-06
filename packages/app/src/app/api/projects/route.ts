@@ -68,32 +68,13 @@ export async function GET(request: Request) {
         return NextResponse.json(project || {});
     }
 
-    // List all projects
-    if (!driver) return NextResponse.json([]);
-    const session = driver.session({ database: DATABASE });
+    // List all projects (uses repository with mock fallback)
     try {
-        const result = await session.run(`
-            MATCH (p:Project)
-            RETURN p
-            ORDER BY p.created_at DESC
-        `);
-
-        const projects = result.records.map(record => {
-            const props = record.get('p').properties;
-            return {
-                ...props,
-                branding: props.branding ? JSON.parse(props.branding) : {},
-                settings: props.settings ? JSON.parse(props.settings) : {},
-                createdAt: props.created_at.toString(),
-                updatedAt: props.updated_at.toString()
-            };
-        });
-
+        const projects = await ProjectRepository.getAllProjects();
         return NextResponse.json(projects);
     } catch (error) {
         console.error('Error fetching projects:', error);
+        // Even if repository fails, return empty array (though repo should handle mocks)
         return NextResponse.json([], { status: 500 });
-    } finally {
-        await session.close();
     }
 }

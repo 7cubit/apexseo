@@ -81,6 +81,8 @@ export const useDashboardStore = create<DashboardState>((set) => ({
     kpis: initialKPIs,
     tasks: initialTasks,
     byok: initialBYOK,
+    aiRecommendations: initialAIRecommendations,
+    brandVoice: 'Professional', // Default value
     isLoading: false,
     fetchDashboardData: async () => {
         set({ isLoading: true });

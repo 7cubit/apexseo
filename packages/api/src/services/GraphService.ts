@@ -48,7 +48,7 @@ export class GraphService {
                 LIMIT 50
             `, { siteId });
 
-            return result.records.map(record => ({
+            return result.records.map((record: any) => ({
                 url: record.get('url'),
                 score: record.get('score')
             }));

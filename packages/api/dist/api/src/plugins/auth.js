@@ -8,6 +8,10 @@ const jwt_1 = __importDefault(require("@fastify/jwt"));
 exports.default = (0, fastify_plugin_1.default)(async (fastify) => {
     fastify.register(jwt_1.default, {
         secret: process.env.NEXTAUTH_SECRET || 'supersecret', // Should match NextAuth secret
+        cookie: {
+            cookieName: 'token',
+            signed: false
+        }
     });
     fastify.decorate("authenticate", async function (request, reply) {
         try {
@@ -31,6 +35,38 @@ exports.default = (0, fastify_plugin_1.default)(async (fastify) => {
                 // if (!hasPermission(user.role, requiredPermission)) {
                 //     throw new Error('Forbidden');
                 // }
+            }
+            catch (err) {
+                reply.send(err);
+            }
+        };
+    });
+    // Admin Authentication Decorator
+    fastify.decorate("authenticateAdmin", async function (request, reply) {
+        try {
+            console.log('authenticateAdmin: Headers:', request.headers);
+            console.log('authenticateAdmin: Cookies:', request.cookies);
+            await request.jwtVerify();
+            const user = request.user;
+            console.log('authenticateAdmin: User:', user);
+            if (!user.isAdmin) {
+                throw new Error('Unauthorized: Admin access required');
+            }
+        }
+        catch (err) {
+            console.error('authenticateAdmin: Error:', err);
+            reply.send(err);
+        }
+    });
+    // Admin Role RBAC Decorator
+    fastify.decorate("requireAdminRole", (allowedRoles) => {
+        return async (request, reply) => {
+            try {
+                await request.jwtVerify();
+                const user = request.user;
+                if (!user.isAdmin || !allowedRoles.includes(user.role)) {
+                    throw new Error('Forbidden: Insufficient admin privileges');
+                }
             }
             catch (err) {
                 reply.send(err);

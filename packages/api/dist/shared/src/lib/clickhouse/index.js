@@ -18,6 +18,9 @@ exports.initClickHouse = initClickHouse;
 exports.insertEmbedding = insertEmbedding;
 const client_1 = require("./client");
 const ClickHouseAlertRepository_1 = require("./repositories/ClickHouseAlertRepository");
+const ClickHousePageRepository_1 = require("./repositories/ClickHousePageRepository");
+const ClickHouseProjectUserRepository_1 = require("./repositories/ClickHouseProjectUserRepository");
+const ClickHouseScoreRepository_1 = require("./repositories/ClickHouseScoreRepository");
 __exportStar(require("./client"), exports);
 async function initClickHouse() {
     if (!client_1.client) {
@@ -32,16 +35,27 @@ async function initClickHouse() {
     ORDER BY id
   `;
     try {
+        console.log("Initializing page_embeddings...");
         await client_1.client.query({
             query: query,
             format: 'JSONEachRow',
         });
         console.log("ClickHouse table initialized.");
+        console.log("Initializing alerts table...", !!ClickHouseAlertRepository_1.ClickHouseAlertRepository);
         await ClickHouseAlertRepository_1.ClickHouseAlertRepository.createTable();
         console.log("ClickHouse alerts table initialized.");
+        console.log("Initializing pages table...", !!ClickHousePageRepository_1.ClickHousePageRepository);
+        await ClickHousePageRepository_1.ClickHousePageRepository.createTable();
+        console.log("ClickHouse pages table initialized.");
+        console.log("Initializing project_users table...", !!ClickHouseProjectUserRepository_1.ClickHouseProjectUserRepository);
+        await ClickHouseProjectUserRepository_1.ClickHouseProjectUserRepository.createTable();
+        console.log("ClickHouse project_users table initialized.");
+        console.log("Initializing score_history table...", !!ClickHouseScoreRepository_1.ClickHouseScoreRepository);
+        await ClickHouseScoreRepository_1.ClickHouseScoreRepository.createTable();
+        console.log("ClickHouse score_history table initialized.");
     }
     catch (error) {
-        console.error("Failed to initialize ClickHouse:", error);
+        console.error("Failed to initialize ClickHouse:", JSON.stringify(error, null, 2));
     }
 }
 async function insertEmbedding(id, embedding) {
@@ -61,3 +75,6 @@ async function insertEmbedding(id, embedding) {
     }
 }
 __exportStar(require("./repositories/ClickHouseAlertRepository"), exports);
+__exportStar(require("./repositories/ClickHousePageRepository"), exports);
+__exportStar(require("./repositories/ClickHouseProjectUserRepository"), exports);
+__exportStar(require("./repositories/ClickHouseScoreRepository"), exports);

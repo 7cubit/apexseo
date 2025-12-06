@@ -2,33 +2,35 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const shared_1 = require("@apexseo/shared");
 const alertRoutes = async (fastify, opts) => {
-    // Get alerts for a project
-    fastify.get('/projects/:id/alerts', async (request, reply) => {
-        const { id } = request.params;
-        const { status } = request.query;
+    // GET /alerts
+    fastify.get('/', async (request, reply) => {
+        const { siteId, limit = 50 } = request.query;
+        // Mock siteId if not provided (for MVP)
+        const effectiveSiteId = siteId || 'example.com';
         try {
-            const alerts = await shared_1.ClickHouseAlertRepository.getAlerts(id, status);
-            return { alerts };
+            const alerts = await shared_1.AlertService.getAlerts(effectiveSiteId, limit);
+            return alerts;
         }
         catch (error) {
             request.log.error(error);
             reply.status(500).send({ error: 'Failed to fetch alerts' });
         }
     });
-    // Update alert status
-    fastify.patch('/projects/:id/alerts/:alertId', async (request, reply) => {
-        const { id, alertId } = request.params;
-        const { status } = request.body;
-        if (!['new', 'acknowledged', 'resolved'].includes(status)) {
-            return reply.status(400).send({ error: 'Invalid status' });
+    // POST /alerts/:id/read
+    fastify.post('/:id/read', async (request, reply) => {
+        const { id } = request.params;
+        const { siteId } = request.body;
+        if (!siteId) {
+            reply.status(400).send({ error: 'siteId is required' });
+            return;
         }
         try {
-            await shared_1.ClickHouseAlertRepository.updateAlertStatus(id, alertId, status);
-            return { success: true, message: `Alert status updated to ${status}` };
+            await shared_1.AlertService.markAsReadWithSiteId(siteId, id);
+            return { success: true };
         }
         catch (error) {
             request.log.error(error);
-            reply.status(500).send({ error: 'Failed to update alert status' });
+            reply.status(500).send({ error: 'Failed to mark alert as read' });
         }
     });
 };

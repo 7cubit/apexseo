@@ -1,5 +1,8 @@
-import { ProjectWizard } from "@/components/projects/wizard/ProjectWizard";
+'use client';
 
+import { ProjectWizard } from '@/components/projects/ProjectWizard';
 export default function NewProjectPage() {
-    return <ProjectWizard />;
+    return (
+        <ProjectWizard />
+    );
 }

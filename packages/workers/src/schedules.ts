@@ -1,5 +1,26 @@
 import { Client, ScheduleOverlapPolicy } from '@temporalio/client';
 
+export const AGENT_SCHEDULES = {
+    SiteDoctor: {
+        scheduleId: 'site-doctor',
+        spec: {
+            cronExpressions: ['0 2 * * *'], // 2:00 AM daily
+        },
+        policies: {
+            overlap: ScheduleOverlapPolicy.SKIP,
+        }
+    },
+    RankTracker: {
+        scheduleId: 'rank-tracker',
+        spec: {
+            cronExpressions: ['0 6 * * *'], // 6:00 AM daily
+        },
+        policies: {
+            overlap: ScheduleOverlapPolicy.SKIP,
+        }
+    }
+};
+
 export async function createSchedules(client: Client) {
     // 1. SiteDoctor Schedule (Nightly at 2 AM)
     try {

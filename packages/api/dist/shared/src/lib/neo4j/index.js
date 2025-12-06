@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.closeDriver = exports.getDriver = void 0;
+exports.closeDriver = exports.getDriver = exports.driver = exports.DATABASE = void 0;
 exports.createProject = createProject;
 exports.savePage = savePage;
 exports.updatePageCluster = updatePageCluster;
@@ -13,10 +13,10 @@ const neo4j_driver_1 = __importDefault(require("neo4j-driver"));
 const uri = process.env.NEO4J_URI;
 const user = process.env.NEO4J_USER;
 const password = process.env.NEO4J_PASSWORD;
-let driver;
+exports.DATABASE = process.env.NEO4J_DATABASE || 'neo4j';
 if (uri && user && password) {
     try {
-        driver = neo4j_driver_1.default.driver(uri, neo4j_driver_1.default.auth.basic(user, password), { disableLosslessIntegers: true });
+        exports.driver = neo4j_driver_1.default.driver(uri, neo4j_driver_1.default.auth.basic(user, password), { disableLosslessIntegers: true });
     }
     catch (error) {
         console.error("Failed to create Neo4j driver:", error);
@@ -25,18 +25,18 @@ if (uri && user && password) {
 else {
     console.warn("Neo4j environment variables are missing.");
 }
-const getDriver = () => driver;
+const getDriver = () => exports.driver;
 exports.getDriver = getDriver;
 const closeDriver = async () => {
-    if (driver) {
-        await driver.close();
+    if (exports.driver) {
+        await exports.driver.close();
     }
 };
 exports.closeDriver = closeDriver;
 async function createProject(id, name, url) {
-    if (!driver)
+    if (!exports.driver)
         return null;
-    const session = driver.session();
+    const session = exports.driver.session();
     try {
         const result = await session.run(`
       MERGE (p:Project {id: $id})
@@ -59,9 +59,9 @@ async function createProject(id, name, url) {
 async function savePage(projectId, pageData) {
     var _a;
     console.warn("Using deprecated savePage. Please migrate to PageRepository.savePageWithLinks.");
-    if (!driver)
+    if (!exports.driver)
         return null;
-    const session = driver.session();
+    const session = exports.driver.session();
     try {
         const result = await session.run(`
       MATCH (p:Project {id: $projectId})
@@ -96,9 +96,9 @@ async function savePage(projectId, pageData) {
     }
 }
 async function updatePageCluster(projectId, url, clusterId, embedding) {
-    if (!driver)
+    if (!exports.driver)
         return null;
-    const session = driver.session();
+    const session = exports.driver.session();
     try {
         await session.run(`
       MATCH (p:Page {url: $url})
@@ -113,9 +113,9 @@ async function updatePageCluster(projectId, url, clusterId, embedding) {
     }
 }
 async function getProjectPages(projectId) {
-    if (!driver)
+    if (!exports.driver)
         return [];
-    const session = driver.session();
+    const session = exports.driver.session();
     try {
         const result = await session.run(`
       MATCH (p:Page)-[:BELONGS_TO]->(:Project {id: $projectId})
@@ -132,9 +132,9 @@ async function getProjectPages(projectId) {
     }
 }
 async function saveBacklink(projectId, backlink) {
-    if (!driver)
+    if (!exports.driver)
         return;
-    const session = driver.session();
+    const session = exports.driver.session();
     try {
         await session.run(`
             MATCH (p:Project {id: $projectId})

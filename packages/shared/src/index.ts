@@ -54,4 +54,7 @@ export * from './lib/neo4j/repositories/BlockedDomainRepository';
 export * from './lib/services/admin-temporal-service';
 export * from './lib/services/SystemInsightsService';
 export * from './lib/neo4j/settings-repository';
+export * from './lib/openai';
+export * from './services/dataforseo';
+export * from './services/migration-helper';
 // Export other shared modules as needed

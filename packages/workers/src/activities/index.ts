@@ -13,3 +13,4 @@ export * from './db/UpdateGraphInNeo4jActivity';
 export * from './db/StoreEmbeddingsActivity';
 export * from './graph/GenerateLinkSuggestionsActivity';
 export * from './analysis/CalculateContentScoreActivity';
+export * from './content-generation';

@@ -1,7 +1,19 @@
 import { client } from '../clickhouse';
 import { AlertService } from './AlertService';
 
+export interface CannibalizationIssue {
+    keyword: string;
+    urls: string[];
+    ranks: number[];
+    priority: 'High' | 'Medium' | 'Low';
+}
+
 export class CannibalizationService {
+    static async analyze(siteId: string): Promise<CannibalizationIssue[]> {
+        // Mock implementation for now
+        return [];
+    }
+
     static async detectCannibalization(siteId: string) {
         if (!client) return;
 

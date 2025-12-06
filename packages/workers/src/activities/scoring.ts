@@ -17,7 +17,7 @@ export async function getPagesForProject(projectId: string): Promise<any[]> {
     return await result.json() as any[];
 }
 
-export async function calculateCompositeScore(url: string): Promise<void> {
+export async function calculateCompositeScore(url: string, projectId: string = 'unknown'): Promise<void> {
     console.log(`Calculating composite score for ${url}...`);
     // Mock implementation:
     // 1. Fetch latest metrics (TSPR, content depth, etc.)
@@ -26,8 +26,13 @@ export async function calculateCompositeScore(url: string): Promise<void> {
 
     const mockScore = Math.floor(Math.random() * 100);
     await ClickHouseScoreRepository.addScore({
+        project_id: projectId,
         url,
-        score: mockScore,
-        created_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
+        composite_score: mockScore,
+        tspr_score: 0,
+        depth_score: 0,
+        ux_score: 0,
+        risk_score: 0,
+        created_at: new Date().toISOString()
     });
 }

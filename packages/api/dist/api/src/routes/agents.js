@@ -1,32 +1,36 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = agentsRoutes;
-const shared_1 = require("@apexseo/shared");
-async function agentsRoutes(fastify) {
+const agentsRoutes = async (fastify, opts) => {
+    // GET /agents/status
     fastify.get('/status', async (request, reply) => {
-        // Mock status for now, or query Temporal if client available
-        // Ideally we query Temporal for schedule status
+        // Mock status data
+        // In real app, query Temporal or a 'job_history' table
         return {
-            agents: [
-                { name: 'SiteDoctor', status: 'idle', lastRun: new Date(Date.now() - 86400000).toISOString(), nextRun: new Date(Date.now() + 3600000).toISOString() },
-                { name: 'RankTracker', status: 'running', lastRun: new Date().toISOString(), nextRun: new Date(Date.now() + 86400000).toISOString() },
-                { name: 'ScoreRefresh', status: 'idle', lastRun: new Date(Date.now() - 43200000).toISOString(), nextRun: new Date(Date.now() + 43200000).toISOString() },
-            ],
-            system: 'healthy'
+            siteDoctor: {
+                lastRun: new Date(Date.now() - 3600000 * 4).toISOString(), // 4 hours ago
+                status: 'healthy',
+                nextRun: new Date(Date.now() + 3600000 * 20).toISOString() // in 20 hours
+            },
+            rankTracker: {
+                lastRun: new Date(Date.now() - 3600000 * 12).toISOString(), // 12 hours ago
+                status: 'healthy',
+                nextRun: new Date(Date.now() + 3600000 * 12).toISOString()
+            },
+            cannibalizationDetector: {
+                lastRun: new Date(Date.now() - 3600000 * 24).toISOString(),
+                status: 'warning', // Example
+                message: 'High latency detected'
+            }
         };
     });
-    fastify.get('/alerts', async (request, reply) => {
-        const { siteId } = request.query;
-        if (!siteId) {
-            return reply.status(400).send({ error: 'siteId is required' });
-        }
-        const alerts = await shared_1.ClickHouseAlertRepository.getAlerts(siteId);
-        return { alerts };
+    // GET /agents/activity
+    fastify.get('/activity', async (request, reply) => {
+        // Mock activity log
+        return [
+            { id: '1', job: 'SiteDoctor', status: 'success', duration: '5m 20s', timestamp: new Date(Date.now() - 3600000 * 4).toISOString() },
+            { id: '2', job: 'RankTracker', status: 'success', duration: '2m 10s', timestamp: new Date(Date.now() - 3600000 * 12).toISOString() },
+            { id: '3', job: 'SiteDoctor', status: 'failed', duration: '1m 0s', timestamp: new Date(Date.now() - 3600000 * 28).toISOString() },
+        ];
     });
-    fastify.post('/trigger', async (request, reply) => {
-        const { workflow, siteId } = request.body;
-        // Mock trigger
-        console.log(`Triggering ${workflow} for ${siteId}`);
-        return { success: true, message: `Triggered ${workflow}` };
-    });
-}
+};
+exports.default = agentsRoutes;

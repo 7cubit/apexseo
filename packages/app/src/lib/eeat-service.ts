@@ -1,4 +1,5 @@
 import { OpenAI } from 'openai';
+import { ProjectRepository } from './neo4j/repositories/ProjectRepository';
 
 // Types
 export interface EEATRequest {
@@ -12,6 +13,7 @@ export interface EEATRequest {
         research: 'perplexity';
         drafting: 'openai' | 'claude';
     };
+    projectId?: string; // New field for V3
 }
 
 export interface EEATResponse {
@@ -144,15 +146,12 @@ export class EEATService {
             throw new Error('No JSON found in response: ' + content.substring(0, 100));
         } catch (e: any) {
             console.error('Failed to parse Perplexity response', e);
-            // Return a partial object to allow debugging via the API response if needed, 
-            // or throw with more info.
             throw new Error(`Perplexity Parse Error: ${e.message}. Raw: ${content.substring(0, 200)}...`);
         }
     }
 
     // --- Activity: validateResearch ---
     validateResearch(research: ResearchData): boolean {
-        // Simple validation: Must have at least 2 citations and some facts
         return research.citations.length >= 2 && research.facts.length > 0;
     }
 
@@ -213,8 +212,33 @@ export class EEATService {
     }
 
     // --- Activity: draftWithLLM (Algorithm 3: Semantic Brand Voice Synthesizer) ---
-    async draftWithLLM(topic: string, keywords: string[], research: ResearchData, architecture: any, brandVoice: string, category: string, perspective: string, apiKey?: string): Promise<string> {
+    async draftWithLLM(
+        topic: string,
+        keywords: string[],
+        research: ResearchData,
+        architecture: any,
+        brandVoice: string,
+        category: string,
+        perspective: string,
+        apiKey?: string,
+        projectContext?: { identity: any; knowledgeGraph: any }
+    ): Promise<string> {
         const client = apiKey ? new OpenAI({ apiKey }) : this.systemOpenAI;
+
+        let contextPrompt = '';
+        if (projectContext) {
+            contextPrompt = `
+            PROJECT CONTEXT (V3 KNOWLEDGE GRAPH):
+            - Brand Identity: ${JSON.stringify(projectContext.identity)}
+            - Products/Services: ${JSON.stringify(projectContext.knowledgeGraph.products)}
+            - USPs: ${JSON.stringify(projectContext.knowledgeGraph.usps)}
+            
+            INSTRUCTION:
+            - Use the Brand Identity rules (e.g., banned words).
+            - Mention relevant Products/Services if they solve the user's problem.
+            - Cite USPs to build authority.
+            `;
+        }
 
         const prompt = `
         ACT AS: SEMANTIC BRAND VOICE SYNTHESIZER
@@ -226,6 +250,7 @@ export class EEATService {
         - Perspective: "${perspective}"
         - Research Brief: ${JSON.stringify(research)}
         - Content Architecture Blueprint: ${JSON.stringify(architecture)}
+        ${contextPrompt}
         
         EXECUTION LOGIC:
         
@@ -243,6 +268,7 @@ export class EEATService {
         2. Integrate "Required Entities" naturally into assigned sections.
         3. Apply Brand Voice ("${brandVoice}") and Perspective ("${perspective}").
         4. Insert [source X] markers where "citationAnchors" are defined.
+        5. If Project Context is provided, weave in Products and USPs naturally.
         
         SPECIAL INSTRUCTION FOR CHRISTIANITY CATEGORY:
         If Category is "Christianity":
@@ -270,11 +296,8 @@ export class EEATService {
         return completion.choices[0].message.content || '';
     }
 
-    // --- ChildWorkflow: EEATOptimizationWorkflow ---
-
     // Activity: extractAndScoreEEAT (Baseline)
     async extractAndScoreEEAT(content: string): Promise<{ score: number }> {
-        // Mock baseline score
         return { score: 60 };
     }
 
@@ -426,7 +449,6 @@ export class EEATService {
 
     // Activity: rescoreEEAT
     async rescoreEEAT(content: string): Promise<{ score: number }> {
-        // Mock improved score
         return { score: 95 };
     }
 
@@ -652,10 +674,80 @@ export class EEATService {
         };
     }
 
+    // --- Brand Voice DNA Extractor ---
+    async extractBrandVoiceDNA(sampleUrls: string[]): Promise<any> {
+        // In a real implementation, we would fetch the content of these URLs here.
+        // For now, we will simulate the content or assume it's passed.
+        // Since we can't fetch external URLs easily in this environment without a proxy/scraper,
+        // we will mock the "fetched content" for the prompt.
+
+        const mockContentSample = `
+        Sample content from ${sampleUrls.join(', ')}. 
+        (This would be the actual text scraped from the provided URLs).
+        `;
+
+        const prompt = `
+        ACT AS: BRAND VOICE DNA EXTRACTOR
+        
+        INPUTS:
+        - Sample URLs: ${JSON.stringify(sampleUrls)}
+        - Content Sample: "${mockContentSample}"
+        
+        ANALYSIS TASKS:
+        1. TONE SPECTRUM: Map content on these axes (0-100 scale):
+           - Formal ↔ Casual
+           - Technical ↔ Simple
+           - Serious ↔ Playful
+           - Data-Driven ↔ Narrative
+        
+        2. VOCABULARY FINGERPRINT:
+           - Most frequent adjectives (top 20)
+           - Unique industry terms (jargon density %)
+           - Sentence length distribution (avg, range)
+        
+        3. STRUCTURAL PATTERNS:
+           - Preferred heading structure (H2 patterns)
+           - List vs. paragraph ratio
+           - Use of questions, quotes, examples
+        
+        4. PROHIBITED ELEMENTS:
+           - Detect clichés, overused phrases
+           - Identify avoided topics/language
+        
+        OUTPUT (JSON):
+        {
+            "toneProfile": { "formal": 70, "technical": 85, "serious": 60, "dataDriven": 90 },
+            "vocabularyFingerprint": ["innovative", "robust", "seamless"],
+            "structuralPreferences": { "avgH2Count": 6, "listUsage": "high" },
+            "bannedPhrases": ["game-changer", "leverage", "synergy"]
+        }
+        `;
+
+        const completion = await this.systemOpenAI.chat.completions.create({
+            model: 'gpt-4o',
+            messages: [{ role: 'user', content: prompt }],
+            response_format: { type: "json_object" }
+        });
+
+        return JSON.parse(completion.choices[0].message.content || '{}');
+    }
+
     // --- Main Orchestrator ---
     async generateEEATContent(request: EEATRequest, userKeys?: { openai?: string; perplexity?: string }): Promise<EEATResponse> {
         const perplexityKey = userKeys?.perplexity || this.systemPerplexityKey;
         if (!perplexityKey) throw new Error('Perplexity API Key missing');
+
+        // V3: Fetch Project Context
+        let projectContext = undefined;
+        if (request.projectId) {
+            const project = await ProjectRepository.findProjectById(request.projectId);
+            if (project) {
+                projectContext = {
+                    identity: project.identity,
+                    knowledgeGraph: project.knowledgeGraph
+                };
+            }
+        }
 
         // 1. Research Loop (Dynamic Research Orchestrator)
         let research: ResearchData | null = null;
@@ -682,11 +774,11 @@ export class EEATService {
             request.brandVoice,
             request.category,
             request.perspective || 'Second Person (You)',
-            userKeys?.openai
+            userKeys?.openai,
+            projectContext // Pass context
         );
 
         // 4. Algorithm 4: Citation & Factual Integrity Auditor
-        // (Replaces the simple citationAudit)
         let optimizedContent = draft;
         const logs: string[] = [];
         const auditRes = await this.verifyAndCiteContent(optimizedContent, research, request.category);

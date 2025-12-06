@@ -35,7 +35,7 @@ async function main() {
         const projectId = project.id;
         console.log(`Syncing schedules for project ${projectId}...`);
 
-        for (const [agentName, config] of Object.entries(AGENT_SCHEDULES)) {
+        for (const [agentName, config] of Object.entries(AGENT_SCHEDULES) as [string, any][]) {
             const scheduleId = `${config.scheduleId}-${projectId}`;
 
             // 1. Ensure in ClickHouse

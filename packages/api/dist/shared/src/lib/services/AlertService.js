@@ -1,68 +1,44 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AlertService = void 0;
+const ClickHouseAlertRepository_1 = require("../clickhouse/repositories/ClickHouseAlertRepository");
 class AlertService {
-    static async sendAlert(alert) {
-        console.log(`Sending alert: ${alert.message}`);
-        // Send to Slack if configured
-        if (this.SLACK_WEBHOOK_URL) {
-            await this.sendToSlack(alert);
-        }
-        // Send email if configured
-        if (this.SMTP_HOST && this.ALERT_EMAIL) {
-            await this.sendEmail(alert);
-        }
+    static async createTable() {
+        await ClickHouseAlertRepository_1.ClickHouseAlertRepository.createTable();
     }
-    static async sendToSlack(alert) {
-        try {
-            const color = this.getSeverityColor(alert.severity);
-            const payload = {
-                attachments: [{
-                        color,
-                        title: `${alert.type.toUpperCase()} Alert`,
-                        text: alert.message,
-                        fields: [
-                            { title: 'Site', value: alert.site_id, short: true },
-                            { title: 'Severity', value: alert.severity, short: true },
-                        ],
-                        footer: 'ApexSEO',
-                        ts: Math.floor(Date.now() / 1000)
-                    }]
-            };
-            await fetch(this.SLACK_WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            console.log('Slack notification sent');
-        }
-        catch (error) {
-            console.error('Failed to send Slack notification:', error);
-        }
+    static async createAlert(siteId, type, message, details = '') {
+        const severityMap = {
+            'info': 'low',
+            'warning': 'medium',
+            'error': 'high'
+        };
+        await ClickHouseAlertRepository_1.ClickHouseAlertRepository.createAlert({
+            site_id: siteId,
+            type,
+            severity: severityMap[type],
+            message,
+            details,
+            status: 'new'
+        });
     }
-    static async sendEmail(alert) {
-        // For MVP, we'll log the email intent
-        // In production, use nodemailer or similar
-        console.log(`[EMAIL] To: ${this.ALERT_EMAIL}`);
-        console.log(`[EMAIL] Subject: ${alert.type.toUpperCase()} Alert - ${alert.site_id}`);
-        console.log(`[EMAIL] Body: ${alert.message}`);
-        // TODO: Implement actual email sending with nodemailer
-        // const transporter = nodemailer.createTransport({ ... });
-        // await transporter.sendMail({ ... });
+    static async getAlerts(siteId, limit = 50) {
+        const alerts = await ClickHouseAlertRepository_1.ClickHouseAlertRepository.getAlerts(siteId);
+        // Map repo alerts to service format if needed
+        return alerts.map((a) => ({
+            ...a,
+            id: a.created_at, // Use created_at as ID for now
+            is_read: a.status !== 'new'
+        }));
     }
-    static getSeverityColor(severity) {
-        switch (severity) {
-            case 'critical': return 'danger';
-            case 'high': return 'warning';
-            case 'medium': return '#ffcc00';
-            case 'low': return 'good';
-            default: return '#808080';
-        }
+    static async markAsRead(alertId) {
+        // We need siteId to update, but the API only passed ID. 
+        // This is a limitation of the current repo update method.
+        // For now, we'll assume we can't easily update without siteId.
+        // Or we update the API to require siteId.
+        console.warn("markAsRead requires siteId, skipping for now or need refactor");
+    }
+    static async markAsReadWithSiteId(siteId, alertId) {
+        await ClickHouseAlertRepository_1.ClickHouseAlertRepository.updateAlertStatus(siteId, alertId, 'acknowledged');
     }
 }
 exports.AlertService = AlertService;
-AlertService.SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
-AlertService.SMTP_HOST = process.env.SMTP_HOST;
-AlertService.SMTP_USER = process.env.SMTP_USER;
-AlertService.SMTP_PASS = process.env.SMTP_PASS;
-AlertService.ALERT_EMAIL = process.env.ALERT_EMAIL;

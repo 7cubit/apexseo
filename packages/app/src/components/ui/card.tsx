@@ -44,3 +44,9 @@ export const CardContent: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ ch
         {children}
     </div>
 );
+
+export const CardFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, className, ...props }) => (
+    <div className={twMerge('flex items-center p-6 pt-0', className)} {...props}>
+        {children}
+    </div>
+);

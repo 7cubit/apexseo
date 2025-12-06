@@ -8,3 +8,5 @@ export { EmbeddingGenerationWorkflow } from './EmbeddingGenerationWorkflow';
 export { RankTrackerWorkflow } from './RankTrackerWorkflow';
 export { LinkOptimizerWorkflow } from './LinkOptimizerWorkflow';
 export { ScoringWorkflow } from './ScoringWorkflow';
+export { ContentGenerationWorkflow } from './ContentGenerationWorkflow';
+export { keywordResearchWorkflow, domainAnalysisWorkflow } from './research';

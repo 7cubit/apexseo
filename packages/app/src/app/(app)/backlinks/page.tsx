@@ -20,7 +20,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 export default function BacklinksPage() {
     const projectId = 'example.com'; // TODO: Get from context
     const { data, error, isLoading } = useSWR(
-        `/backlinks/${projectId}`,
+        `/api/backlinks/${projectId}`,
         fetcher
     );
 
