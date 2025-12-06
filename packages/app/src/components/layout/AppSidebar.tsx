@@ -70,34 +70,34 @@ const NAV_GROUPS = [
 ];
 
 export function AppSidebar() {
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(true); // Default to collapsed for minimalist focus
     const pathname = usePathname();
 
     return (
         <aside
             className={twMerge(
-                "h-full bg-white dark:bg-[#0B0E14] border-r border-gray-200 dark:border-gray-800 flex flex-col transition-all duration-300 relative shrink-0 z-50",
+                "h-full bg-editor-surface border-r border-border/50 flex flex-col transition-all duration-300 relative shrink-0 z-50",
                 isCollapsed ? "w-16" : "w-64"
             )}
         >
             {/* Toggle Button */}
             <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="absolute -right-3 top-8 w-6 h-6 bg-white dark:bg-[#0B0E14] border border-gray-200 dark:border-gray-700 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-white z-50 shadow-md cursor-pointer hover:scale-110 transition-transform"
+                className="absolute -right-3 top-8 w-6 h-6 bg-editor-surface border border-border rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground z-50 shadow-depth-sm cursor-pointer hover:scale-110 transition-all duration-200"
                 title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
             >
                 {isCollapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
             </button>
 
             {/* Header / Logo */}
-            <div className="h-20 flex items-center px-4 border-b border-gray-200 dark:border-gray-800/50 shrink-0">
-                <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-blue-500/20">
-                    <span className="text-white font-bold text-lg">A</span>
+            <div className="h-20 flex items-center px-4 border-b border-border/50 shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0 shadow-depth-sm">
+                    <span className="text-primary-foreground font-bold text-lg">A</span>
                 </div>
                 {!isCollapsed && (
                     <div className="ml-3 overflow-hidden whitespace-nowrap animate-in fade-in duration-300">
-                        <span className="text-base font-bold text-gray-900 dark:text-white block leading-none">ApexSEO</span>
-                        <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-wider uppercase mt-1 block">Enterprise Suite</span>
+                        <span className="text-base font-bold text-foreground block leading-none">ApexSEO</span>
+                        <span className="text-[10px] text-muted-foreground font-medium tracking-wider uppercase mt-1 block">Enterprise Suite</span>
                     </div>
                 )}
             </div>
@@ -107,7 +107,7 @@ export function AppSidebar() {
                 {NAV_GROUPS.map((group, groupIndex) => (
                     <div key={groupIndex} className="mb-6">
                         {!isCollapsed && (
-                            <h3 className="px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 whitespace-nowrap animate-in fade-in duration-300">
+                            <h3 className="px-6 text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2 whitespace-nowrap animate-in fade-in duration-300">
                                 {group.title}
                             </h3>
                         )}
@@ -122,15 +122,15 @@ export function AppSidebar() {
                                             "flex items-center rounded-lg transition-colors duration-200 group relative",
                                             isCollapsed ? "justify-center p-2" : "px-3 py-2",
                                             isActive
-                                                ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                                                : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800/50"
+                                                ? "bg-primary/10 text-primary"
+                                                : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                                         )}
                                         title={isCollapsed ? item.label : undefined}
                                     >
                                         <item.icon className={twMerge(
                                             "shrink-0 transition-colors",
                                             isCollapsed ? "w-5 h-5" : "w-4 h-4 mr-3",
-                                            isActive ? "text-blue-600 dark:text-blue-400" : (item.color || "text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300")
+                                            isActive ? "text-primary" : (item.color || "text-muted-foreground group-hover:text-foreground")
                                         )} />
                                         {!isCollapsed && (
                                             <span className="text-sm font-medium whitespace-nowrap animate-in fade-in duration-300">{item.label}</span>
@@ -145,41 +145,41 @@ export function AppSidebar() {
 
             {/* Footer Stats (Only visible when expanded) */}
             {!isCollapsed && (
-                <div className="p-4 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#0F1219] shrink-0 animate-in fade-in duration-300">
+                <div className="p-4 border-t border-border/50 bg-secondary/30 shrink-0 animate-in fade-in duration-300">
                     <div className="space-y-3">
                         <div className="flex justify-between items-center text-xs">
-                            <span className="text-gray-500 font-bold">API STATUS (BYOK)</span>
-                            <span className="text-gray-400">Est. $1.74</span>
+                            <span className="text-muted-foreground font-bold">API STATUS (BYOK)</span>
+                            <span className="text-muted-foreground/70">Est. $1.74</span>
                         </div>
                         <div className="space-y-2">
                             <div className="flex justify-between items-center text-xs">
                                 <div className="flex items-center gap-2">
                                     <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                                    <span className="text-gray-500 dark:text-gray-300">OpenAI</span>
+                                    <span className="text-foreground/80">OpenAI</span>
                                 </div>
-                                <span className="text-gray-400 dark:text-gray-500 border-b border-dashed border-gray-300 dark:border-gray-700">$1.24</span>
+                                <span className="text-muted-foreground border-b border-dashed border-border">$1.24</span>
                             </div>
                             <div className="flex justify-between items-center text-xs">
                                 <div className="flex items-center gap-2">
                                     <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                                    <span className="text-gray-500 dark:text-gray-300">Perplexity</span>
+                                    <span className="text-foreground/80">Perplexity</span>
                                 </div>
-                                <span className="text-gray-400 dark:text-gray-500 border-b border-dashed border-gray-300 dark:border-gray-700">$0.50</span>
+                                <span className="text-muted-foreground border-b border-dashed border-border">$0.50</span>
                             </div>
                         </div>
 
-                        <div className="pt-3 border-t border-gray-200 dark:border-gray-800 flex justify-between items-center text-xs">
-                            <span className="text-gray-500 uppercase font-bold">Brand Voice</span>
-                            <span className="text-purple-500 dark:text-purple-400">Professional SaaS</span>
+                        <div className="pt-3 border-t border-border/50 flex justify-between items-center text-xs">
+                            <span className="text-muted-foreground uppercase font-bold">Brand Voice</span>
+                            <span className="text-primary">Professional SaaS</span>
                         </div>
 
-                        <div className="pt-3 border-t border-gray-200 dark:border-gray-800">
-                            <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase mb-2">Follow Us</p>
+                        <div className="pt-3 border-t border-border/50">
+                            <p className="text-[10px] text-muted-foreground font-bold uppercase mb-2">Follow Us</p>
                             <div className="flex justify-between px-2">
-                                <Facebook className="w-4 h-4 text-gray-400 hover:text-blue-600 dark:text-gray-500 dark:hover:text-white cursor-pointer transition-colors" />
-                                <Instagram className="w-4 h-4 text-gray-400 hover:text-pink-600 dark:text-gray-500 dark:hover:text-white cursor-pointer transition-colors" />
-                                <Twitter className="w-4 h-4 text-gray-400 hover:text-blue-400 dark:text-gray-500 dark:hover:text-white cursor-pointer transition-colors" />
-                                <Linkedin className="w-4 h-4 text-gray-400 hover:text-blue-700 dark:text-gray-500 dark:hover:text-white cursor-pointer transition-colors" />
+                                <Facebook className="w-4 h-4 text-muted-foreground hover:text-blue-500 cursor-pointer transition-colors" />
+                                <Instagram className="w-4 h-4 text-muted-foreground hover:text-pink-500 cursor-pointer transition-colors" />
+                                <Twitter className="w-4 h-4 text-muted-foreground hover:text-blue-400 cursor-pointer transition-colors" />
+                                <Linkedin className="w-4 h-4 text-muted-foreground hover:text-blue-600 cursor-pointer transition-colors" />
                             </div>
                         </div>
                     </div>
@@ -188,9 +188,9 @@ export function AppSidebar() {
 
             {/* Footer Icon Mode (Only visible when collapsed) */}
             {isCollapsed && (
-                <div className="p-4 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#0F1219] shrink-0 flex flex-col items-center gap-4 animate-in fade-in duration-300">
+                <div className="p-4 border-t border-border/50 bg-secondary/30 shrink-0 flex flex-col items-center gap-4 animate-in fade-in duration-300">
                     <div className="w-1.5 h-1.5 rounded-full bg-green-500" title="System Operational"></div>
-                    <User className="w-4 h-4 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white cursor-pointer" />
+                    <User className="w-4 h-4 text-muted-foreground hover:text-foreground cursor-pointer" />
                 </div>
             )}
         </aside>

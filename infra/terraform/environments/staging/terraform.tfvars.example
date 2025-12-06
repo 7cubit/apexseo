@@ -1,0 +1,27 @@
+# Staging Environment Configuration
+# Copy this file to terraform.tfvars and fill in your values
+
+gcp_project_id = "apexseo-480102"
+gcp_region     = "us-central1"
+
+# Database
+db_password = "CHANGE_ME_STRONG_PASSWORD"
+
+# ClickHouse Cloud (or self-hosted)
+clickhouse_host     = "https://your-instance.clickhouse.cloud:8443"
+clickhouse_user     = "default"
+clickhouse_password = "CHANGE_ME"
+
+# Temporal Cloud (or self-hosted)
+temporal_address   = "your-namespace.tmprl.cloud:7233"
+temporal_namespace = "apexseo-staging"
+
+# API Keys
+serper_api_key = "CHANGE_ME"
+
+# NextAuth
+nextauth_secret = "CHANGE_ME_RANDOM_STRING" # Generate with: openssl rand -base64 32
+
+# Google OAuth (optional, for GSC integration)
+google_client_id     = ""
+google_client_secret = ""

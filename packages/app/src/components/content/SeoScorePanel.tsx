@@ -7,85 +7,64 @@ import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, AlertCircle, XCircle, ChevronRight, HelpCircle, Info } from 'lucide-react';
+import { CheckCircle2, AlertCircle, XCircle, ChevronRight, HelpCircle, Info, Sparkles } from 'lucide-react';
+import { CircularProgressRing } from './CircularProgressRing';
 
 // --- Sub-Components ---
 
-const ScoreGauge = ({ score }: { score: number }) => {
-    // Semi-circle gauge
-    const radius = 70;
-    const stroke = 12;
-    const normalizedScore = Math.min(100, Math.max(0, score));
-    const circumference = Math.PI * radius; // Semi-circle
-    const strokeDashoffset = circumference - (normalizedScore / 100) * circumference;
+const OptimizeTab = () => {
+    const { keywords } = useEditorStore();
 
-    let color = 'text-red-500';
-    if (score >= 50) color = 'text-yellow-500';
-    if (score >= 75) color = 'text-green-500';
+    // Group keywords logically
+    const criticalTerms = keywords.filter((_, i) => i < 3);
+    const extendedVocab = keywords.filter((_, i) => i >= 3 && i < 6);
+    const headingTerms = keywords.filter((_, i) => i >= 6);
 
-    return (
-        <div className="relative w-48 h-28 flex flex-col items-center justify-end overflow-hidden">
-            <svg className="w-full h-full" viewBox="0 0 160 85">
-                {/* Background Track */}
-                <path
-                    d="M 10 80 A 70 70 0 0 1 150 80"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={stroke}
-                    strokeLinecap="round"
-                    className="text-gray-100 dark:text-gray-800"
-                />
-                {/* Score Progress */}
-                <path
-                    d="M 10 80 A 70 70 0 0 1 150 80"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={stroke}
-                    strokeLinecap="round"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={strokeDashoffset}
-                    className={`${color} transition-all duration-1000 ease-out`}
-                />
-            </svg>
-            <div className="absolute bottom-0 flex flex-col items-center mb-2">
-                <span className="text-4xl font-bold text-gray-900 dark:text-white">{score}</span>
-                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Content Score</span>
+    const renderKeywordGroup = (title: string, terms: typeof keywords) => (
+        <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase text-muted-foreground tracking-wider">{title}</h4>
+            <div className="space-y-1">
+                {terms.map((k, i) => {
+                    // Determine dot color based on status
+                    let dotColor = 'text-muted-foreground/40'; // grey - unused
+                    if (k.status === 'optimal') dotColor = 'text-green-500'; // green - used optimally
+                    if (k.status === 'overused') dotColor = 'text-red-500'; // red - overused
+                    if (k.count === k.target) dotColor = 'text-amber-500'; // gold - perfect
+
+                    return (
+                        <div
+                            key={i}
+                            className="flex items-center justify-between p-2 rounded-md hover:bg-secondary/50 group transition-colors cursor-pointer"
+                            title={`${k.count}/${k.target} uses`}
+                        >
+                            <div className="flex items-center gap-2">
+                                <span className={`text-lg ${dotColor} transition-colors`}>●</span>
+                                <span className={`text-sm font-medium ${k.status === 'optimal' ? 'text-foreground' : 'text-muted-foreground'}`}>
+                                    {k.keyword}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 text-xs gap-1 text-primary"
+                                >
+                                    <Sparkles className="w-3 h-3" /> Add
+                                </Button>
+                            </div>
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );
-};
-
-const GuidelinesTab = () => {
-    const { keywords } = useEditorStore();
 
     return (
         <ScrollArea className="h-full">
             <div className="p-4 space-y-6">
-                <div className="space-y-4">
-                    <h4 className="text-xs font-bold uppercase text-gray-500 tracking-wider">NLP Terms</h4>
-                    <div className="space-y-2">
-                        {keywords.map((k, i) => (
-                            <div key={i} className="flex items-center justify-between p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-900 group transition-colors">
-                                <span className={`text-sm font-medium ${k.status === 'optimal' ? 'text-green-700 dark:text-green-400' : 'text-gray-700 dark:text-gray-300'}`}>
-                                    {k.keyword}
-                                </span>
-                                <div className="flex items-center gap-2">
-                                    <span className={`text-xs px-2 py-0.5 rounded-full font-mono ${k.status === 'optimal' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
-                                        k.status === 'overused' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                                            'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
-                                        }`}>
-                                        {k.count}/{k.target}
-                                    </span>
-                                    <div className="w-4 h-4 flex items-center justify-center">
-                                        {k.status === 'optimal' && <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />}
-                                        {k.status === 'missing' && <AlertCircle className="w-3.5 h-3.5 text-gray-300 group-hover:text-red-400 transition-colors" />}
-                                        {k.status === 'overused' && <AlertCircle className="w-3.5 h-3.5 text-yellow-500" />}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                {renderKeywordGroup('Critical Terms', criticalTerms)}
+                {renderKeywordGroup('Extended Vocabulary', extendedVocab)}
+                {renderKeywordGroup('Heading Terms', headingTerms)}
             </div>
         </ScrollArea>
     );
@@ -194,46 +173,46 @@ const BriefTab = () => {
 
 export function SeoScorePanel() {
     const { overallScore } = useEditorStore();
-    const [activeTab, setActiveTab] = React.useState('guidelines');
+    const [activeTab, setActiveTab] = React.useState('optimize');
 
     return (
-        <div className="h-full flex flex-col bg-white dark:bg-black border-l border-gray-200 dark:border-gray-800 shadow-sm z-10">
-            {/* Top Section: Score Gauge */}
-            <div className="pt-8 pb-6 border-b border-gray-100 dark:border-gray-800 flex flex-col items-center bg-white dark:bg-black">
-                <ScoreGauge score={overallScore} />
-                <Button className="mt-4 w-4/5 bg-gray-900 text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 shadow-none">
+        <div className="h-full flex flex-col bg-editor-surface border-l border-border/30 shadow-depth-sm z-10">
+            {/* Top Section: Compact Score Ring */}
+            <div className="pt-6 pb-4 border-b border-border/30 flex flex-col items-center bg-secondary/10">
+                <CircularProgressRing score={overallScore} />
+                <Button className="mt-4 w-4/5 bg-primary hover:bg-primary/90 text-primary-foreground shadow-depth-sm">
                     Auto-Optimize
                 </Button>
             </div>
 
             {/* Tabs Section */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
-                <div className="px-4 border-b border-gray-100 dark:border-gray-800">
+                <div className="px-4 border-b border-border/30">
                     <TabsList className="w-full justify-start h-10 bg-transparent p-0 gap-6">
                         <TabsTrigger
-                            value="guidelines"
-                            className="data-[state=active]:border-b-2 data-[state=active]:border-purple-600 data-[state=active]:text-purple-600 rounded-none px-0 pb-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors bg-transparent shadow-none"
+                            value="optimize"
+                            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-0 pb-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors bg-transparent shadow-none"
                         >
-                            Guidelines
+                            Optimize
                         </TabsTrigger>
                         <TabsTrigger
                             value="outline"
-                            className="data-[state=active]:border-b-2 data-[state=active]:border-purple-600 data-[state=active]:text-purple-600 rounded-none px-0 pb-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors bg-transparent shadow-none"
+                            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-0 pb-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors bg-transparent shadow-none"
                         >
                             Outline
                         </TabsTrigger>
                         <TabsTrigger
                             value="brief"
-                            className="data-[state=active]:border-b-2 data-[state=active]:border-purple-600 data-[state=active]:text-purple-600 rounded-none px-0 pb-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors bg-transparent shadow-none"
+                            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-0 pb-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors bg-transparent shadow-none"
                         >
                             Brief
                         </TabsTrigger>
                     </TabsList>
                 </div>
 
-                <div className="flex-1 bg-white dark:bg-black overflow-hidden relative">
-                    <TabsContent value="guidelines" className="h-full m-0 absolute inset-0">
-                        <GuidelinesTab />
+                <div className="flex-1 bg-transparent overflow-hidden relative">
+                    <TabsContent value="optimize" className="h-full m-0 absolute inset-0">
+                        <OptimizeTab />
                     </TabsContent>
 
                     <TabsContent value="outline" className="h-full m-0 absolute inset-0">
