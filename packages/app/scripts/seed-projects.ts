@@ -12,6 +12,11 @@ function generateUUID() {
 }
 
 async function seed() {
+    if (!driver) {
+        console.error('❌ Neo4j driver not initialized. Check environment variables.');
+        return;
+    }
+
     console.log('🌱 Seeding Projects...');
 
     // 1. Example Project

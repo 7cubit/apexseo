@@ -7,6 +7,10 @@ const PROJECT_NAME = 'ApexSEO Space';
 const DOMAIN = 'apexseo.com';
 
 async function seedNeo4j() {
+    if (!driver) {
+        console.error('❌ Neo4j driver not initialized. Check environment variables.');
+        return;
+    }
     const session = driver.session();
     try {
         console.log('🌱 Starting Neo4j Seeding...');

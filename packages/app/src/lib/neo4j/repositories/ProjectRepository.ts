@@ -28,7 +28,7 @@ export interface ContentArchetype {
     voice: {
         tone: string;
         readingLevel: string;
-        perspective: 'First Person (We)' | 'Third Person (It)';
+        perspective: 'First Person (We)' | 'Third Person (It)' | 'Second Person (You)';
     };
     targetAudience: string;
     structureTemplate?: string;
