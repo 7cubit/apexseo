@@ -1,6 +1,6 @@
 import Fastify, { FastifyRequest, FastifyReply } from 'fastify';
 import dotenv from 'dotenv';
-import { logger } from '@apexseo/shared';
+import { logger, redis } from '@apexseo/shared';
 import authPlugin from './plugins/auth';
 import tenancyPlugin from './plugins/tenancy';
 import siteRoutes from './routes/sites';
@@ -14,10 +14,16 @@ import projectsRoutes from './routes/projects';
 import alertRoutes from './routes/alerts';
 import adminAuthRoutes from './routes/admin-auth';
 import { adminUserRoutes } from './routes/admin-users';
+import adminProductRoutes from './routes/admin-products';
+// import adminAccountRoutes from './routes/admin-accounts'; // Validated: exists.
 import adminAccountRoutes from './routes/admin-accounts';
-import projectUsersRoutes from './routes/project-users';
+import adminBillingRoutes from './routes/admin-billing';
+import { adminSystemRoutes } from './routes/admin-system';
 import suggestionsRoutes from './routes/suggestions';
 import ingestRoutes from './routes/ingest';
+import { stripeWebhooks } from './routes/stripe-webhooks';
+import { campaignRoutes } from './routes/campaigns';
+import { trackingRoutes } from './routes/tracking';
 
 import path from 'path';
 const envPath = path.resolve(__dirname, '../../../.env');
@@ -65,7 +71,8 @@ fastify.setSerializerCompiler(serializerCompiler);
 
 fastify.register(rateLimit, {
     max: 100,
-    timeWindow: '1 minute'
+    timeWindow: '1 minute',
+    redis: redis // Use shared Redis client
 });
 fastify.register(errorHandlerPlugin);
 fastify.register(swaggerPlugin);
@@ -81,9 +88,9 @@ fastify.register(scheduleRoutes);
 fastify.register(keywordsRoutes);
 fastify.register(contentRoutes);
 fastify.register(projectsRoutes, { prefix: '/projects' });
-fastify.register(projectUsersRoutes, { prefix: '/projects' });
 fastify.register(suggestionsRoutes);
 fastify.register(ingestRoutes);
+fastify.register(stripeWebhooks);
 fastify.register(alertRoutes, { prefix: '/alerts' });
 // Actually, the route file defines /:id/suggestions, so mounting at /projects makes it /projects/:id/suggestions.
 // However, the accept/reject routes are /:suggestionId/accept.
@@ -118,22 +125,54 @@ fastify.register(alertRoutes, { prefix: '/alerts' });
 // So I need to change the route file to `/projects/:id/suggestions` and `/suggestions/:suggestionId/accept`.
 
 // OK, I will register it at root here, and then I will do another tool call to fix the route paths in suggestions.ts.
+// Registers moved to start() for correct middleware ordering
 fastify.register(alertRoutes);
-fastify.register(adminAuthRoutes, { prefix: '/admin/auth' });
-fastify.register(adminUserRoutes, { prefix: '/admin/users' });
-fastify.register(adminAccountRoutes, { prefix: '/admin/accounts' });
+// fastify.register(adminAuthRoutes, { prefix: '/admin/auth' }); // Moving to start()
+// fastify.register(adminUserRoutes, { prefix: '/admin/users' }); // Moving to start()
+// fastify.register(adminAccountRoutes, { prefix: '/admin/accounts' }); // Moving to start()
 
-fastify.get('/health', async (request: FastifyRequest, reply: FastifyReply) => {
-    logger.info('Health check requested');
-    return { status: 'ok', timestamp: new Date().toISOString() };
-});
+// fastify.get('/health'...) replaced by routes/health.ts
+fastify.register(healthRoutes);
 
 // import { graphRoutes } from './routes/graph'; // Removed duplicate
 
 // ... existing code ...
 
+import helmet from '@fastify/helmet';
+import clerkAuthPlugin from './plugins/clerk-auth';
+import { auditLogger } from './middleware/audit-logger';
+import metricsMiddleware from './middleware/metrics'; // New middleware
+import { healthRoutes } from './routes/health'; // New route
+
+// ...
+
 const start = async () => {
     try {
+        await fastify.register(helmet, { global: true });
+        await fastify.register(clerkAuthPlugin);
+        await fastify.register(metricsMiddleware); // Register early
+
+        // Register Admin Routes (After Auth/Helmet)
+        await fastify.register(adminAuthRoutes, { prefix: '/admin/auth' });
+        await fastify.register(adminUserRoutes, { prefix: '/admin/users' });
+        await fastify.register(adminProductRoutes, { prefix: '/admin/products' });
+        await fastify.register(adminBillingRoutes, { prefix: '/admin/billing' });
+        await fastify.register(campaignRoutes, { prefix: '/campaigns' });
+        await fastify.register(trackingRoutes, { prefix: '/tracking' });
+        await fastify.register(adminAccountRoutes, { prefix: '/admin/accounts' });
+        await fastify.register(adminSystemRoutes, { prefix: '/admin/system' });
+
+
+        // Audit Logger as a global hook for relevant methods
+        fastify.addHook('onResponse', async (request, reply) => {
+            // We can call the audit logger here or as preHandler. 
+            // Implementation in audit-logger.ts was async function.
+            // Let's call it here to ensure it runs.
+            // Actually, audit-logger.ts is written as a handler. let's adapt it.
+            // Or just register it as a global hook.
+            await auditLogger(request as any, reply as any);
+        });
+
         await fastify.register(graphRoutes, { prefix: '/graph' });
         // ... existing code ...
         await fastify.listen({ port: 4000, host: '0.0.0.0' });

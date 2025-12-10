@@ -37,11 +37,6 @@ export const authGscRoutes: FastifyPluginAsync = async (fastify) => {
     fastify.post('/authorize', {
         schema: {
             body: authorizeSchema,
-            response: {
-                200: z.object({
-                    authUrl: z.string().url(),
-                }),
-            },
         },
     }, async (request, reply) => {
         // TODO: Implement after OAuth credentials are set up
@@ -77,7 +72,7 @@ export const authGscRoutes: FastifyPluginAsync = async (fastify) => {
             querystring: callbackSchema,
         },
     }, async (request, reply) => {
-        const { code, state: userId, error } = request.query;
+        const { code, state: userId, error } = request.query as z.infer<typeof callbackSchema>;
 
         if (error) {
             return reply.redirect(`/onboarding?error=${encodeURIComponent(error)}`);

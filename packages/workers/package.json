@@ -9,13 +9,15 @@
         "lint": "eslint ."
     },
     "dependencies": {
+        "@apexseo/database": "^0.0.0",
         "@apexseo/shared": "*",
         "@temporalio/activity": "^1.0.0",
         "@temporalio/client": "^1.0.0",
         "@temporalio/worker": "^1.0.0",
         "bullmq": "^5.65.1",
         "dotenv": "^16.0.0",
-        "ioredis": "^5.8.2"
+        "ioredis": "^5.8.2",
+        "stripe": "^20.0.0"
     },
     "devDependencies": {
         "@types/node": "^20.0.0",

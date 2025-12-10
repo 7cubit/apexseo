@@ -3,6 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CannibalizationService = void 0;
 const clickhouse_1 = require("../clickhouse");
 class CannibalizationService {
+    static async analyze(siteId) {
+        // Mock implementation for now
+        return [];
+    }
     static async detectCannibalization(siteId) {
         if (!clickhouse_1.client)
             return;

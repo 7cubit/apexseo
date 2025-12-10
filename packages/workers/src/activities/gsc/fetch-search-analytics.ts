@@ -4,7 +4,7 @@
  * and stores it in ClickHouse
  */
 
-import type { GscSyncParams, GscSyncResult } from '@apexseo/shared/types/gsc';
+import type { GscSyncParams, GscSyncResult } from '@apexseo/shared';
 
 // TODO: Install googleapis package
 // npm install googleapis

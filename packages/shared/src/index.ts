@@ -57,4 +57,7 @@ export * from './lib/neo4j/settings-repository';
 export * from './lib/openai';
 export * from './services/dataforseo';
 export * from './services/migration-helper';
+export * from './types/gsc';
+export * from './lib/email/client';
+export * from './lib/redis';
 // Export other shared modules as needed

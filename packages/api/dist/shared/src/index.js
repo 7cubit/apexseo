@@ -78,4 +78,7 @@ __exportStar(require("./lib/neo4j/settings-repository"), exports);
 __exportStar(require("./lib/openai"), exports);
 __exportStar(require("./services/dataforseo"), exports);
 __exportStar(require("./services/migration-helper"), exports);
+__exportStar(require("./types/gsc"), exports);
+__exportStar(require("./lib/email/client"), exports);
+__exportStar(require("./lib/redis"), exports);
 // Export other shared modules as needed

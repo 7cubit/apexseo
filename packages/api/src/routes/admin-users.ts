@@ -1,171 +1,164 @@
-import { FastifyInstance } from 'fastify';
-import { ZodTypeProvider } from 'fastify-type-provider-zod';
+import { FastifyPluginAsync } from 'fastify';
 import { z } from 'zod';
-import { UserService } from '../services/user.service';
-import { AdminRole } from '@apexseo/shared';
+import { prisma, UserRole, UserStatus } from '@apexseo/database';
+import { requireRole } from '../middleware/rbac';
+import { CreateUserSchema, UpdateUserSchema, BulkActionSchema } from '../schemas';
 
-const userService = new UserService();
+const adminUserRoutes: FastifyPluginAsync = async (fastify) => {
+    // Protect all routes
+    fastify.addHook('preHandler', requireRole([UserRole.SUPER_ADMIN, UserRole.SUPPORT_ADMIN]));
 
-export async function adminUserRoutes(app: FastifyInstance) {
-    const server = app.withTypeProvider<ZodTypeProvider>();
-
-    // List Users
-    server.get(
-        '/',
-        {
-            schema: {
-                tags: ['Admin Users'],
-                querystring: z.object({
-                    page: z.coerce.number().min(1).default(1),
-                    limit: z.coerce.number().min(1).max(100).default(10),
-                    search: z.string().optional()
-                }),
-                response: {
-                    200: z.object({
-                        data: z.array(z.object({
-                            id: z.string(),
-                            email: z.string(),
-                            name: z.string().optional(),
-                            image: z.string().optional(),
-                            is_suspended: z.boolean(),
-                            created_at: z.string(),
-                            last_login_at: z.string().optional()
-                        })),
-                        meta: z.object({
-                            total: z.number(),
-                            page: z.number(),
-                            limit: z.number(),
-                            totalPages: z.number()
-                        })
-                    })
-                }
-            },
-            preHandler: [app.authenticateAdmin]
-        },
-        async (request, reply) => {
-            const { page, limit, search } = request.query;
-            return userService.listUsers(page, limit, search);
+    // GET /users - List with filtering
+    fastify.get('/', {
+        schema: {
+            querystring: z.object({
+                search: z.string().optional(),
+                role: z.nativeEnum(UserRole).optional(),
+                status: z.nativeEnum(UserStatus).optional(),
+                page: z.coerce.number().default(1),
+                limit: z.coerce.number().default(20),
+                planId: z.string().optional(),
+            })
         }
-    );
+    }, async (request, reply) => {
+        const { search, role, status, page, limit, planId } = request.query as any;
+        const skip = (page - 1) * limit;
 
-    // Get User Detail
-    server.get(
-        '/:id',
-        {
-            schema: {
-                tags: ['Admin Users'],
-                params: z.object({
-                    id: z.string()
-                }),
-                response: {
-                    200: z.object({
-                        id: z.string(),
-                        email: z.string(),
-                        name: z.string().optional(),
-                        image: z.string().optional(),
-                        is_suspended: z.boolean(),
-                        created_at: z.string(),
-                        last_login_at: z.string().optional()
-                    }),
-                    404: z.object({
-                        message: z.string()
-                    })
-                }
-            },
-            preHandler: [app.authenticateAdmin]
-        },
-        async (request, reply) => {
-            const user = await userService.getUser(request.params.id);
-            if (!user) return reply.status(404).send({ message: 'User not found' });
-            return user;
+        const where: any = {
+            deletedAt: null // Exclude soft deleted by default
+        };
+
+        if (search) {
+            where.OR = [
+                { email: { contains: search, mode: 'insensitive' } },
+                { firstName: { contains: search, mode: 'insensitive' } },
+                { lastName: { contains: search, mode: 'insensitive' } },
+            ];
         }
-    );
+        if (role) where.role = role;
+        if (status) where.status = status;
+        if (planId) where.planId = planId;
 
-    // Suspend User
-    server.post(
-        '/:id/suspend',
-        {
-            schema: {
-                tags: ['Admin Users'],
-                params: z.object({
-                    id: z.string()
-                }),
-                response: {
-                    200: z.object({
-                        id: z.string(),
-                        is_suspended: z.boolean()
-                    }),
-                    404: z.object({
-                        message: z.string()
-                    })
-                }
-            },
-            preHandler: [app.authenticateAdmin, app.requireAdminRole([AdminRole.SUPER_ADMIN, AdminRole.SUPPORT_ADMIN])]
-        },
-        async (request, reply) => {
-            const user = await userService.suspendUser(request.params.id);
-            if (!user) return reply.status(404).send({ message: 'User not found' });
-            return { id: user.id, is_suspended: user.is_suspended };
-        }
-    );
+        const [users, total] = await Promise.all([
+            prisma.user.findMany({
+                where,
+                skip,
+                take: limit,
+                orderBy: { createdAt: 'desc' },
+                include: { plan: true }
+            }),
+            prisma.user.count({ where })
+        ]);
 
-    // Unsuspend User
-    server.post(
-        '/:id/unsuspend',
-        {
-            schema: {
-                tags: ['Admin Users'],
-                params: z.object({
-                    id: z.string()
-                }),
-                response: {
-                    200: z.object({
-                        id: z.string(),
-                        is_suspended: z.boolean()
-                    }),
-                    404: z.object({
-                        message: z.string()
-                    })
-                }
-            },
-            preHandler: [app.authenticateAdmin, app.requireAdminRole([AdminRole.SUPER_ADMIN, AdminRole.SUPPORT_ADMIN])]
-        },
-        async (request, reply) => {
-            const user = await userService.unsuspendUser(request.params.id);
-            if (!user) return reply.status(404).send({ message: 'User not found' });
-            return { id: user.id, is_suspended: user.is_suspended };
-        }
-    );
+        return { data: users, meta: { total, page, limit, pages: Math.ceil(total / limit) } };
+    });
 
-    // Impersonate User
-    server.post(
-        '/:id/impersonate',
-        {
-            schema: {
-                tags: ['Admin Users'],
-                params: z.object({
-                    id: z.string()
-                }),
-                response: {
-                    200: z.object({
-                        token: z.string()
-                    }),
-                    404: z.object({
-                        message: z.string()
-                    }),
-                    400: z.object({
-                        message: z.string()
-                    })
-                }
-            },
-            preHandler: [app.authenticateAdmin, app.requireAdminRole([AdminRole.SUPER_ADMIN, AdminRole.SUPPORT_ADMIN])]
-        },
-        async (request, reply) => {
-            try {
-                return await userService.impersonateUser(request.params.id, reply);
-            } catch (error: any) {
-                return reply.status(400).send({ message: error.message });
+    // GET /users/:id - Get Single User
+    fastify.get('/:id', {
+        schema: { params: z.object({ id: z.string() }) }
+    }, async (request, reply) => {
+        const { id } = request.params as { id: string };
+        const user = await prisma.user.findUnique({
+            where: { id },
+            include: {
+                plan: true,
+                auditLogs: { take: 10, orderBy: { createdAt: 'desc' } },
+                sentEmails: { take: 20, orderBy: { sentAt: 'desc' } }
+            } // Include recent logs and emails
+        });
+        if (!user) return reply.status(404).send({ error: 'User not found' });
+        return user;
+    });
+
+    // POST /users - Create User
+    fastify.post('/', {
+        schema: { body: CreateUserSchema }
+    }, async (request, reply) => {
+        const data = request.body as z.infer<typeof CreateUserSchema>;
+        // ID handling: In real app, we'd trigger Clerk invitation here.
+        // For now, assume ID is generated or passed (if syncing).
+        // Let's rely on Prisma 'cuid' or upstream ID. 
+        // Since `id` is not standard default in our schema (it was @id without default), we must provide it.
+        // We should probably allow providing ID or generate one if treating as "Pending Invitation".
+        // For simplicity, generate a placeholder ID or expect one.
+        // Let's auto-generate if not present (requires schema change or manual gen here).
+        const id = `user_${Math.random().toString(36).substring(2, 15)}`;
+
+        const user = await prisma.user.create({
+            data: {
+                id,
+                ...data,
             }
+        });
+
+        // Log audit explicitly if middleware doesn't catch implicitly or for more detail
+        return user;
+    });
+
+    // PATCH /users/:id - Update User
+    fastify.patch('/:id', {
+        schema: {
+            params: z.object({ id: z.string() }),
+            body: UpdateUserSchema
         }
-    );
-}
+    }, async (request, reply) => {
+        const { id } = request.params as { id: string };
+        const data = request.body as any;
+
+        const user = await prisma.user.update({
+            where: { id },
+            data
+        });
+        return user;
+    });
+
+    // DELETE /users/:id - Soft Delete
+    fastify.delete('/:id', {
+        schema: { params: z.object({ id: z.string() }) }
+    }, async (request, reply) => {
+        const { id } = request.params as { id: string };
+        await prisma.user.update({
+            where: { id },
+            data: {
+                deletedAt: new Date(),
+                status: 'SUSPENDED'
+            }
+        });
+        return { success: true };
+    });
+
+    // POST /users/bulk - Bulk Actions
+    fastify.post('/bulk', {
+        schema: { body: BulkActionSchema }
+    }, async (request, reply) => {
+        const { userIds, action } = request.body as z.infer<typeof BulkActionSchema>;
+
+        switch (action) {
+            case 'suspend':
+                await prisma.user.updateMany({
+                    where: { id: { in: userIds } },
+                    data: { status: 'SUSPENDED' }
+                });
+                break;
+            case 'activate':
+                await prisma.user.updateMany({
+                    where: { id: { in: userIds } },
+                    data: { status: 'ACTIVE' }
+                });
+                break;
+            case 'delete':
+                await prisma.user.updateMany({
+                    where: { id: { in: userIds } },
+                    data: { deletedAt: new Date(), status: 'SUSPENDED' }
+                });
+                break;
+            case 'reset_password':
+                // In reality, trigger Clerk password reset
+                // request.log.info(`Mock triggering password reset for ${userIds.length} users`);
+                break;
+        }
+        return { success: true, count: userIds.length, action };
+    });
+};
+
+export { adminUserRoutes }; // Named export

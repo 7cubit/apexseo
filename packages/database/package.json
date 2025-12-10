@@ -1,19 +1,24 @@
 {
     "name": "@apexseo/database",
     "version": "0.0.0",
-    "main": "index.ts",
+    "main": "src/index.ts",
     "scripts": {
         "init:neo4j": "ts-node scripts/init-neo4j-schema.ts",
         "init:clickhouse": "ts-node scripts/init-clickhouse-schema.ts",
         "migrate": "ts-node src/migrate.ts",
-        "seed": "ts-node src/seed.ts"
+        "seed": "ts-node src/seed.ts",
+        "db:generate": "prisma generate",
+        "db:push": "prisma db push",
+        "db:seed": "ts-node prisma/seed.ts"
     },
     "dependencies": {
         "@apexseo/shared": "*",
+        "@prisma/client": "^5.10.2",
         "csv-parse": "^6.1.0",
         "dotenv": "^16.0.0"
     },
     "devDependencies": {
+        "prisma": "^5.10.2",
         "ts-node": "^10.9.1",
         "typescript": "^5.0.0"
     }

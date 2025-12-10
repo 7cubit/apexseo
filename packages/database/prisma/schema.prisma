@@ -1,0 +1,314 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  BILLING_ADMIN
+  PRODUCT_ADMIN
+  SUPPORT_ADMIN
+  ADMIN_CRM
+  VIEWER
+}
+
+enum ProductTier {
+  STARTER
+  PRO
+  AGENCY
+}
+
+enum ProductInterval {
+  MONTHLY
+  YEARLY
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING
+}
+
+model Product {
+  id           String          @id @default(cuid())
+  name         String
+  tier         ProductTier
+  price        Decimal         @db.Decimal(10, 2)
+  interval     ProductInterval
+  featureFlags Json?           @default("{}")
+  isActive     Boolean         @default(true)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  users        User[]
+
+  @@map("products")
+}
+
+model User {
+  id        String     @id // Clerk ID
+  email     String     @unique
+  role      UserRole   @default(VIEWER)
+  firstName String?
+  lastName  String?
+  status    UserStatus @default(ACTIVE)
+  planId    String?
+  plan      Product?   @relation(fields: [planId], references: [id])
+  deletedAt DateTime?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  
+  stripeCustomerId String? @unique
+
+  auditLogs    AuditLog[]
+  invoices     Invoice[]
+  subscription Subscription?
+  preferences  CustomerPreference?
+  sentEmails   SentEmail[]
+
+  // FTS Index for PostgreSQL. 
+  // Note: Prisma supports @@fulltext in MySQL/MongoDB but for Postgres we use generic indexes or raw SQL.
+  // We can use standard B-Tree on text fields for basic 'startsWith' or 'contains'. 
+  // For proper FTS we need GIN index. Prisma "Extended Indexes" preview feature allows `type: Gin`.
+  // However, without preview features enabled, let's stick to standard indexes for now or enable if stable.
+  // Actually, standard indexes on email and names cover most admin use cases.
+  // But plan asked for FTS. Let's add basic indexes first. To do GIN via Prisma requires enabling `extendedIndexes`.
+  // Or we just add @@index.
+  
+  @@index([email])
+  @@index([firstName])
+  @@index([lastName])
+  @@index([status])
+  @@index([deletedAt])
+
+  @@map("users")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String   // POST, PATCH, DELETE, LOGIN
+  resource  String   // API Route or Entity
+  metadata  Json?    // Detailed changes or payload
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("audit_logs")
+}
+
+enum InvoiceStatus {
+  PAID
+  OPEN
+  VOID
+  UNCOLLECTIBLE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  UNPAID
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  TRIALING
+  PAUSED
+}
+
+model Subscription {
+  id               String             @id // Stripe Subscription ID
+  userId           String             @unique
+  user             User               @relation(fields: [userId], references: [id])
+  status           SubscriptionStatus
+  currentPeriodEnd DateTime
+  cancelAtPeriodEnd Boolean           @default(false)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  @@map("subscriptions")
+}
+
+model Invoice {
+  id              String        @id // Stripe Invoice ID
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  amountPaid      Decimal       @db.Decimal(10, 2)
+  status          InvoiceStatus
+  invoicePdfUrl   String?
+  hostedInvoiceUrl String?
+  createdAt       DateTime      @default(now())
+  refunds         Refund[]
+
+  @@index([userId])
+  @@map("invoices")
+}
+
+model Refund {
+  id        String   @id // Stripe Refund ID
+  invoiceId String
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id])
+  amount    Decimal  @db.Decimal(10, 2)
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@map("refunds")
+}
+
+model EmailTemplate {
+  id        String   @id @default(cuid())
+  name      String
+  subject   String
+  body      String   // HTML content. Note: Prisma doesn't strictly enforce @db.Text in all providers, but string works.
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  campaigns EmailCampaign[]
+
+  @@map("email_templates")
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  SENDING
+  COMPLETED
+  FAILED
+}
+
+model EmailCampaign {
+  id          String   @id @default(cuid())
+  name        String
+  subject     String
+  templateId  String?
+  template    EmailTemplate? @relation(fields: [templateId], references: [id])
+  status      CampaignStatus @default(DRAFT)
+  scheduledAt DateTime?
+  sentAt      DateTime?
+  
+  // Stats
+  totalSent   Int      @default(0)
+  openCount   Int      @default(0)
+  clickCount  Int      @default(0)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  emails      SentEmail[]
+
+  @@index([status])
+  @@map("email_campaigns")
+}
+
+model SentEmail {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  campaignId  String?
+  campaign    EmailCampaign? @relation(fields: [campaignId], references: [id])
+  
+  subject     String
+  to          String
+  sentAt      DateTime @default(now())
+  openedAt    DateTime?
+  clickedAt   DateTime?
+  
+  // For transactional/drip emails not linked to a bulk campaign
+  metadata    Json?
+
+  @@index([userId])
+  @@index([campaignId])
+  @@index([sentAt]) // For timeline queries
+  @@map("sent_emails")
+}
+
+model CustomerPreference {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id])
+  newsletterOptIn      Boolean  @default(false)
+  marketingOptIn       Boolean  @default(false)
+  
+  unsubscribeToken     String   @unique @default(cuid())
+  
+  updatedAt            DateTime @updatedAt
+
+  @@map("customer_preferences")
+}
+
+// --- Legacy Models (Do Not Delete) ---
+
+model LegacyAccount {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              LegacyUser    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "account_userId_user_id_fk")
+
+  @@id([provider, providerAccountId], map: "account_provider_providerAccountId_pk")
+  @@map("account")
+}
+
+model LegacyPasswordResetToken {
+  id      String   @id
+  email   String
+  token   String   @unique(map: "passwordResetToken_token_unique")
+  expires DateTime @db.Timestamp(6)
+
+  @@map("passwordResetToken")
+}
+
+model LegacySession {
+  sessionToken String   @id
+  userId       String
+  expires      DateTime @db.Timestamp(6)
+  user         LegacyUser     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "session_userId_user_id_fk")
+
+  @@map("session")
+}
+
+model LegacyUser {
+  id            String    @id
+  name          String?
+  email         String?   @unique(map: "user_email_unique")
+  emailVerified DateTime? @db.Timestamp(6)
+  image         String?
+  password      String?
+  role          LegacyRole?     @default(user)
+  accounts      LegacyAccount[]
+  sessions      LegacySession[]
+
+  @@map("user")
+}
+
+model LegacyVerificationToken {
+  identifier String
+  token      String
+  expires    DateTime @db.Timestamp(6)
+
+  @@id([identifier, token], map: "verificationToken_identifier_token_pk")
+  @@map("verificationToken")
+}
+
+enum LegacyRole {
+  user
+  customer_admin
+  super_admin
+  admin_support
+  support_staff
+  admin_crm
+  owner
+
+  @@map("role")
+}

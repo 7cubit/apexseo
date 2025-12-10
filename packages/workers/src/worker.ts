@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { logger } from '@apexseo/shared';
 import { Worker as BullWorker } from 'bullmq';
 import IORedis from 'ioredis';
+import { runStripeSyncWorker } from './jobs/stripe-sync';
 
 dotenv.config();
 
@@ -48,6 +49,10 @@ async function run() {
     });
 
     logger.info('BullMQ Worker started for html-processing');
+
+    // Start Stripe Sync Worker
+    runStripeSyncWorker();
+    logger.info('BullMQ Worker started for stripe-sync');
 
     await worker.run();
 }

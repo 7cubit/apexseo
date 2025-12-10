@@ -1,0 +1,158 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  BILLING_ADMIN
+  PRODUCT_ADMIN
+  SUPPORT_ADMIN
+  VIEWER
+}
+
+enum ProductTier {
+  STARTER
+  PRO
+  AGENCY
+}
+
+enum ProductInterval {
+  MONTHLY
+  YEARLY
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING
+}
+
+model Product {
+  id           String          @id @default(cuid())
+  name         String
+  tier         ProductTier
+  price        Decimal         @db.Decimal(10, 2)
+  interval     ProductInterval
+  featureFlags Json?           @default("{}")
+  isActive     Boolean         @default(true)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  users        User[]
+
+  @@map("products")
+}
+
+model User {
+  id        String     @id // Clerk ID
+  email     String     @unique
+  role      UserRole   @default(VIEWER)
+  firstName String?
+  lastName  String?
+  status    UserStatus @default(ACTIVE)
+  planId    String?
+  plan      Product?   @relation(fields: [planId], references: [id])
+  deletedAt DateTime?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  
+  stripeCustomerId String? @unique
+
+  auditLogs    AuditLog[]
+  invoices     Invoice[]
+  subscription Subscription?
+
+  // FTS Index for PostgreSQL. 
+  // Note: Prisma supports @@fulltext in MySQL/MongoDB but for Postgres we use generic indexes or raw SQL.
+  // We can use standard B-Tree on text fields for basic 'startsWith' or 'contains'. 
+  // For proper FTS we need GIN index. Prisma "Extended Indexes" preview feature allows `type: Gin`.
+  // However, without preview features enabled, let's stick to standard indexes for now or enable if stable.
+  // Actually, standard indexes on email and names cover most admin use cases.
+  // But plan asked for FTS. Let's add basic indexes first. To do GIN via Prisma requires enabling `extendedIndexes`.
+  // Or we just add @@index.
+  
+  @@index([email])
+  @@index([firstName])
+  @@index([lastName])
+  @@index([status])
+  @@index([deletedAt])
+
+  @@map("users")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String   // POST, PATCH, DELETE, LOGIN
+  resource  String   // API Route or Entity
+  metadata  Json?    // Detailed changes or payload
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("audit_logs")
+}
+
+enum InvoiceStatus {
+  PAID
+  OPEN
+  VOID
+  UNCOLLECTIBLE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  UNPAID
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  TRIALING
+  PAUSED
+}
+
+model Subscription {
+  id               String             @id // Stripe Subscription ID
+  userId           String             @unique
+  user             User               @relation(fields: [userId], references: [id])
+  status           SubscriptionStatus
+  currentPeriodEnd DateTime
+  cancelAtPeriodEnd Boolean           @default(false)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  @@map("subscriptions")
+}
+
+model Invoice {
+  id              String        @id // Stripe Invoice ID
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  amountPaid      Decimal       @db.Decimal(10, 2)
+  status          InvoiceStatus
+  invoicePdfUrl   String?
+  hostedInvoiceUrl String?
+  createdAt       DateTime      @default(now())
+  refunds         Refund[]
+
+  @@index([userId])
+  @@map("invoices")
+}
+
+model Refund {
+  id        String   @id // Stripe Refund ID
+  invoiceId String
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id])
+  amount    Decimal  @db.Decimal(10, 2)
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@index([invoiceId])
+  @@map("refunds")
+}

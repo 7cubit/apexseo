@@ -10,8 +10,10 @@
     },
     "dependencies": {
         "@apexseo/shared": "*",
+        "@clerk/clerk-sdk-node": "^4.13.23",
         "@fastify/cookie": "^11.0.2",
         "@fastify/cors": "^11.1.0",
+        "@fastify/helmet": "^13.0.2",
         "@fastify/jwt": "^10.0.0",
         "@fastify/rate-limit": "^10.3.0",
         "@fastify/swagger": "^9.6.1",
@@ -21,13 +23,15 @@
         "fastify": "^5.6.2",
         "fastify-plugin": "^5.1.0",
         "fastify-type-provider-zod": "^6.1.0",
+        "stripe": "^20.0.0",
         "zod": "^4.1.13"
     },
     "devDependencies": {
-        "@types/node": "^20.0.0",
+        "@types/node": "^20.19.26",
         "eslint": "^8.0.0",
         "eslint-config-custom": "*",
         "ts-node-dev": "^2.0.0",
-        "typescript": "^5.0.0"
+        "typescript": "^5.0.0",
+        "vitest": "^4.0.15"
     }
 }
