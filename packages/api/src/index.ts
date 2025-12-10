@@ -17,6 +17,7 @@ import { adminUserRoutes } from './routes/admin-users';
 import adminAccountRoutes from './routes/admin-accounts';
 import projectUsersRoutes from './routes/project-users';
 import suggestionsRoutes from './routes/suggestions';
+import ingestRoutes from './routes/ingest';
 
 import path from 'path';
 const envPath = path.resolve(__dirname, '../../../.env');
@@ -82,6 +83,7 @@ fastify.register(contentRoutes);
 fastify.register(projectsRoutes, { prefix: '/projects' });
 fastify.register(projectUsersRoutes, { prefix: '/projects' });
 fastify.register(suggestionsRoutes);
+fastify.register(ingestRoutes);
 fastify.register(alertRoutes, { prefix: '/alerts' });
 // Actually, the route file defines /:id/suggestions, so mounting at /projects makes it /projects/:id/suggestions.
 // However, the accept/reject routes are /:suggestionId/accept.

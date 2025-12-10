@@ -9,16 +9,18 @@
         "lint": "eslint ."
     },
     "dependencies": {
-        "@temporalio/worker": "^1.0.0",
-        "@temporalio/client": "^1.0.0",
-        "@temporalio/activity": "^1.0.0",
         "@apexseo/shared": "*",
-        "dotenv": "^16.0.0"
+        "@temporalio/activity": "^1.0.0",
+        "@temporalio/client": "^1.0.0",
+        "@temporalio/worker": "^1.0.0",
+        "bullmq": "^5.65.1",
+        "dotenv": "^16.0.0",
+        "ioredis": "^5.8.2"
     },
     "devDependencies": {
-        "typescript": "^5.0.0",
-        "ts-node-dev": "^2.0.0",
         "@types/node": "^20.0.0",
-        "eslint": "^8.0.0"
+        "eslint": "^8.0.0",
+        "ts-node-dev": "^2.0.0",
+        "typescript": "^5.0.0"
     }
 }

@@ -71,8 +71,11 @@ gcloud auth configure-docker --quiet
 echo ""
 echo "📦 Building Docker images..."
 echo "  Building App..."
+echo "  (Running local build first to optimize Docker context...)"
+npm run build --workspace=@apexseo/app
+
 docker build -t gcr.io/$GCP_PROJECT_ID/apexseo-app:staging \
-  -f packages/app/Dockerfile .
+  -f packages/app/Dockerfile.prebuilt .
 
 echo "  Building API..."
 docker build -t gcr.io/$GCP_PROJECT_ID/apexseo-api:staging \

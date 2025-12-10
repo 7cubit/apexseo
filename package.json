@@ -8,7 +8,8 @@
         "start:api": "cd packages/api && npm run dev",
         "start:workers": "cd packages/workers && npm run dev",
         "start:app": "cd packages/app && npm run dev",
-        "format": "prettier --write \"**/*.{ts,tsx,md}\""
+        "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+        "seed": "ts-node scripts/seed-db.ts"
     },
     "devDependencies": {
         "@types/dotenv": "^6.1.1",

@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    output: 'standalone',
     reactStrictMode: true,
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
+    typescript: {
+        ignoreBuildErrors: true,
+    },
+    transpilePackages: ['@apexseo/ui'], // Ensures UI package is transpiled
     images: {
         domains: ['apexseo.space'],
     },

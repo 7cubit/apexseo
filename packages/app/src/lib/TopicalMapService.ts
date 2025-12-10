@@ -117,7 +117,6 @@ export class TopicalMapService {
                 searchVolume: primaryMetric.vol,
                 difficulty: primaryMetric.diff,
                 contentType: c.contentType,
-                contentType: c.contentType,
                 status: 'Not Covered', // Default
                 competitorCoverage: Math.floor(Math.random() * 100), // Mock coverage
                 competitors: ['competitor-a.com', 'competitor-b.com'] // Mock competitors
@@ -181,8 +180,68 @@ export class TopicalMapService {
     }
 
     async getTopicMap(projectId: string): Promise<TopicMap | null> {
-        // Mock retrieval for now if DB fails or empty
-        return null;
+        if (!driver) return null;
+        const session = driver.session({ database: DATABASE });
+
+        try {
+            // Find the project's root topic and all connected clusters/keywords
+            const result = await session.run(
+                `
+                MATCH (p:Project {id: $projectId})
+                MATCH (t:Topic)-[:HAS_CLUSTER]->(c:Cluster)
+                WHERE (p)-[:HAS_SITE]->(:Site)-[:HAS_TOPIC]->(t)
+                
+                OPTIONAL MATCH (c)<-[:BELONGS_TO]-(k:Keyword)
+                
+                WITH t, c, collect(k.text) as keywords
+                
+                RETURN t.name as topicName, collect({
+                    id: c.id,
+                    name: c.name,
+                    primaryKeyword: c.name, // Simplified for now
+                    relatedKeywords: keywords,
+                    searchVolume: c.total_volume,
+                    difficulty: c.avg_difficulty,
+                    contentType: 'Blog Post', // Default
+                    status: 'Not Covered',
+                    competitorCoverage: 0,
+                    competitors: []
+                }) as clusters
+                `,
+                { projectId }
+            );
+
+            if (result.records.length === 0) return null;
+
+            // Transform Neo4j result to TopicMap
+            // Assuming single root topic for simplicity in this V1
+            const record = result.records[0];
+            const topicName = record.get('topicName');
+            const clusters = record.get('clusters');
+
+            return {
+                projectId,
+                seedKeyword: topicName,
+                clusters: clusters.map((c: any) => ({
+                    id: c.id,
+                    name: c.name,
+                    primaryKeyword: c.primaryKeyword,
+                    relatedKeywords: c.relatedKeywords || [],
+                    searchVolume: c.searchVolume || 0,
+                    difficulty: c.difficulty || 0,
+                    contentType: 'Blog Post',
+                    status: 'Not Covered',
+                    competitorCoverage: 0,
+                    competitors: []
+                }))
+            };
+
+        } catch (e) {
+            console.error("Failed to fetch topic map from Neo4j", e);
+            return null;
+        } finally {
+            await session.close();
+        }
     }
 
     /**
