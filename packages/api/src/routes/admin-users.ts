@@ -28,8 +28,13 @@ export async function adminUserRoutes(app: FastifyInstance) {
                             name: z.string().optional(),
                             image: z.string().optional(),
                             is_suspended: z.boolean(),
+                            newsletter_opt_in: z.boolean().optional(),
                             created_at: z.string(),
-                            last_login_at: z.string().optional()
+                            last_login_at: z.string().optional(),
+                            accounts: z.array(z.object({
+                                account: z.string().optional(),
+                                plan: z.string().optional()
+                            })).optional()
                         })),
                         meta: z.object({
                             total: z.number(),
@@ -44,7 +49,7 @@ export async function adminUserRoutes(app: FastifyInstance) {
         },
         async (request, reply) => {
             const { page, limit, search } = request.query;
-            return userService.listUsers(page, limit, search);
+            return userService.listUsersEnhanced(page, limit, search);
         }
     );
 

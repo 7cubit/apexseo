@@ -202,5 +202,93 @@ export class DataForSEOClient {
             throw error;
         }
     }
+    async getSerp(keyword: string, location_code: number = 2840, language_code: string = "en", depth: number = 100): Promise<any> {
+        const endpoint = `${this.baseUrl}/serp/google/organic/live/advanced`;
+        const payload = [
+            {
+                keyword: keyword,
+                location_code: location_code, // US
+                language_code: language_code,
+                depth: depth,
+            },
+        ];
+
+        try {
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: {
+                    Authorization: this.getAuthHeader(),
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                throw new Error(`DataForSEO API error: ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error(`Error fetching SERP for ${keyword}:`, error);
+            throw error;
+        }
+    }
+
+    async getOnPageInstantPages(url: string): Promise<any> {
+        const endpoint = `${this.baseUrl}/on_page/instant_pages`;
+        const payload = [
+            {
+                url: url,
+                enable_javascript: false,
+                check_spell: true,
+            }
+        ];
+
+        try {
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: {
+                    Authorization: this.getAuthHeader(),
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                throw new Error(`DataForSEO API error: ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error(`Error running on-page instant audit for ${url}:`, error);
+            throw error;
+        }
+    }
+}
+
+export function createDataForSEOClient() {
+    const client = new DataForSEOClient();
+    return {
+        keywords: {
+            getKeywordSuggestions: async (keywords: string[]) => {
+                // Adapter: shared client takes string, workers passes string[]
+                // We'll take the first keyword as the seed
+                const keyword = keywords[0];
+                return client.getKeywordSuggestions(keyword);
+            },
+            getSearchVolume: (keywords: string[]) => client.getSearchVolume(keywords),
+        },
+        serp: {
+            getOrganic: (keyword: string, location_code?: number, language_code?: string, depth?: number) =>
+                client.getSerp(keyword, location_code, language_code, depth),
+        },
+        backlinks: {
+            getSummary: (domain: string) => client.getBacklinksSummary(domain),
+            getBacklinks: (domain: string, limit: number) => client.getBacklinks(domain, limit),
+        },
+        onPage: {
+            getInstantPages: (url: string) => client.getOnPageInstantPages(url),
+        }
+    };
 }
 

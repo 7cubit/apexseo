@@ -22,7 +22,7 @@ export default function UserDetailPage({ params }: { params: { id: string } }) {
     const fetchUser = async () => {
         setLoading(true);
         try {
-            const res = await apiClient.get(`/admin/users/${params.id}`);
+            const res = await api.get(`/admin/users/${params.id}`);
             setUser(res.data);
         } catch (error) {
             console.error('Failed to fetch user:', error);
@@ -39,7 +39,7 @@ export default function UserDetailPage({ params }: { params: { id: string } }) {
         if (!user) return;
         try {
             const action = user.is_suspended ? 'unsuspend' : 'suspend';
-            await apiClient.post(`/admin/users/${user.id}/${action}`);
+            await api.post(`/admin/users/${user.id}/${action}`);
             fetchUser(); // Refresh data
         } catch (error) {
             console.error('Failed to toggle suspend status:', error);
@@ -49,7 +49,7 @@ export default function UserDetailPage({ params }: { params: { id: string } }) {
     const handleImpersonate = async () => {
         if (!user) return;
         try {
-            const res = await apiClient.post(`/admin/users/${user.id}/impersonate`);
+            const res = await api.post(`/admin/users/${user.id}/impersonate`);
             alert(`Impersonation Token: ${res.data.token}`);
             // In a real app, we would redirect to the main app with this token
         } catch (error) {

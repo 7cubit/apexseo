@@ -26,9 +26,12 @@ RUN adduser --system --uid 1001 nextjs
 
 # Copy standalone build
 # The standalone build is located at packages/app/.next/standalone
-COPY --from=builder --chown=nextjs:nodejs /app/packages/app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/packages/app/.next/standalone ./packages/app/
 COPY --from=builder --chown=nextjs:nodejs /app/packages/app/.next/static ./packages/app/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/packages/app/public ./packages/app/public
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+
+RUN ls -R /app
 
 USER nextjs
 

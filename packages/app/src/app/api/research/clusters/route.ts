@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { TopicalMapService } from '@/lib/TopicalMapService';
 
-const service = new TopicalMapService();
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
+    const service = new TopicalMapService();
     try {
         const { seedKeyword, projectId } = await req.json();
 

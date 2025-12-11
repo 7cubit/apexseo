@@ -101,4 +101,5 @@ export const useDashboardStore = create<DashboardState>((set) => ({
         }
         set({ isLoading: false });
     },
+    setBrandVoice: (voice: string) => set({ brandVoice: voice }),
 }));

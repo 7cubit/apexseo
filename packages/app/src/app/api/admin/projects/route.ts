@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { ProjectRepository } from '@apexseo/shared';
+import { ProjectRepository } from '@/lib/neo4j/repositories/ProjectRepository';
 
 export async function GET(request: Request) {
     try {

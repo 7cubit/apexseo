@@ -58,6 +58,11 @@ else
     echo -e "${RED}✗ Temporal not responding${NC}"
 fi
 
+# Check Admin Dashboard
+if curl -s http://localhost:3001 > /dev/null; then
+    echo -e "${GREEN}✓ Admin Dashboard ready${NC}"
+fi
+
 # Install dependencies
 echo -e "\n${YELLOW}Installing dependencies...${NC}"
 npm install
@@ -74,6 +79,8 @@ echo "1. Set up environment variables (see docs/testing-deployment.md)"
 echo "2. Start API:     cd packages/api && npm run dev"
 echo "3. Start Worker:  cd packages/workers && npm run dev"
 echo "4. Start Frontend: cd packages/app && npm run dev"
-echo "5. Visit http://localhost:3000"
+echo "5. Start Admin:    cd packages/admin && npm run dev"
+echo "6. Visit Customer Dashboard: http://localhost:3000"
+echo "7. Visit Admin Dashboard:    http://localhost:3001"
 
 echo -e "\n${GREEN}Happy coding! 🎉${NC}"

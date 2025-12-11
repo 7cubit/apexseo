@@ -72,7 +72,7 @@ export function SeoMetadataModal({ isOpen, onClose, initialData }: SeoMetadataMo
     const [generating, setGenerating] = useState(false);
 
     const form = useForm<SeoMetadataFormData>({
-        resolver: zodResolver(seoMetadataSchema),
+        resolver: zodResolver(seoMetadataSchema) as any,
         defaultValues: {
             title: '',
             description: '',

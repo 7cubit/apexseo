@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { GraphService } from '../services/GraphService';
 
 const graphService = new GraphService();
+// const graphService = null as any;
 
 export const graphRoutes: FastifyPluginAsync = async (fastify) => {
     const app = fastify.withTypeProvider<ZodTypeProvider>();

@@ -45,7 +45,7 @@ const HexagonNode = ({ data }: NodeProps) => {
 
     return (
         <div className="relative w-[160px] h-[140px] flex items-center justify-center group transition-all duration-300 hover:scale-110 cursor-pointer">
-            <Handle type="target" position={Position.Center} className="!bg-transparent !border-none" />
+            <Handle type="target" position={Position.Top} style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} className="!bg-transparent !border-none" />
 
             {/* SVG Hexagon */}
             <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full drop-shadow-xl" style={{ filter: 'drop-shadow(0px 4px 10px rgba(0,0,0,0.5))' }}>
@@ -90,7 +90,7 @@ const HexagonNode = ({ data }: NodeProps) => {
                 ))}
             </div>
 
-            <Handle type="source" position={Position.Center} className="!bg-transparent !border-none" />
+            <Handle type="source" position={Position.Top} style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} className="!bg-transparent !border-none" />
         </div>
     );
 };

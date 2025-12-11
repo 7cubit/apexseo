@@ -4,6 +4,7 @@ exports.graphRoutes = void 0;
 const zod_1 = require("zod");
 const GraphService_1 = require("../services/GraphService");
 const graphService = new GraphService_1.GraphService();
+// const graphService = null as any;
 const graphRoutes = async (fastify) => {
     const app = fastify.withTypeProvider();
     app.get('/visualize', {

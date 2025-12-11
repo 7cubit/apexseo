@@ -100,6 +100,9 @@ export class SystemInsightsService {
         if (!client) return { runningWorkflows: 0, failedWorkflows: 0 };
 
         try {
+            const client = await createTemporalClient();
+            if (!client) return { runningWorkflows: 0, failedWorkflows: 0 }; // Adjusted to match TemporalStats interface
+
             const namespace = process.env.TEMPORAL_NAMESPACE || 'default';
 
             const runningCount = await client.connection.workflowService.countWorkflowExecutions({

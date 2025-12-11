@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { AdminTemporalService, ProjectRepository, AuditLogRepository } from '@apexseo/shared';
+import { AdminTemporalService, AuditLogRepository } from '@apexseo/shared';
+import { ProjectRepository } from '@/lib/neo4j/repositories/ProjectRepository';
 
 const auditRepo = new AuditLogRepository();
 

@@ -15,18 +15,20 @@ import alertRoutes from './routes/alerts';
 import adminAuthRoutes from './routes/admin-auth';
 import { adminUserRoutes } from './routes/admin-users';
 import adminAccountRoutes from './routes/admin-accounts';
+import { adminSubscriptionRoutes } from './routes/admin-subscriptions';
+import { adminAnalyticsRoutes } from './routes/admin-analytics';
 import projectUsersRoutes from './routes/project-users';
 import suggestionsRoutes from './routes/suggestions';
 
 import path from 'path';
-const envPath = path.resolve(__dirname, '../../../.env');
-console.log('Loading .env from:', envPath);
-const result = dotenv.config({ path: envPath });
-if (result.error) {
-    console.error('Error loading .env:', result.error);
-} else {
-    console.log('.env loaded successfully');
-}
+// // const envPath = path.resolve(__dirname, '../../../.env');
+// // console.log('Loading .env from:', envPath);
+// // const result = dotenv.config({ path: envPath });
+// // if (result.error) {
+// //     console.error('Error loading .env:', result.error);
+// // } else {
+// //     console.log('.env loaded successfully');
+// // }
 
 const fastify = Fastify({
     logger: false // Use our custom logger
@@ -49,7 +51,7 @@ fastify.register(cookie, {
 });
 
 fastify.register(cors, {
-    origin: ['http://localhost:3000'],
+    origin: ['http://localhost:3000', 'http://localhost:3001'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true
 });
@@ -68,16 +70,25 @@ fastify.register(rateLimit, {
 });
 fastify.register(errorHandlerPlugin);
 fastify.register(swaggerPlugin);
+console.log('Registering authPlugin');
 fastify.register(authPlugin);
+console.log('Registering tenancyPlugin');
 fastify.register(tenancyPlugin);
 
 // Register Routes
+console.log('Registering siteRoutes');
 fastify.register(siteRoutes, { prefix: '/sites' });
+console.log('Registering analysisRoutes');
 fastify.register(analysisRoutes, { prefix: '/analysis' });
+console.log('Registering graphRoutes');
 fastify.register(graphRoutes);
+console.log('Registering agentsRoutes');
 fastify.register(agentsRoutes, { prefix: '/agents' });
+console.log('Registering scheduleRoutes');
 fastify.register(scheduleRoutes);
+console.log('Registering keywordsRoutes');
 fastify.register(keywordsRoutes);
+console.log('Registering contentRoutes');
 fastify.register(contentRoutes);
 fastify.register(projectsRoutes, { prefix: '/projects' });
 fastify.register(projectUsersRoutes, { prefix: '/projects' });
@@ -120,6 +131,8 @@ fastify.register(alertRoutes);
 fastify.register(adminAuthRoutes, { prefix: '/admin/auth' });
 fastify.register(adminUserRoutes, { prefix: '/admin/users' });
 fastify.register(adminAccountRoutes, { prefix: '/admin/accounts' });
+fastify.register(adminSubscriptionRoutes, { prefix: '/admin/subscriptions' });
+fastify.register(adminAnalyticsRoutes, { prefix: '/admin/analytics' });
 
 fastify.get('/health', async (request: FastifyRequest, reply: FastifyReply) => {
     logger.info('Health check requested');
@@ -143,3 +156,4 @@ const start = async () => {
 };
 
 start();
+// Trigger rebuild

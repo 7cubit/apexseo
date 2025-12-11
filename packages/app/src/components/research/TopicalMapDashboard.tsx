@@ -11,6 +11,7 @@ import { TopicTable } from './TopicTable';
 import { KeywordDetailsPanel } from './KeywordDetailsPanel';
 import { TopicMap } from '@/lib/TopicalMapService';
 import { CompetitorGapAnalysis } from './CompetitorGapAnalysis';
+import { SemanticSetupWizard } from './SemanticSetupWizard';
 import { Search, RefreshCw, Filter, LayoutGrid, Table as TableIcon, Loader2, Sparkles, BarChart3, Globe, Target, ArrowRight, PlayCircle, Swords } from 'lucide-react';
 
 // --- Components ---
@@ -88,7 +89,10 @@ const StatsCard = ({ label, value, subtext, icon: Icon, color }: any) => (
 
 // --- Main Dashboard ---
 
+import { useRouter } from 'next/navigation';
+
 export function TopicalMapDashboard() {
+    const router = useRouter();
     const [seedKeyword, setSeedKeyword] = useState('');
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState<TopicMap | null>(null);
@@ -114,6 +118,32 @@ export function TopicalMapDashboard() {
             setData(json);
         } catch (e) {
             console.error("Failed to fetch clusters", e);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSemanticAnalysis = async (seed: string, rawKeywords: string[]) => {
+        setLoading(true);
+        try {
+            const res = await fetch('/api/keywords/analysis/semantic', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    seedKeyword: seed,
+                    rawKeywords,
+                    serpData: [] // TODO: Let backend fetch or pass if available
+                })
+            });
+            const json = await res.json();
+            // Mock projectId for now, should come from context/props
+            const projectId = 'current-project-id';
+
+            // Navigate to the new Strategy View
+            router.push(`/projects/${projectId}/research/${encodeURIComponent(seed)}`);
+
+        } catch (e) {
+            console.error("Semantic analysis failed", e);
         } finally {
             setLoading(false);
         }
@@ -280,6 +310,9 @@ export function TopicalMapDashboard() {
                     <Button variant="outline" size="sm" className="text-xs">
                         Export Report
                     </Button>
+                    <div className="ml-2">
+                        <SemanticSetupWizard onAnalyze={handleSemanticAnalysis} loading={loading} />
+                    </div>
                 </div>
 
                 {/* Content Area */}

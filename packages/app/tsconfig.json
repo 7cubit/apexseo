@@ -24,6 +24,9 @@
         "paths": {
             "@/*": [
                 "./src/*"
+            ],
+            "@apexseo/shared": [
+                "../../packages/shared/src/index.ts"
             ]
         },
         "typeRoots": [

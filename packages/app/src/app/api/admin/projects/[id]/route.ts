@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { ProjectRepository, ClickHouseProjectRepository } from '@apexseo/shared';
+import { ClickHouseProjectRepository } from '@apexseo/shared';
 
 export async function GET(
     request: Request,
@@ -7,7 +7,7 @@ export async function GET(
 ) {
     try {
         // Fetch Neo4j data (owner, plan, etc.)
-        const projectList = await ProjectRepository.listWithDetails(1, 0, undefined);
+        // Fetch details from ClickHouse directly
         // Note: listWithDetails is not ideal for getById, but for now we can filter or assume we'd add getByIdWithDetails later.
         // Let's assume we need to implement getByIdWithDetails or just fetch basic info + metrics.
         // Actually, let's use ClickHouseProjectRepository.getById for basic info and augment it.

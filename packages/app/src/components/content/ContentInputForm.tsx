@@ -36,10 +36,12 @@ export const ContentInputForm: React.FC<ContentInputFormProps> = ({ onSubmit, is
         e.preventDefault();
         onSubmit({
             topic,
-            keywords: keywords.split(',').map(k => k.trim()).filter(k => k),
+            keywords: (keywords || '').split(',').map(k => k.trim()).filter(k => k),
             brandVoice,
             providers: { research: 'perplexity', drafting: 'openai' },
-            projectId: selectedProjectId || undefined
+            projectId: selectedProjectId || undefined,
+            category: 'General',
+            audienceLevel: 'Beginner'
         });
     };
 

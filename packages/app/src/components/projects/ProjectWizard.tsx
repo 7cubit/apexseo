@@ -143,11 +143,11 @@ export function ProjectWizard() {
 
             <Card className="min-h-[600px] flex flex-col border-gray-200 dark:border-gray-800 shadow-lg">
                 <div className="flex-1">
-                    {step === 1 && <Step1_Identity data={formData} update={d => setFormData({ ...formData, ...d })} />}
-                    {step === 2 && <Step2_BrandIdentity data={formData} update={d => setFormData({ ...formData, ...d })} />}
-                    {step === 3 && <Step3_Knowledge data={formData} update={d => setFormData({ ...formData, ...d })} />}
-                    {step === 4 && <Step4_ContentPillars data={formData} update={d => setFormData({ ...formData, ...d })} />}
-                    {step === 5 && <Step5_ContentImport data={formData} update={d => setFormData({ ...formData, ...d })} />}
+                    {step === 1 && <Step1_Identity data={formData} update={(d: any) => setFormData(prev => ({ ...prev, ...d }))} />}
+                    {step === 2 && <Step2_BrandIdentity data={formData} update={(d: any) => setFormData(prev => ({ ...prev, ...d }))} />}
+                    {step === 3 && <Step3_Knowledge data={formData} update={(d: any) => setFormData(prev => ({ ...prev, ...d }))} />}
+                    {step === 4 && <Step4_ContentPillars data={formData} update={(d: any) => setFormData(prev => ({ ...prev, ...d }))} />}
+                    {step === 5 && <Step5_ContentImport data={formData} update={(d: any) => setFormData(prev => ({ ...prev, ...d }))} />}
                     {step === 6 && <Step6_Review data={formData} onSubmit={handleSubmit} loading={loading} />}
                 </div>
 

@@ -270,6 +270,36 @@ export class ProjectRepository {
         }
     }
 
+    static async updateStatus(id: string, status: string): Promise<void> {
+        if (!driver) return;
+        const session = driver.session({ database: DATABASE });
+        try {
+            await session.run(
+                `MATCH (p:Project {id: $id}) SET p.status = $status, p.updated_at = datetime($now)`,
+                { id, status, now: new Date().toISOString() }
+            );
+        } finally {
+            await session.close();
+        }
+    }
+
+    static async listWithDetails(limit: number, offset: number, search?: string) {
+        const all = await this.getAllProjects();
+        let filtered = all;
+        if (search) {
+            const lower = search.toLowerCase();
+            filtered = all.filter(p => p.name.toLowerCase().includes(lower) || p.siteId.toLowerCase().includes(lower));
+        }
+        const sliced = filtered.slice(offset, offset + limit);
+
+        // Mock owner details for admin view
+        return sliced.map(p => ({
+            ...p,
+            owner: { email: 'user@example.com' }, // Mock owner
+            plan: { name: 'Pro' } // Mock plan
+        }));
+    }
+
     static async getPublishedContent(projectId: string): Promise<PublishedPost[]> {
         if (!driver) return [];
         const session = driver.session({ database: DATABASE });

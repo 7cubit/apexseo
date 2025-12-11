@@ -3,85 +3,363 @@
 > @apexseo/app@0.1.0 build
 > next build
 
-  [1m[38;2;173;127;168m ▲ Next.js 14.1.0[39m[22m
-   - Environments: .env.local, .env
+  [1m[38;2;173;127;168m▲ Next.js 14.2.33[39m[22m
+  - Environments: .env
 
  [37m[1m [22m[39m Creating an optimized production build ...
  [32m[1m✓[22m[39m Compiled successfully
-[?25l [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[?25h [37m[1m [22m[39m Linting and checking validity of types     [32m[1m✓[22m[39m Linting and checking validity of types 
-[?25l [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39mInitializing ClickHouse client... { URL: true, USER: true, PASS: true }
+[?25l [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m ⨯ ESLint: Converting circular structure to JSON     --> starting at object with constructor 'Object'     |     property 'configs' -> object with constructor 'Object'     |     property 'flat' -> object with constructor 'Object'     |     ...     |     property 'plugins' -> object with constructor 'Object'     --- property 'react' closes the circle Referenced from: /Users/tamilchurchtokyo/projects/apexseo/packages/app/.eslintrc.json
+[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[?25h [37m[1m [22m[39m Linting and checking validity of types     [32m[1m✓[22m[39m Linting and checking validity of types 
+[?25l [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[dotenv@17.2.3] injecting env (1) from ../../.env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+Initializing ClickHouse client... { URL: true, USER: true, PASS: true }
+ClickHouse client initialized. Client instance: true
+[dotenv@17.2.3] injecting env (1) from ../../.env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+Initializing ClickHouse client... { URL: true, USER: true, PASS: true }
+ClickHouse client initialized. Client instance: true
+[dotenv@17.2.3] injecting env (1) from ../../.env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+Initializing ClickHouse client... { URL: true, USER: true, PASS: true }
+[dotenv@17.2.3] injecting env (1) from ../../.env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+ClickHouse client initialized. Client instance: true
+Initializing ClickHouse client... { URL: true, USER: true, PASS: true }
+ClickHouse client initialized. Client instance: true
+[dotenv@17.2.3] injecting env (1) from ../../.env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+Initializing ClickHouse client... { URL: true, USER: true, PASS: true }
+ClickHouse client initialized. Client instance: true
+[dotenv@17.2.3] injecting env (1) from ../../.env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+Initializing ClickHouse client... { URL: true, USER: true, PASS: true }
+ClickHouse client initialized. Client instance: true
+[dotenv@17.2.3] injecting env (1) from ../../.env -- tip: ⚙️  suppress all logs with { quiet: true }
+Creating Neo4j driver with URI: bolt://localhost:7687
+Initializing ClickHouse client... { URL: true, USER: true, PASS: true }
+Neo4j driver created.
+ClickHouse client initialized. Client instance: true
+Creating Neo4j driver with URI: bolt://localhost:7687
+Neo4j driver created.
+Creating Neo4j driver with URI: bolt://localhost:7687
+Neo4j driver created.
+Creating Neo4j driver with URI: bolt://localhost:7687
+Neo4j driver created.
+OPENAI_API_KEY is not set in environment variables.
+OPENAI_API_KEY is not set in environment variables.
+[dotenv@17.2.3] injecting env (0) from ../../.env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from ../../.env -- tip: ⚙️  enable debug logging with { debug: true }
+OPENAI_API_KEY is not set in environment variables.
+[dotenv@17.2.3] injecting env (0) from ../../.env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+Creating Neo4j driver with URI: bolt://localhost:7687
+Neo4j driver created.
+Creating Neo4j driver with URI: bolt://localhost:7687
+Neo4j driver created.
+Creating Neo4j driver with URI: bolt://localhost:7687
+Neo4j driver created.
+OPENAI_API_KEY is not set in environment variables.
+[dotenv@17.2.3] injecting env (0) from ../../.env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
 Initializing ClickHouse client... { URL: true, USER: true, PASS: true }
 Initializing ClickHouse client... { URL: true, USER: true, PASS: true }
+OPENAI_API_KEY is not set in environment variables.
+OPENAI_API_KEY is not set in environment variables.
+[dotenv@17.2.3] injecting env (0) from ../../.env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from ../../.env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+OPENAI_API_KEY is not set in environment variables.
+[dotenv@17.2.3] injecting env (0) from ../../.env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
 Initializing ClickHouse client... { URL: true, USER: true, PASS: true }
-[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39mInitializing ClickHouse client... { URL: true, USER: true, PASS: true }
 [2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39mInitializing ClickHouse client... { URL: true, USER: true, PASS: true }
-[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G[?25h [37m[1m [22m[39m Collecting page data     [32m[1m✓[22m[39m Collecting page data 
-[?25l [37m[1m [22m[39m Generating static pages (0/28)  [36m[    ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/28)  [36m[=   ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/28)  [36m[==  ][39m  [37m[1m [22m[39m Generating static pages (7/28) 
-[2K[1G[1A[2K[1G [37m[1m [22m[39m Generating static pages (0/28)  [36m[=== ][39m  [37m[1m [22m[39m Generating static pages (17/28) 
-[2K[1G[1A[2K[1G [37m[1m [22m[39m Generating static pages (0/28)  [36m[ ===][39m  [37m[1m [22m[39m Generating static pages (17/28) 
-[2K[1G[1A[2K[1G [37m[1m [22m[39m Generating static pages (0/28)  [36m[  ==][39m  [37m[1m [22m[39m Generating static pages (27/28) 
-[2K[1G[1A[2K[1G[?25h [32m[1m✓[22m[39m Generating static pages (28/28) 
-[?25l [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[?25l [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G[?25h [37m[1m [22m[39m Collecting build traces     [32m[1m✓[22m[39m Collecting build traces 
-[2K[1G[?25h [37m[1m [22m[39m Finalizing page optimization     [32m[1m✓[22m[39m Finalizing page optimization 
+Initializing ClickHouse client... { URL: true, USER: true, PASS: true }
+Initializing ClickHouse client... { URL: true, USER: true, PASS: true }
+[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G[?25h [37m[1m [22m[39m Collecting page data     [32m[1m✓[22m[39m Collecting page data 
+[?25l [37m[1m [22m[39m Generating static pages (0/89)  [36m[    ][39mError fetching invoices: B [Error]: Dynamic server usage: Route /api/admin/billing/invoices couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at V (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:21778)
+    at Object.get (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:29465)
+    at a (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/app/api/admin/billing/invoices/route.js:1:1389)
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/server/lib/trace/tracer.js:122:103 {
+  description: "Route /api/admin/billing/invoices couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+Error fetching global usage: B [Error]: Dynamic server usage: Route /api/admin/api-usage couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at V (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:21778)
+    at Object.get (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:29465)
+    at n (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/app/api/admin/api-usage/route.js:1:1378)
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/server/lib/trace/tracer.js:122:103 {
+  description: "Route /api/admin/api-usage couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+Error fetching audit logs: B [Error]: Dynamic server usage: Route /api/admin/audit-logs couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at V (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:21778)
+    at Object.get (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:29465)
+    at u (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/app/api/admin/audit-logs/route.js:1:1390)
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/server/lib/trace/tracer.js:122:103 {
+  description: "Route /api/admin/audit-logs couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+[2K[1G [37m[1m [22m[39m Generating static pages (7/89)  [36m[=   ][39mError fetching users: B [Error]: Dynamic server usage: Route /api/admin/users couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at V (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:21778)
+    at Object.get (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:29465)
+    at n (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/app/api/admin/users/route.js:1:1390)
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/server/lib/trace/tracer.js:122:103 {
+  description: "Route /api/admin/users couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+Error fetching projects: B [Error]: Dynamic server usage: Route /api/admin/projects couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at V (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:21778)
+    at Object.get (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:29465)
+    at d (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/app/api/admin/projects/route.js:1:820)
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/server/lib/trace/tracer.js:122:103 {
+  description: "Route /api/admin/projects couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+Temporal disabled to prevent segfault.
+Failed to get Neo4j stats: t [Neo4jError]: Failed to connect to server. Please ensure that your database is listening on the correct host and port and that you have compatible encryption settings both on Neo4j server and driver. Note that the default encryption setting has changed in Neo4j 4.0.
 
-[4mRoute (app)[24m                               [4mSize[24m     [4mFirst Load JS[24m
-┌ ○ /                                     1.84 kB        [37m[1m93.6 kB[22m[39m
-├ ○ /_not-found                           892 B          [37m[1m85.5 kB[22m[39m
-├ ○ /analyze                              4.73 kB        [37m[1m96.5 kB[22m[39m
-├ λ /api/crawl                            0 B                [37m[1m0 B[22m[39m
-├ λ /api/crawl/[url]                      0 B                [37m[1m0 B[22m[39m
-├ λ /api/crawl/[url]/status               0 B                [37m[1m0 B[22m[39m
-├ λ /api/embeddings/[projectId]           0 B                [37m[1m0 B[22m[39m
-├ ○ /api/health                           0 B                [37m[1m0 B[22m[39m
-├ λ /api/projects                         0 B                [37m[1m0 B[22m[39m
-├ λ /api/projects/[id]/analyze            0 B                [37m[1m0 B[22m[39m
-├ λ /api/projects/[id]/backlinks          0 B                [37m[1m0 B[22m[39m
-├ λ /api/projects/[id]/cannibalization    0 B                [37m[1m0 B[22m[39m
-├ λ /api/projects/[id]/graph              0 B                [37m[1m0 B[22m[39m
-├ λ /api/projects/[id]/health-score       0 B                [37m[1m0 B[22m[39m
-├ λ /api/projects/[id]/links              0 B                [37m[1m0 B[22m[39m
-├ λ /api/projects/[id]/orphans            0 B                [37m[1m0 B[22m[39m
-├ λ /api/projects/[id]/rank-history       0 B                [37m[1m0 B[22m[39m
-├ λ /api/projects/[id]/rank-tracking      0 B                [37m[1m0 B[22m[39m
-├ λ /api/projects/[id]/truth              0 B                [37m[1m0 B[22m[39m
-├ λ /api/projects/[id]/tspr               0 B                [37m[1m0 B[22m[39m
-├ λ /api/ux/[projectId]                   0 B                [37m[1m0 B[22m[39m
-├ λ /api/verify/[pageId]                  0 B                [37m[1m0 B[22m[39m
-├ ○ /backlinks                            9.98 kB         [37m[1m188 kB[22m[39m
-├ ○ /cannibalization                      2.97 kB        [37m[1m87.6 kB[22m[39m
-├ ○ /clusters                             183 B          [37m[1m84.8 kB[22m[39m
-├ ○ /dashboard                            2.49 kB         [37m[1m101 kB[22m[39m
-├ ○ /dashboard/new                        186 B          [37m[1m84.8 kB[22m[39m
-├ ○ /graph                                50.1 kB         [37m[1m142 kB[22m[39m
-├ ○ /health-score                         2.72 kB         [37m[1m190 kB[22m[39m
-├ ○ /leaderboard                          3.02 kB        [37m[1m94.8 kB[22m[39m
-├ ○ /linking                              185 B          [37m[1m84.8 kB[22m[39m
-├ ○ /login                                1.79 kB        [37m[1m93.6 kB[22m[39m
-├ ○ /orphans                              3.44 kB        [37m[1m95.2 kB[22m[39m
-├ λ /public/[hash]                        186 B          [37m[1m84.8 kB[22m[39m
-├ ○ /rank-tracker                         4.87 kB         [37m[1m193 kB[22m[39m
-├ ○ /recommendations                      3.15 kB        [37m[1m94.9 kB[22m[39m
-├ ○ /settings                             186 B          [37m[1m84.8 kB[22m[39m
-├ ○ /signup                               197 B          [37m[1m91.6 kB[22m[39m
-├ ○ /sites                                2.49 kB         [37m[1m101 kB[22m[39m
-├ λ /sites/[id]                           3.19 kB         [37m[1m102 kB[22m[39m
-├ λ /sites/[id]/clusters                  197 B          [37m[1m91.6 kB[22m[39m
-├ λ /sites/[id]/linking                   197 B          [37m[1m91.6 kB[22m[39m
-├ λ /sites/[id]/pages/[page_id]           199 B          [37m[1m91.6 kB[22m[39m
-├ λ /sites/[id]/truth                     197 B          [37m[1m91.6 kB[22m[39m
-├ λ /sites/[id]/ux                        197 B          [37m[1m91.6 kB[22m[39m
-├ λ /sites/[id]/ux/sessions/[session_id]  197 B          [37m[1m91.6 kB[22m[39m
-├ ○ /sites/new                            2.65 kB         [37m[1m101 kB[22m[39m
-├ ○ /truth                                2.83 kB        [37m[1m94.6 kB[22m[39m
-├ ○ /ux-lab                               3.08 kB        [37m[1m94.9 kB[22m[39m
-└ ○ /workflows                            186 B          [37m[1m84.8 kB[22m[39m
-+ First Load JS shared by all             [37m[1m84.6 kB[22m[39m
-  ├ chunks/1dd3208c-fff0bc2524d01fc2.js   53.4 kB
-  ├ chunks/9997-d767376880572e8f.js       29.1 kB
-  └ other shared chunks (total)           2.15 kB
+    at new e (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/chunks/2125.js:1:334012)
+    at e._run (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/chunks/2125.js:1:345546)
+    at e.run (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/chunks/2125.js:1:344569)
+    at ea.getNeo4jStats (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/chunks/3846.js:500:1425)
+    at u (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/app/api/admin/system/insights/route.js:1:1380)
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093) {
+  constructor: [Function: t] { isRetriable: [Function (anonymous)] },
+  cause: undefined,
+  gqlStatus: '50N42',
+  gqlStatusDescription: 'error: general processing exception - unexpected error. Failed to connect to server. Please ensure that your database is listening on the correct host and port and that you have compatible encryption settings both on Neo4j server and driver. Note that the default encryption setting has changed in Neo4j 4.0.',
+  diagnosticRecord: { OPERATION: '', OPERATION_CODE: '0', CURRENT_SCHEMA: '/' },
+  classification: 'UNKNOWN',
+  rawClassification: undefined,
+  code: 'ServiceUnavailable',
+  retriable: true
+}
+Neo4j health check failed: t [Neo4jError]: Failed to connect to server. Please ensure that your database is listening on the correct host and port and that you have compatible encryption settings both on Neo4j server and driver. Note that the default encryption setting has changed in Neo4j 4.0.
+    at t [as constructor] (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/chunks/2125.js:1:232119)
+    at new t (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/chunks/2125.js:1:232818)
+    at t.newError (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/chunks/2125.js:1:233199)
+    at e._handleConnectionError (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/chunks/2125.js:1:117600)
+    at Socket.emit (node:events:508:28)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
+  constructor: [Function: t] { isRetriable: [Function (anonymous)] },
+  cause: undefined,
+  gqlStatus: '50N42',
+  gqlStatusDescription: 'error: general processing exception - unexpected error. Failed to connect to server. Please ensure that your database is listening on the correct host and port and that you have compatible encryption settings both on Neo4j server and driver. Note that the default encryption setting has changed in Neo4j 4.0.',
+  diagnosticRecord: { OPERATION: '', OPERATION_CODE: '0', CURRENT_SCHEMA: '/' },
+  classification: 'UNKNOWN',
+  rawClassification: undefined,
+  code: 'ServiceUnavailable',
+  retriable: true
+}
+[2K[1G [37m[1m [22m[39m Generating static pages (19/89)  [36m[==  ][39mError fetching accounts: B [Error]: Dynamic server usage: Route /api/admin/accounts couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at V (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:21778)
+    at Object.get (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:29465)
+    at u (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/app/api/admin/accounts/route.js:1:1390)
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/server/lib/trace/tracer.js:122:103 {
+  description: "Route /api/admin/accounts couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+Keyword Research API Error: B [Error]: Dynamic server usage: Route /api/keywords/research couldn't be rendered statically because it used `nextUrl.searchParams`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at V (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:21778)
+    at Object.get (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:29137)
+    at n (/Users/tamilchurchtokyo/projects/apexseo/packages/app/.next/server/app/api/keywords/research/route.js:1:1364)
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at /Users/tamilchurchtokyo/projects/apexseo/node_modules/next/dist/server/lib/trace/tracer.js:122:103 {
+  description: "Route /api/keywords/research couldn't be rendered statically because it used `nextUrl.searchParams`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+[2K[1G [37m[1m [22m[39m Generating static pages (33/89)  [36m[=== ][39m[2K[1G [37m[1m [22m[39m Generating static pages (41/89)  [36m[ ===][39m[2K[1G [37m[1m [22m[39m Generating static pages (55/89)  [36m[  ==][39m[2K[1G [37m[1m [22m[39m Generating static pages (79/89)  [36m[   =][39m[2K[1G[?25h [32m[1m✓[22m[39m Generating static pages (89/89)
+[?25l [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[?25l [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G[?25h [37m[1m [22m[39m Collecting build traces     [32m[1m✓[22m[39m Collecting build traces 
+[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G[?25h [37m[1m [22m[39m Finalizing page optimization     [32m[1m✓[22m[39m Finalizing page optimization 
 
+[4mRoute (app)[24m                                    [4mSize[24m     [4mFirst Load JS[24m
+┌ ○ /                                          776 B           [37m[1m109 kB[22m[39m
+├ ○ /_not-found                                880 B          [37m[1m88.4 kB[22m[39m
+├ ○ /admin/accounts                            2.48 kB         [37m[1m105 kB[22m[39m
+├ ƒ /admin/accounts/[id]                       3.49 kB         [37m[1m109 kB[22m[39m
+├ ƒ /admin/accounts/[id]/api-keys              2.62 kB        [37m[1m99.8 kB[22m[39m
+├ ○ /admin/api-usage                           4.53 kB         [37m[1m200 kB[22m[39m
+├ ○ /admin/audit-logs                          2.68 kB         [37m[1m106 kB[22m[39m
+├ ƒ /admin/audit-logs/[id]                     2.31 kB        [37m[1m96.5 kB[22m[39m
+├ ○ /admin/dashboard                           1.97 kB        [37m[1m99.1 kB[22m[39m
+├ ○ /admin/login                               2.1 kB         [37m[1m99.3 kB[22m[39m
+├ ○ /admin/plans                               2.56 kB        [37m[1m96.7 kB[22m[39m
+├ ○ /admin/plans/builder                       2.38 kB        [37m[1m99.5 kB[22m[39m
+├ ○ /admin/projects                            2.58 kB         [37m[1m105 kB[22m[39m
+├ ƒ /admin/projects/[id]                       2.42 kB        [37m[1m99.6 kB[22m[39m
+├ ○ /admin/projects/blocked                    2.31 kB        [37m[1m99.5 kB[22m[39m
+├ ○ /admin/settings/flags                      2.65 kB        [37m[1m99.8 kB[22m[39m
+├ ○ /admin/settings/general                    2.75 kB        [37m[1m99.9 kB[22m[39m
+├ ○ /admin/settings/limits                     1.92 kB        [37m[1m99.1 kB[22m[39m
+├ ○ /admin/system                              3.98 kB        [37m[1m98.1 kB[22m[39m
+├ ○ /admin/users                               2.68 kB         [37m[1m106 kB[22m[39m
+├ ƒ /admin/users/[id]                          2.55 kB        [37m[1m99.7 kB[22m[39m
+├ ○ /agents/status                             2.8 kB          [37m[1m102 kB[22m[39m
+├ ○ /alerts                                    3.47 kB         [37m[1m125 kB[22m[39m
+├ ○ /analytics                                 11.6 kB         [37m[1m207 kB[22m[39m
+├ ○ /analyze                                   2.17 kB         [37m[1m193 kB[22m[39m
+├ ƒ /api/admin/accounts                        0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/accounts/[id]                   0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/accounts/[id]/api-keys          0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/accounts/[id]/subscription      0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/accounts/[id]/usage             0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/api-usage                       0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/audit-logs                      0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/audit-logs/[id]                 0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/auth/login                      0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/billing/credits                 0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/billing/invoices                0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/billing/invoices/[id]/refund    0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/billing/ltd/redeem              0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/plans                           0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/projects                        0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/projects/[id]                   0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/projects/[id]/crawl             0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/projects/blocked                0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/settings/config                 0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/settings/flags                  0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/settings/flags/override         0 B                [37m[1m0 B[22m[39m
+├ ○ /api/admin/settings/integrations           0 B                [37m[1m0 B[22m[39m
+├ ○ /api/admin/system/health                   0 B                [37m[1m0 B[22m[39m
+├ ○ /api/admin/system/insights                 0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/users                           0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/users/[id]                      0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/admin/users/[id]/impersonate          0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/analytics/cannibalization             0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/analytics/hexbin-data                 0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/analytics/volatility                  0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/audit/onpage                          0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/auth/[...nextauth]                    0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/backlinks/[projectId]                 0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/content/generate                      0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/crawl                                 0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/crawl/[url]                           0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/crawl/[url]/status                    0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/embeddings/[projectId]                0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/generation                            0 B                [37m[1m0 B[22m[39m
+├ ○ /api/health                                0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/keywords/research                     0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/migrate/projects                      0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects                              0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects/[id]                         0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects/[id]/analysis                0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects/[id]/analyze                 0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects/[id]/backlinks               0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects/[id]/cannibalization         0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects/[id]/clusters                0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects/[id]/graph                   0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects/[id]/health-score            0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects/[id]/links                   0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects/[id]/orphans                 0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects/[id]/rank-history            0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects/[id]/rank-tracking           0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects/[id]/scores                  0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects/[id]/truth                   0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/projects/[id]/tspr                    0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/research/clusters                     0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/research/serp                         0 B                [37m[1m0 B[22m[39m
+├ ○ /api/status/byok                           0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/ux/[projectId]                        0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/verify/[pageId]                       0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/workflows/eeat-power                  0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/workflows/trigger-content-generation  0 B                [37m[1m0 B[22m[39m
+├ ƒ /api/workflows/trigger-gap-fill            0 B                [37m[1m0 B[22m[39m
+├ ○ /audit                                     2.52 kB        [37m[1m96.7 kB[22m[39m
+├ ○ /backlinks                                 12.3 kB         [37m[1m235 kB[22m[39m
+├ ○ /cannibalization                           13 kB           [37m[1m252 kB[22m[39m
+├ ○ /clusters                                  183 B          [37m[1m87.7 kB[22m[39m
+├ ○ /content-optimizer                         4.3 kB          [37m[1m214 kB[22m[39m
+├ ○ /content-studio                            7.52 kB         [37m[1m145 kB[22m[39m
+├ ○ /content/audit                             13.5 kB         [37m[1m151 kB[22m[39m
+├ ○ /content/editor                            42.7 kB         [37m[1m309 kB[22m[39m
+├ ○ /dashboard                                 3.17 kB         [37m[1m261 kB[22m[39m
+├ ○ /dashboard-test                            4.7 kB          [37m[1m218 kB[22m[39m
+├ ○ /dashboard/hexbin                          4.12 kB         [37m[1m106 kB[22m[39m
+├ ○ /dashboard/new                             183 B          [37m[1m87.7 kB[22m[39m
+├ ○ /graph                                     7.03 kB         [37m[1m143 kB[22m[39m
+├ ○ /health-score                              3.08 kB         [37m[1m192 kB[22m[39m
+├ ○ /keywords                                  4.11 kB         [37m[1m108 kB[22m[39m
+├ ○ /keywords/tracking                         3.51 kB         [37m[1m125 kB[22m[39m
+├ ○ /leaderboard                               3.29 kB        [37m[1m97.4 kB[22m[39m
+├ ○ /linking                                   182 B          [37m[1m87.7 kB[22m[39m
+├ ○ /login                                     259 B           [37m[1m108 kB[22m[39m
+├ ○ /orphans                                   3.75 kB        [37m[1m97.9 kB[22m[39m
+├ ○ /projects                                  2.76 kB         [37m[1m106 kB[22m[39m
+├ ƒ /projects/[id]                             188 B          [37m[1m87.7 kB[22m[39m
+├ ƒ /projects/[id]/graph                       13.4 kB         [37m[1m189 kB[22m[39m
+├ ƒ /projects/[id]/research/[keyword]          3.38 kB        [37m[1m97.5 kB[22m[39m
+├ ƒ /projects/[id]/settings                    4.92 kB         [37m[1m135 kB[22m[39m
+├ ○ /projects/new                              9.81 kB         [37m[1m131 kB[22m[39m
+├ ƒ /public/[hash]                             183 B          [37m[1m87.7 kB[22m[39m
+├ ○ /rank-tracker                              2.55 kB         [37m[1m194 kB[22m[39m
+├ ○ /recommendations                           3.4 kB         [37m[1m97.5 kB[22m[39m
+├ ○ /research                                  16 kB           [37m[1m182 kB[22m[39m
+├ ○ /serp                                      3.25 kB        [37m[1m97.4 kB[22m[39m
+├ ○ /settings                                  183 B          [37m[1m87.7 kB[22m[39m
+├ ○ /settings/team                             6.43 kB         [37m[1m131 kB[22m[39m
+├ ○ /signup                                    200 B          [37m[1m96.5 kB[22m[39m
+├ ○ /sites                                     3.29 kB         [37m[1m128 kB[22m[39m
+├ ƒ /sites/[id]                                2.84 kB         [37m[1m261 kB[22m[39m
+├ ƒ /sites/[id]/clusters                       200 B          [37m[1m96.5 kB[22m[39m
+├ ƒ /sites/[id]/linking                        200 B          [37m[1m96.5 kB[22m[39m
+├ ƒ /sites/[id]/pages                          3.73 kB         [37m[1m134 kB[22m[39m
+├ ƒ /sites/[id]/pages/[pageId]                 200 B          [37m[1m96.5 kB[22m[39m
+├ ƒ /sites/[id]/pages/[pageId]/audit           3.77 kB         [37m[1m134 kB[22m[39m
+├ ƒ /sites/[id]/truth                          200 B          [37m[1m96.5 kB[22m[39m
+├ ƒ /sites/[id]/ux                             200 B          [37m[1m96.5 kB[22m[39m
+├ ƒ /sites/[id]/ux/sessions/[session_id]       200 B          [37m[1m96.5 kB[22m[39m
+├ ○ /sites/new                                 2.88 kB         [37m[1m106 kB[22m[39m
+├ ○ /system-status                             3.35 kB         [37m[1m134 kB[22m[39m
+├ ○ /truth                                     3.11 kB        [37m[1m97.3 kB[22m[39m
+├ ○ /ux-lab                                    3.37 kB        [37m[1m97.5 kB[22m[39m
+└ ○ /workflows                                 3.18 kB        [37m[1m97.3 kB[22m[39m
++ First Load JS shared by all                  [37m[1m87.5 kB[22m[39m
+  ├ chunks/1528-e07d5983d25bb217.js            31.8 kB
+  ├ chunks/1dd3208c-1a6a463d83e37997.js        53.6 kB
+  └ other shared chunks (total)                2.05 kB
+
+
+ƒ Middleware                                   [37m[1m49.5 kB[22m[39m
 
 ○  (Static)   prerendered as static content
-λ  (Dynamic)  server-rendered on demand using Node.js
+ƒ  (Dynamic)  server-rendered on demand
 
 [?25h⠙[1G[0K

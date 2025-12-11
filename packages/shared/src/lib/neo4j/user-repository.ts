@@ -9,9 +9,31 @@ export interface User {
     password_hash?: string;
     image?: string;
     is_suspended: boolean;
+    newsletter_opt_in?: boolean;
+    marketing_opt_in?: boolean;
     created_at: string;
     updated_at: string;
     last_login_at?: string;
+}
+
+export interface Subscription {
+    id: string;
+    status: 'trialing' | 'active' | 'past_due' | 'canceled' | 'incomplete';
+    current_period_end: string;
+    trial_ends_at?: string;
+    stripe_subscription_id?: string;
+    stripe_customer_id?: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Plan {
+    id: string;
+    name: string;
+    price: number;
+    currency: string;
+    interval: 'month' | 'year';
+    stripe_price_id: string;
 }
 
 export class UserRepository {
@@ -40,6 +62,8 @@ export class UserRepository {
                     password_hash: $password_hash,
                     image: $image,
                     is_suspended: $is_suspended,
+                    newsletter_opt_in: $newsletter_opt_in,
+                    marketing_opt_in: $marketing_opt_in,
                     created_at: $now,
                     updated_at: $now
                 })

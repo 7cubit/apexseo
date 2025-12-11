@@ -116,6 +116,47 @@ class PageRepository {
             await session.close();
         }
     }
+    static async getCannibalizationConflicts(siteId) {
+        var _a;
+        if (!driver_1.driver)
+            return { conflicts: [], stats: { totalConflicts: 0, affectedPages: 0 } };
+        const session = driver_1.driver.session({ database: driver_1.DATABASE });
+        try {
+            // Fetch conflicts
+            const result = await session.run(`
+                MATCH (p1:Page {siteId: $siteId})-[r:CANNIBALIZES]->(p2:Page)
+                RETURN 
+                    p1.url as page1_url, 
+                    p1.targetKeyword as page1_keyword,
+                    p2.url as page2_url, 
+                    p2.targetKeyword as page2_keyword,
+                    r.similarity as similarity
+                ORDER BY r.similarity DESC
+                `, { siteId });
+            const conflicts = result.records.map(record => ({
+                page1: { url: record.get('page1_url'), keyword: record.get('page1_keyword') },
+                page2: { url: record.get('page2_url'), keyword: record.get('page2_keyword') },
+                similarity: record.get('similarity')
+            }));
+            // Get stats
+            const statsResult = await session.run(`
+                MATCH (p:Page {siteId: $siteId})
+                WHERE p.cannibalizationStatus = 'conflict'
+                RETURN count(p) as affectedPages
+                `, { siteId });
+            const affectedPages = ((_a = statsResult.records[0]) === null || _a === void 0 ? void 0 : _a.get('affectedPages').toNumber()) || 0;
+            return {
+                conflicts,
+                stats: {
+                    totalConflicts: conflicts.length,
+                    affectedPages
+                }
+            };
+        }
+        finally {
+            await session.close();
+        }
+    }
 }
 exports.PageRepository = PageRepository;
 /**

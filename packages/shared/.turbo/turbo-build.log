@@ -3,33 +3,4 @@
 > @apexseo/shared@0.0.0 build
 > tsc
 
-[96msrc/lib/services/SiteAuditService.test.ts[0m:[93m1[0m:[93m54[0m - [91merror[0m[90m TS2307: [0mCannot find module 'vitest' or its corresponding type declarations.
-
-[7m1[0m import { describe, it, expect, vi, beforeEach } from 'vitest';
-[7m [0m [91m                                                     ~~~~~~~~[0m
-
-[96msrc/lib/utils/date.ts[0m:[93m1[0m:[93m55[0m - [91merror[0m[90m TS2307: [0mCannot find module 'date-fns' or its corresponding type declarations.
-
-[7m1[0m import { format, subDays, startOfDay, endOfDay } from 'date-fns';
-[7m [0m [91m                                                      ~~~~~~~~~~[0m
-
-[96msrc/lib/utils/utils.test.ts[0m:[93m4[0m:[93m42[0m - [91merror[0m[90m TS2307: [0mCannot find module 'vitest' or its corresponding type declarations.
-
-[7m4[0m import { describe, it, expect, vi } from 'vitest';
-[7m [0m [91m                                         ~~~~~~~~[0m
-
-
-Found 3 errors in 3 files.
-
-Errors  Files
-     1  src/lib/services/SiteAuditService.test.ts[90m:1[0m
-     1  src/lib/utils/date.ts[90m:1[0m
-     1  src/lib/utils/utils.test.ts[90m:4[0m
-⠙[1G[0K[1mnpm[22m [31merror[39m Lifecycle script `build` failed with error:
-⠙[1G[0K[1mnpm[22m [31merror[39m [94mcode[39m [33m2[39m
-⠙[1G[0K[1mnpm[22m [31merror[39m [94mpath[39m /Users/tamilchurchtokyo/projects/apexseo/packages/shared
-⠙[1G[0K[1mnpm[22m [31merror[39m [94mworkspace[39m @apexseo/shared@0.0.0
-⠙[1G[0K[1mnpm[22m [31merror[39m [94mlocation[39m /Users/tamilchurchtokyo/projects/apexseo/packages/shared
-⠙[1G[0K[1mnpm[22m [31merror[39m command failed
-⠙[1G[0K[1mnpm[22m [31merror[39m [94mcommand[39m sh -c tsc
 ⠙[1G[0K

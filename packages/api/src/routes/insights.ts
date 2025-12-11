@@ -1,7 +1,28 @@
 import { FastifyPluginAsync } from 'fastify';
-import { ClickHousePageRepository, ClickHouseLinkSuggestionRepository } from '@apexseo/shared';
+import { ClickHousePageRepository, ClickHouseLinkSuggestionRepository, Neo4jPageRepository } from '@apexseo/shared';
 
 const insightsRoutes: FastifyPluginAsync = async (fastify) => {
+    // ... (keep existing routes)
+
+    // GET /projects/:id/cannibalization
+    fastify.get('/:id/cannibalization', async (request, reply) => {
+        const { id } = request.params as { id: string };
+        const { siteId } = request.query as { siteId?: string };
+
+        // Use siteId query param if present, otherwise assume the URL param is the site identifier (e.g. domain)
+        const targetSiteId = siteId || id;
+
+        try {
+            const results = await Neo4jPageRepository.getCannibalizationConflicts(targetSiteId);
+            return results;
+        } catch (error) {
+            request.log.error(error);
+            reply.status(500).send({ error: 'Failed to fetch cannibalization insights' });
+        }
+    });
+
+    // ... (keep other routes)
+
     // GET /projects/:id/overview
     fastify.get('/:id/overview', async (request, reply) => {
         const { id } = request.params as { id: string };
@@ -127,3 +148,4 @@ const insightsRoutes: FastifyPluginAsync = async (fastify) => {
 };
 
 export default insightsRoutes;
+

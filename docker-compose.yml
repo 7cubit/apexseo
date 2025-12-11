@@ -10,9 +10,18 @@ services:
     environment:
       - NODE_ENV=development
       - TEMPORAL_ADDRESS=temporal:7233
-    volumes:
-      - ./packages/app:/app/packages/app
-      - ./packages/shared:/app/packages/shared
+    depends_on:
+      - api
+
+  admin:
+    build:
+      context: .
+      dockerfile: packages/admin/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - TEMPORAL_ADDRESS=temporal:7233
     depends_on:
       - api
 
@@ -22,12 +31,23 @@ services:
       dockerfile: packages/api/Dockerfile
     ports:
       - "4000:4000"
+    env_file:
+      - .env
     environment:
       - NODE_ENV=development
       - PORT=4000
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=password
+      - CLICKHOUSE_ADDR=clickhouse:9000
+      - CLICKHOUSE_URL=http://clickhouse:8123
+      - TEMPORAL_ADDRESS=temporal:7233
     volumes:
       - ./packages/api:/app/packages/api
       - ./packages/shared:/app/packages/shared
+      - /app/packages/api/node_modules
+      - /app/packages/shared/node_modules
+    command: node packages/api/dist/api/src/test-start.js
 
   workers:
     build:
@@ -64,8 +84,12 @@ services:
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
       - SERPER_API_KEY=${SERPER_API_KEY}
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=password
     depends_on:
       - temporal
+      - neo4j
 
   temporal:
     image: temporalio/auto-setup:latest

@@ -9,7 +9,9 @@ export let driver: any;
 
 if (uri && user && password) {
     try {
+        console.log("Creating Neo4j driver with URI:", uri);
         driver = neo4j.driver(uri, neo4j.auth.basic(user, password), { disableLosslessIntegers: true });
+        console.log("Neo4j driver created.");
     } catch (error) {
         console.error("Failed to create Neo4j driver:", error);
     }

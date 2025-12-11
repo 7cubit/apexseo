@@ -83,7 +83,65 @@ export default function AdminAccountDetailPage({ params }: { params: { id: strin
         fetchInvoices();
     };
 
-    // ... existing handlers ...
+    const [account, setAccount] = useState<AccountDetail | null>(null);
+    const [plans, setPlans] = useState<Plan[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isActionLoading, setIsActionLoading] = useState(false);
+
+    // Mock admin user for now since auth store might be missing
+    const admin = useAdminAuthStore((state: any) => state.admin);
+
+    const fetchAccount = async () => {
+        try {
+            const res = await fetch(`/api/admin/accounts/${params.id}`);
+            if (res.ok) {
+                const data = await res.json();
+                setAccount(data);
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const fetchPlans = async () => {
+        const res = await fetch('/api/admin/plans');
+        if (res.ok) {
+            const data = await res.json();
+            setPlans(data.plans || []);
+        }
+    };
+
+    const handleChangePlan = async (planId: string) => {
+        if (!confirm('Change subscription plan?')) return;
+        setIsActionLoading(true);
+        try {
+            await fetch(`/api/admin/accounts/${params.id}/subscription`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ planId, admin_id: admin?.id })
+            });
+            fetchAccount();
+        } finally {
+            setIsActionLoading(false);
+        }
+    };
+
+    const handleCancelSubscription = async () => {
+        if (!confirm('Cancel subscription immediately?')) return;
+        setIsActionLoading(true);
+        try {
+            await fetch(`/api/admin/accounts/${params.id}/subscription`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ admin_id: admin?.id })
+            });
+            fetchAccount();
+        } finally {
+            setIsActionLoading(false);
+        }
+    };
 
     if (isLoading) return <div className="p-8 text-center">Loading...</div>;
     if (!account) return <div className="p-8 text-center">Account not found</div>;
@@ -188,7 +246,7 @@ export default function AdminAccountDetailPage({ params }: { params: { id: strin
                                                 </td>
                                                 <td className="py-2 px-4 text-sm">
                                                     <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${inv.status === 'PAID' ? 'bg-green-100 text-green-800' :
-                                                            inv.status === 'REFUNDED' ? 'bg-gray-100 text-gray-800' : 'bg-yellow-100 text-yellow-800'
+                                                        inv.status === 'REFUNDED' ? 'bg-gray-100 text-gray-800' : 'bg-yellow-100 text-yellow-800'
                                                         }`}>
                                                         {inv.status}
                                                     </span>

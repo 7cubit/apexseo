@@ -1,4 +1,4 @@
-import { Connection, Client } from '@temporalio/client';
+// import { Connection, Client } from '@temporalio/client';
 
 export async function createTemporalClient() {
     const address = process.env.TEMPORAL_ADDRESS;
@@ -10,16 +10,13 @@ export async function createTemporalClient() {
         return null;
     }
 
-    const connection = await Connection.connect({
-        address,
-        apiKey, // Pass API key directly if using Temporal Cloud with API Key auth
-        tls: !!apiKey, // Enable TLS if API Key is present (Cloud), otherwise assume plaintext/local unless configured
-    });
+    // const connection = await Connection.connect({
+    //     address,
+    //     apiKey, // Pass API key directly if using Temporal Cloud with API Key auth
+    //     tls: !!apiKey, // Enable TLS if API Key is present (Cloud), otherwise assume plaintext/local unless configured
+    // });
 
-    const client = new Client({
-        connection,
-        namespace,
-    });
-
-    return client;
+    // return client;
+    console.warn("Temporal disabled to prevent segfault.");
+    return null as any;
 }

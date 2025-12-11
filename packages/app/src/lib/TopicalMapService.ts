@@ -117,7 +117,6 @@ export class TopicalMapService {
                 searchVolume: primaryMetric.vol,
                 difficulty: primaryMetric.diff,
                 contentType: c.contentType,
-                contentType: c.contentType,
                 status: 'Not Covered', // Default
                 competitorCoverage: Math.floor(Math.random() * 100), // Mock coverage
                 competitors: ['competitor-a.com', 'competitor-b.com'] // Mock competitors

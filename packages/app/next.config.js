@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
+    transpilePackages: ['@apexseo/shared'],
     images: {
         domains: ['apexseo.space'],
     },
@@ -11,6 +12,7 @@ const nextConfig = {
         }
         return config;
     },
+    output: 'standalone',
 };
 
 module.exports = nextConfig;

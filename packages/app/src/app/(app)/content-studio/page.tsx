@@ -36,7 +36,7 @@ export default function ContentStudioPage() {
 
     return (
         <div className="flex flex-col h-screen bg-gray-50 dark:bg-[#0B0D12] overflow-hidden">
-            <DashboardHeader />
+            <DashboardHeader projectName="ApexSEO Space" projectDomain="apexseo.com" />
 
             <main className="flex-1 overflow-hidden p-6">
                 <div className="max-w-[1600px] mx-auto h-full flex flex-col gap-6">

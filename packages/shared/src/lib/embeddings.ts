@@ -1,10 +1,13 @@
-import { pipeline } from "@xenova/transformers";
+// import { pipeline } from "@xenova/transformers";
 
 // Singleton to hold the pipeline
 let extractor: any = null;
 
 export async function getExtractor() {
     if (!extractor) {
+        console.log("Initializing transformer pipeline...");
+        // Dynamic import to avoid native crash on boot
+        const { pipeline } = await import("@xenova/transformers");
         extractor = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2");
     }
     return extractor;

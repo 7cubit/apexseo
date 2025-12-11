@@ -19,3 +19,5 @@ export const client = CLICKHOUSE_URL
         request_timeout: 30000,
     })
     : null;
+
+console.log("ClickHouse client initialized. Client instance:", !!client);

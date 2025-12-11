@@ -1,0 +1,31 @@
+
+> @apexseo/app@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.33
+  - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+ ⨯ ESLint: Converting circular structure to JSON     --> starting at object with constructor 'Object'     |     property 'configs' -> object with constructor 'Object'     |     property 'flat' -> object with constructor 'Object'     |     ...     |     property 'plugins' -> object with constructor 'Object'     --- property 'react' closes the circle Referenced from: /Users/tamilchurchtokyo/projects/apexseo/packages/app/.eslintrc.json
+Failed to compile.
+
+./src/lib/TopicalMapService.ts:120:17
+Type error: An object literal cannot have multiple properties with the same name.
+
+[0m [90m 118 |[39m                 difficulty[33m:[39m primaryMetric[33m.[39mdiff[33m,[39m[0m
+[0m [90m 119 |[39m                 contentType[33m:[39m c[33m.[39mcontentType[33m,[39m[0m
+[0m[31m[1m>[22m[39m[90m 120 |[39m                 contentType[33m:[39m c[33m.[39mcontentType[33m,[39m[0m
+[0m [90m     |[39m                 [31m[1m^[22m[39m[0m
+[0m [90m 121 |[39m                 status[33m:[39m [32m'Not Covered'[39m[33m,[39m [90m// Default[39m[0m
+[0m [90m 122 |[39m                 competitorCoverage[33m:[39m [33mMath[39m[33m.[39mfloor([33mMath[39m[33m.[39mrandom() [33m*[39m [35m100[39m)[33m,[39m [90m// Mock coverage[39m[0m
+[0m [90m 123 |[39m                 competitors[33m:[39m [[32m'competitor-a.com'[39m[33m,[39m [32m'competitor-b.com'[39m] [90m// Mock competitors[39m[0m
+Next.js build worker exited with code: 1 and signal: null
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path /Users/tamilchurchtokyo/projects/apexseo/packages/app
+npm error workspace @apexseo/app@0.1.0
+npm error location /Users/tamilchurchtokyo/projects/apexseo/packages/app
+npm error command failed
+npm error command sh -c next build

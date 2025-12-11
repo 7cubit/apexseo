@@ -7,6 +7,7 @@
         "lint": "turbo run lint",
         "start:api": "cd packages/api && npm run dev",
         "start:workers": "cd packages/workers && npm run dev",
+        "start:admin": "cd packages/admin && npm run dev",
         "start:app": "cd packages/app && npm run dev",
         "format": "prettier --write \"**/*.{ts,tsx,md}\""
     },

@@ -16,7 +16,9 @@ const password = process.env.NEO4J_PASSWORD;
 exports.DATABASE = process.env.NEO4J_DATABASE || 'neo4j';
 if (uri && user && password) {
     try {
+        console.log("Creating Neo4j driver with URI:", uri);
         exports.driver = neo4j_driver_1.default.driver(uri, neo4j_driver_1.default.auth.basic(user, password), { disableLosslessIntegers: true });
+        console.log("Neo4j driver created.");
     }
     catch (error) {
         console.error("Failed to create Neo4j driver:", error);

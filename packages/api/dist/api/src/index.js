@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const fastify_1 = __importDefault(require("fastify"));
-const dotenv_1 = __importDefault(require("dotenv"));
 const shared_1 = require("@apexseo/shared");
 const auth_1 = __importDefault(require("./plugins/auth"));
 const tenancy_1 = __importDefault(require("./plugins/tenancy"));
@@ -22,16 +21,14 @@ const admin_users_1 = require("./routes/admin-users");
 const admin_accounts_1 = __importDefault(require("./routes/admin-accounts"));
 const project_users_1 = __importDefault(require("./routes/project-users"));
 const suggestions_1 = __importDefault(require("./routes/suggestions"));
-const path_1 = __importDefault(require("path"));
-const envPath = path_1.default.resolve(__dirname, '../../../.env');
-console.log('Loading .env from:', envPath);
-const result = dotenv_1.default.config({ path: envPath });
-if (result.error) {
-    console.error('Error loading .env:', result.error);
-}
-else {
-    console.log('.env loaded successfully');
-}
+// // const envPath = path.resolve(__dirname, '../../../.env');
+// // console.log('Loading .env from:', envPath);
+// // const result = dotenv.config({ path: envPath });
+// // if (result.error) {
+// //     console.error('Error loading .env:', result.error);
+// // } else {
+// //     console.log('.env loaded successfully');
+// // }
 const fastify = (0, fastify_1.default)({
     logger: false // Use our custom logger
 });
@@ -62,15 +59,24 @@ fastify.register(rate_limit_1.default, {
 });
 fastify.register(error_handler_1.default);
 fastify.register(swagger_1.default);
+console.log('Registering authPlugin');
 fastify.register(auth_1.default);
+console.log('Registering tenancyPlugin');
 fastify.register(tenancy_1.default);
 // Register Routes
+console.log('Registering siteRoutes');
 fastify.register(sites_1.default, { prefix: '/sites' });
+console.log('Registering analysisRoutes');
 fastify.register(analysis_1.default, { prefix: '/analysis' });
+console.log('Registering graphRoutes');
 fastify.register(graph_1.graphRoutes);
+console.log('Registering agentsRoutes');
 fastify.register(agents_1.default, { prefix: '/agents' });
+console.log('Registering scheduleRoutes');
 fastify.register(schedules_1.default);
+console.log('Registering keywordsRoutes');
 fastify.register(keywords_1.default);
+console.log('Registering contentRoutes');
 fastify.register(content_1.default);
 fastify.register(projects_1.default, { prefix: '/projects' });
 fastify.register(project_users_1.default, { prefix: '/projects' });

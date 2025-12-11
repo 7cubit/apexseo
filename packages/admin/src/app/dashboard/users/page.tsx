@@ -11,6 +11,8 @@ interface User {
     email: string;
     name?: string;
     is_suspended: boolean;
+    newsletter_opt_in?: boolean;
+    accounts?: { account: string; plan: string }[];
     created_at: string;
 }
 
@@ -67,6 +69,8 @@ export default function UsersPage() {
                             <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                                 <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Email</th>
                                 <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Name</th>
+                                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Plan</th>
+                                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Newsletter</th>
                                 <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Status</th>
                                 <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Created At</th>
                                 <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Actions</th>
@@ -75,13 +79,13 @@ export default function UsersPage() {
                         <tbody className="[&_tr:last-child]:border-0">
                             {loading ? (
                                 <tr>
-                                    <td colSpan={5} className="h-24 text-center">
+                                    <td colSpan={7} className="h-24 text-center">
                                         Loading...
                                     </td>
                                 </tr>
                             ) : users.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="h-24 text-center">
+                                    <td colSpan={7} className="h-24 text-center">
                                         No users found.
                                     </td>
                                 </tr>
@@ -90,6 +94,18 @@ export default function UsersPage() {
                                     <tr key={user.id} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                                         <td className="p-4 align-middle">{user.email}</td>
                                         <td className="p-4 align-middle">{user.name || '-'}</td>
+                                        <td className="p-4 align-middle">
+                                            {user.accounts && user.accounts.length > 0
+                                                ? user.accounts.map(a => a.plan).join(', ')
+                                                : <span className="text-muted-foreground text-xs">Free</span>}
+                                        </td>
+                                        <td className="p-4 align-middle">
+                                            {user.newsletter_opt_in ? (
+                                                <span className="text-green-500 font-medium">Yes</span>
+                                            ) : (
+                                                <span className="text-muted-foreground">No</span>
+                                            )}
+                                        </td>
                                         <td className="p-4 align-middle">
                                             {user.is_suspended ? (
                                                 <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80">

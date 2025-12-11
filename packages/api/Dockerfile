@@ -4,6 +4,7 @@ RUN apk add --no-cache libc6-compat python3 make g++ vips-dev
 
 COPY . .
 RUN npm ci
+RUN npm install fastify-type-provider-zod
 RUN npm run build --workspace=@apexseo/api
 
 FROM node:20-alpine AS runner
