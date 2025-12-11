@@ -85,7 +85,7 @@ import * as cheerio from 'cheerio';
 // fetchRobotsAndSitemap removed to avoid conflict with new activity
 
 export async function resolveSeedUrls(siteId: string, sitemapData: any): Promise<string[]> {
-    console.log(`Resolving seed URLs for ${siteId}`);
+    logger.info(`Resolving seed URLs for ${siteId}`);
     // Try to fetch sitemap and extract URLs
     const urls: string[] = [];
     for (const sitemapUrl of sitemapData.sitemapUrls) {
@@ -99,7 +99,7 @@ export async function resolveSeedUrls(siteId: string, sitemapData: any): Promise
                 });
             }
         } catch (e) {
-            console.warn(`Failed to fetch sitemap ${sitemapUrl}`, e);
+            logger.warn(`Failed to fetch sitemap ${sitemapUrl}`, e);
         }
     }
 
@@ -112,7 +112,7 @@ export async function resolveSeedUrls(siteId: string, sitemapData: any): Promise
 }
 
 export async function crawlBatch(siteId: string, urls: string[]): Promise<any> {
-    console.log(`Crawling batch of ${urls.length} pages for ${siteId}`);
+    logger.info(`Crawling batch of ${urls.length} pages for ${siteId}`);
     const results = [];
     for (const url of urls) {
         try {
@@ -177,7 +177,7 @@ export async function crawlBatch(siteId: string, urls: string[]): Promise<any> {
 
             results.push({ url, status: 'ok' });
         } catch (error) {
-            console.error(`Failed to crawl ${url}`, error);
+            logger.error(`Failed to crawl ${url}`, error);
             results.push({ url, status: 'error' });
         }
     }
@@ -192,7 +192,7 @@ export async function selectPagesForEmbedding(siteId: string): Promise<string[]>
 }
 
 export async function computePageEmbeddings(siteId: string, pageIds: string[]): Promise<void> {
-    console.log(`Computing embeddings for ${pageIds.length} pages`);
+    logger.info(`Computing embeddings for ${pageIds.length} pages`);
     for (const pageId of pageIds) {
         const page = await ClickHousePageRepository.getPageById(pageId) as any;
         if (page && page.text) {
@@ -200,14 +200,14 @@ export async function computePageEmbeddings(siteId: string, pageIds: string[]): 
                 const embedding = await generateEmbedding(page.text.substring(0, 8000));
                 await ClickHouseEmbeddingStore.saveEmbedding(siteId, pageId, embedding);
             } catch (e) {
-                console.error(`Failed to generate embedding for ${pageId}`, e);
+                logger.error(`Failed to generate embedding for ${pageId}`, e);
             }
         }
     }
 }
 
 export async function runClustering(siteId: string): Promise<any> {
-    console.log(`Running clustering for ${siteId}`);
+    logger.info(`Running clustering for ${siteId}`);
     // Basic K-Means placeholder - in real app use ml-kmeans on embeddings
     // For now, assign random clusters 0-4
     const pages = await ClickHousePageRepository.getPagesBySite(siteId);
@@ -222,11 +222,11 @@ export async function runClustering(siteId: string): Promise<any> {
 }
 
 export async function labelClusters(siteId: string): Promise<void> {
-    console.log(`Labeling clusters for ${siteId}`);
+    logger.info(`Labeling clusters for ${siteId}`);
 }
 
 export async function generateLinkRecommendationsActivity(siteId: string): Promise<void> {
-    console.log(`Generating link recommendations for ${siteId}`);
+    logger.info(`Generating link recommendations for ${siteId}`);
     // This logic is now handled by the API route calling this workflow, 
     // but ideally we move the logic here.
     // For now, we can leave it as a placeholder or move the logic from the API route here.
@@ -234,12 +234,12 @@ export async function generateLinkRecommendationsActivity(siteId: string): Promi
 }
 
 export async function detectOrphanPagesActivity(siteId: string): Promise<void> {
-    console.log(`Detecting orphan pages for ${siteId}`);
+    logger.info(`Detecting orphan pages for ${siteId}`);
     try {
         // 1. Find orphans in Neo4j
         // Assuming siteId is the domain name for now
         const orphans = await GraphRepository.findOrphanPages(siteId);
-        console.log(`Found ${orphans.length} orphan pages for ${siteId}`);
+        logger.info(`Found ${orphans.length} orphan pages for ${siteId}`);
 
         if (orphans.length > 0) {
             // 2. Update ClickHouse
@@ -248,7 +248,7 @@ export async function detectOrphanPagesActivity(siteId: string): Promise<void> {
             await ClickHousePageRepository.updateOrphanStatus(siteId, pageIds, true);
         }
     } catch (error) {
-        console.error(`Failed to detect orphans for ${siteId}`, error);
+        logger.error(`Failed to detect orphans for ${siteId}`, error);
         throw error;
     }
 }
@@ -276,7 +276,7 @@ export async function startUxSession(siteId: string, persona: string, goal: stri
 }
 
 export async function loadPageInBrowser(url: string): Promise<{ title: string, links: { text: string, url: string }[], content: string }> {
-    console.log(`[Mock Browser] Loading ${url}`);
+    logger.info(`[Mock Browser] Loading ${url}`);
     // Try to fetch real content if it's a real URL
     try {
         const res = await fetch(url);
@@ -324,18 +324,18 @@ export async function finalizeUxSession(sessionId: string, status: 'completed' |
 // --- Truth Activities ---
 
 export async function extractClaimsForSite(siteId: string): Promise<void> {
-    console.log(`Extracting claims for ${siteId}`);
+    logger.info(`Extracting claims for ${siteId}`);
 }
 
 export async function computeClaimRiskScores(siteId: string): Promise<void> {
-    console.log(`Computing risk scores for ${siteId}`);
+    logger.info(`Computing risk scores for ${siteId}`);
 }
 
 
 // --- Rank Tracking Activities ---
 
 export async function fetchRankDataActivity(siteId: string, keywords: string[]): Promise<any[]> {
-    console.log(`Fetching rank data for ${siteId} with keywords: ${keywords.join(', ')}`);
+    logger.info(`Fetching rank data for ${siteId} with keywords: ${keywords.join(', ')}`);
     const client = new DataForSEOClient();
     const results = [];
 
@@ -356,7 +356,7 @@ export async function fetchRankDataActivity(siteId: string, keywords: string[]):
                     cpc = result.cpc || 0;
                 }
             } catch (e) {
-                console.warn(`Failed to fetch volume for ${keyword}`, e);
+                logger.warn(`Failed to fetch volume for ${keyword}`, e);
             }
 
             const rankData = await client.getSerpRank(keyword, siteUrl);
@@ -369,7 +369,7 @@ export async function fetchRankDataActivity(siteId: string, keywords: string[]):
                     cpc: cpc
                 });
             } else {
-                console.log(`No rank found for ${keyword} on ${siteId}`);
+                logger.info(`No rank found for ${keyword} on ${siteId}`);
                 results.push({
                     keyword,
                     rank: 0,
@@ -379,14 +379,14 @@ export async function fetchRankDataActivity(siteId: string, keywords: string[]):
                 });
             }
         } catch (error) {
-            console.error(`Failed to fetch rank for ${keyword}`, error);
+            logger.error(`Failed to fetch rank for ${keyword}`, error);
         }
     }
     return results;
 }
 
 export async function storeRankHistoryActivity(siteId: string, rankData: any[]): Promise<void> {
-    console.log(`Storing rank history for ${siteId}`);
+    logger.info(`Storing rank history for ${siteId}`);
 
     // Ensure table exists
     await ClickHouseRankRepository.createTable();
@@ -425,7 +425,7 @@ export async function storeRankHistoryActivity(siteId: string, rankData: any[]):
 }
 
 export async function fetchBacklinksActivity(siteId: string, limit: number = 100): Promise<any[]> {
-    console.log(`Fetching backlinks for ${siteId}`);
+    logger.info(`Fetching backlinks for ${siteId}`);
     const client = new DataForSEOClient();
     try {
         const data = await client.getBacklinks(siteId, limit);
@@ -434,13 +434,13 @@ export async function fetchBacklinksActivity(siteId: string, limit: number = 100
         }
         return [];
     } catch (error) {
-        console.error(`Failed to fetch backlinks for ${siteId}`, error);
+        logger.error(`Failed to fetch backlinks for ${siteId}`, error);
         return [];
     }
 }
 
 export async function processBacklinksActivity(siteId: string, backlinks: any[]): Promise<void> {
-    console.log(`Processing ${backlinks.length} backlinks for ${siteId}`);
+    logger.info(`Processing ${backlinks.length} backlinks for ${siteId}`);
     // Save to Neo4j
     for (const backlink of backlinks) {
         await saveBacklink(siteId, {
@@ -455,7 +455,7 @@ export async function processBacklinksActivity(siteId: string, backlinks: any[])
 }
 
 export async function storeBacklinksActivity(siteId: string, backlinks: any[]): Promise<void> {
-    console.log(`Storing ${backlinks.length} backlinks for ${siteId} in ClickHouse`);
+    logger.info(`Storing ${backlinks.length} backlinks for ${siteId} in ClickHouse`);
     await ClickHouseBacklinkRepository.createTable();
 
     const records = backlinks.map(b => ({
@@ -474,7 +474,7 @@ export async function storeBacklinksActivity(siteId: string, backlinks: any[]): 
 }
 
 export async function detectRankVolatilityActivity(siteId: string, threshold: number = 5): Promise<void> {
-    console.log(`Detecting rank volatility for ${siteId}`);
+    logger.info(`Detecting rank volatility for ${siteId}`);
     // This could be a complex query or just checking the latest insertions.
     // For now, we'll just log high volatility based on the logic in storeRankHistoryActivity
     // In a real app, this might trigger alerts.
@@ -506,7 +506,7 @@ export const calculateHealthScoresActivity = async (projectId: string) => {
 };
 
 export async function detectCannibalizationActivity(siteId: string): Promise<void> {
-    console.log(`Detecting cannibalization for ${siteId}`);
+    logger.info(`Detecting cannibalization for ${siteId}`);
     try {
         const issues = await CannibalizationService.analyze(siteId);
 
@@ -514,7 +514,7 @@ export async function detectCannibalizationActivity(siteId: string): Promise<voi
         const highPriorityIssues = issues.filter(issue => issue.priority === 'High');
 
         if (highPriorityIssues.length > 0) {
-            console.log(`Found ${highPriorityIssues.length} high priority cannibalization issues for ${siteId}`);
+            logger.info(`Found ${highPriorityIssues.length} high priority cannibalization issues for ${siteId}`);
 
             // Create a consolidated alert or individual alerts
             // For now, let's create one alert summarizing the issues
@@ -531,15 +531,15 @@ export async function detectCannibalizationActivity(siteId: string): Promise<voi
             await ClickHouseAlertRepository.createAlert(alert);
         }
     } catch (error) {
-        console.error(`Failed to detect cannibalization for ${siteId}`, error);
+        logger.error(`Failed to detect cannibalization for ${siteId}`, error);
     }
 }
 
 export async function sendAlertActivity(alert: Alert): Promise<void> {
-    console.log(`Sending alert for ${alert.site_id}: ${alert.message}`);
+    logger.info(`Sending alert for ${alert.site_id}: ${alert.message}`);
     try {
     } catch (error) {
-        console.error(`Failed to send alert`, error);
+        logger.error(`Failed to send alert`, error);
     }
 }
 

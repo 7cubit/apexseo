@@ -1,5 +1,5 @@
 module.exports = {
-    extends: ['turbo', 'prettier'],
+    extends: ['prettier'],
     parser: '@typescript-eslint/parser',
     plugins: ['@typescript-eslint'],
     rules: {

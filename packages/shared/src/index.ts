@@ -61,5 +61,5 @@ export * from './services/migration-helper';
 // Export other shared modules as needed
 export * from './lib/neo4j/repositories/KeywordRepository';
 export * from './lib/neo4j/repositories/CompetitorRepository';
-export { type ProjectData } from './lib/neo4j/repositories/ProjectRepository';
+export { ProjectRepository, type ProjectData } from './lib/neo4j/repositories/ProjectRepository';
 export { SiteRepository, type Site as Neo4jSite } from './lib/neo4j/repositories/SiteRepository';

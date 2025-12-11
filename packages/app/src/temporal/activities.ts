@@ -13,7 +13,7 @@ import * as cheerio from 'cheerio';
 // --- Ingestion Activities ---
 
 export async function fetchRobotsAndSitemap(siteId: string): Promise<any> {
-    console.log(`Fetching robots.txt and sitemap for ${siteId}`);
+    // console.log(`Fetching robots.txt and sitemap for ${siteId}`);
     // Basic implementation: try standard sitemap paths
     // In production, use a robust sitemap parser
     const sitemapUrls = [
@@ -24,7 +24,7 @@ export async function fetchRobotsAndSitemap(siteId: string): Promise<any> {
 }
 
 export async function resolveSeedUrls(siteId: string, sitemapData: any): Promise<string[]> {
-    console.log(`Resolving seed URLs for ${siteId}`);
+    // console.log(`Resolving seed URLs for ${siteId}`);
     // Try to fetch sitemap and extract URLs
     const urls: string[] = [];
     for (const sitemapUrl of sitemapData.sitemapUrls) {
@@ -38,7 +38,7 @@ export async function resolveSeedUrls(siteId: string, sitemapData: any): Promise
                 });
             }
         } catch (e) {
-            console.warn(`Failed to fetch sitemap ${sitemapUrl}`, e);
+            // console.warn(`Failed to fetch sitemap ${sitemapUrl}`, e);
         }
     }
 
@@ -51,7 +51,7 @@ export async function resolveSeedUrls(siteId: string, sitemapData: any): Promise
 }
 
 export async function crawlBatch(siteId: string, urls: string[]): Promise<any> {
-    console.log(`Crawling batch of ${urls.length} pages for ${siteId}`);
+    // console.log(`Crawling batch of ${urls.length} pages for ${siteId}`);
     const results = [];
     for (const url of urls) {
         try {
@@ -102,7 +102,7 @@ export async function crawlBatch(siteId: string, urls: string[]): Promise<any> {
 
             results.push({ url, status: 'ok' });
         } catch (error) {
-            console.error(`Failed to crawl ${url}`, error);
+            // console.error(`Failed to crawl ${url}`, error);
             results.push({ url, status: 'error' });
         }
     }
@@ -117,7 +117,7 @@ export async function selectPagesForEmbedding(siteId: string): Promise<string[]>
 }
 
 export async function computePageEmbeddings(siteId: string, pageIds: string[]): Promise<void> {
-    console.log(`Computing embeddings for ${pageIds.length} pages`);
+    // console.log(`Computing embeddings for ${pageIds.length} pages`);
     for (const pageId of pageIds) {
         const page = await ClickHousePageRepository.getPageById(pageId) as any;
         if (page && page.text) {
@@ -125,14 +125,14 @@ export async function computePageEmbeddings(siteId: string, pageIds: string[]): 
                 const embedding = await generateEmbedding(page.text.substring(0, 8000));
                 await ClickHouseEmbeddingStore.saveEmbedding(siteId, pageId, embedding);
             } catch (e) {
-                console.error(`Failed to generate embedding for ${pageId}`, e);
+                // console.error(`Failed to generate embedding for ${pageId}`, e);
             }
         }
     }
 }
 
 export async function runClustering(siteId: string): Promise<any> {
-    console.log(`Running clustering for ${siteId}`);
+    // console.log(`Running clustering for ${siteId}`);
     // Basic K-Means placeholder - in real app use ml-kmeans on embeddings
     // For now, assign random clusters 0-4
     const pages = await ClickHousePageRepository.getPagesBySite(siteId);
@@ -147,11 +147,11 @@ export async function runClustering(siteId: string): Promise<any> {
 }
 
 export async function labelClusters(siteId: string): Promise<void> {
-    console.log(`Labeling clusters for ${siteId}`);
+    // console.log(`Labeling clusters for ${siteId}`);
 }
 
 export async function generateLinkRecommendationsActivity(siteId: string): Promise<void> {
-    console.log(`Generating link recommendations for ${siteId}`);
+    // console.log(`Generating link recommendations for ${siteId}`);
     // This logic is now handled by the API route calling this workflow, 
     // but ideally we move the logic here.
     // For now, we can leave it as a placeholder or move the logic from the API route here.
@@ -159,7 +159,7 @@ export async function generateLinkRecommendationsActivity(siteId: string): Promi
 }
 
 export async function detectOrphanPagesActivity(siteId: string): Promise<void> {
-    console.log(`Detecting orphan pages for ${siteId}`);
+    // console.log(`Detecting orphan pages for ${siteId}`);
 }
 
 // --- UX Simulation Activities ---
@@ -185,7 +185,7 @@ export async function startUxSession(siteId: string, persona: string, goal: stri
 }
 
 export async function loadPageInBrowser(url: string): Promise<{ title: string, links: { text: string, url: string }[], content: string }> {
-    console.log(`[Mock Browser] Loading ${url}`);
+    // console.log(`[Mock Browser] Loading ${url}`);
     // Try to fetch real content if it's a real URL
     try {
         const res = await fetch(url);
@@ -233,18 +233,18 @@ export async function finalizeUxSession(sessionId: string, status: 'completed' |
 // --- Truth Activities ---
 
 export async function extractClaimsForSite(siteId: string): Promise<void> {
-    console.log(`Extracting claims for ${siteId}`);
+    // console.log(`Extracting claims for ${siteId}`);
 }
 
 export async function computeClaimRiskScores(siteId: string): Promise<void> {
-    console.log(`Computing risk scores for ${siteId}`);
+    // console.log(`Computing risk scores for ${siteId}`);
 }
 
 
 // --- Rank Tracking Activities ---
 
 export async function fetchRankDataActivity(siteId: string, keywords: string[]): Promise<any[]> {
-    console.log(`Fetching rank data for ${siteId} with keywords: ${keywords.join(', ')}`);
+    // console.log(`Fetching rank data for ${siteId} with keywords: ${keywords.join(', ')}`);
     const client = new DataForSEOClient();
     const results = [];
 
@@ -265,7 +265,7 @@ export async function fetchRankDataActivity(siteId: string, keywords: string[]):
                     cpc = result.cpc || 0;
                 }
             } catch (e) {
-                console.warn(`Failed to fetch volume for ${keyword}`, e);
+                // console.warn(`Failed to fetch volume for ${keyword}`, e);
             }
 
             const rankData = await client.getSerpRank(keyword, siteUrl);
@@ -278,7 +278,7 @@ export async function fetchRankDataActivity(siteId: string, keywords: string[]):
                     cpc: cpc
                 });
             } else {
-                console.log(`No rank found for ${keyword} on ${siteId}`);
+                // console.log(`No rank found for ${keyword} on ${siteId}`);
                 results.push({
                     keyword,
                     rank: 0,
@@ -288,14 +288,14 @@ export async function fetchRankDataActivity(siteId: string, keywords: string[]):
                 });
             }
         } catch (error) {
-            console.error(`Failed to fetch rank for ${keyword}`, error);
+            // console.error(`Failed to fetch rank for ${keyword}`, error);
         }
     }
     return results;
 }
 
 export async function storeRankHistoryActivity(siteId: string, rankData: any[]): Promise<void> {
-    console.log(`Storing rank history for ${siteId}`);
+    // console.log(`Storing rank history for ${siteId}`);
 
     // Ensure table exists
     await ClickHouseRankRepository.createTable();
@@ -334,7 +334,7 @@ export async function storeRankHistoryActivity(siteId: string, rankData: any[]):
 }
 
 export async function fetchBacklinksActivity(siteId: string, limit: number = 100): Promise<any[]> {
-    console.log(`Fetching backlinks for ${siteId}`);
+    // console.log(`Fetching backlinks for ${siteId}`);
     const client = new DataForSEOClient();
     try {
         const data = await client.getBacklinks(siteId, limit);
@@ -343,13 +343,13 @@ export async function fetchBacklinksActivity(siteId: string, limit: number = 100
         }
         return [];
     } catch (error) {
-        console.error(`Failed to fetch backlinks for ${siteId}`, error);
+        // console.error(`Failed to fetch backlinks for ${siteId}`, error);
         return [];
     }
 }
 
 export async function processBacklinksActivity(siteId: string, backlinks: any[]): Promise<void> {
-    console.log(`Processing ${backlinks.length} backlinks for ${siteId}`);
+    // console.log(`Processing ${backlinks.length} backlinks for ${siteId}`);
     // Save to Neo4j
     for (const backlink of backlinks) {
         await saveBacklink(siteId, {
@@ -364,7 +364,7 @@ export async function processBacklinksActivity(siteId: string, backlinks: any[])
 }
 
 export async function storeBacklinksActivity(siteId: string, backlinks: any[]): Promise<void> {
-    console.log(`Storing ${backlinks.length} backlinks for ${siteId} in ClickHouse`);
+    // console.log(`Storing ${backlinks.length} backlinks for ${siteId} in ClickHouse`);
     await ClickHouseBacklinkRepository.createTable();
 
     const records = backlinks.map(b => ({
@@ -383,7 +383,7 @@ export async function storeBacklinksActivity(siteId: string, backlinks: any[]): 
 }
 
 export async function detectRankVolatilityActivity(siteId: string, threshold: number = 5): Promise<void> {
-    console.log(`Detecting rank volatility for ${siteId}`);
+    // console.log(`Detecting rank volatility for ${siteId}`);
     // This could be a complex query or just checking the latest insertions.
     // For now, we'll just log high volatility based on the logic in storeRankHistoryActivity
     // In a real app, this might trigger alerts.
