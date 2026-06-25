@@ -1,0 +1,24 @@
+{
+    "manifest_version": 3,
+    "name": "ApexSEO Content Capture",
+    "version": "1.0.0",
+    "description": "Captures page HTML for ApexSEO analysis",
+    "permissions": [
+        "activeTab",
+        "scripting"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {},
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content.js"
+            ]
+        }
+    ]
+}

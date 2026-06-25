@@ -52,6 +52,16 @@ const config = {
                     DEFAULT: "hsl(var(--card))",
                     foreground: "hsl(var(--card-foreground))",
                 },
+                // Custom editor colors
+                'editor-bg': 'hsl(var(--editor-bg))',
+                'editor-surface': 'hsl(var(--editor-surface))',
+                'text-primary': 'hsl(var(--text-primary))',
+                'text-secondary': 'hsl(var(--text-secondary))',
+            },
+            boxShadow: {
+                'depth-sm': '0 1px 2px 0 rgb(0 0 0 / 0.15)',
+                'depth-md': '0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.15)',
+                'depth-lg': '0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -4px rgb(0 0 0 / 0.2)',
             },
             borderRadius: {
                 lg: "var(--radius)",

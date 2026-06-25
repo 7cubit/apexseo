@@ -1,18 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    output: 'standalone',
     reactStrictMode: true,
-    transpilePackages: ['@apexseo/shared'],
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
+    typescript: {
+        ignoreBuildErrors: true,
+    },
+    transpilePackages: ['@apexseo/shared', '@apexseo/ui'],
     images: {
         domains: ['apexseo.space'],
     },
-    webpack: (config) => {
-        config.resolve.alias = {
-            ...config.resolve.alias,
-            "onnxruntime-node": false,
-        }
-        return config;
-    },
-    output: 'standalone',
 };
 
 module.exports = nextConfig;

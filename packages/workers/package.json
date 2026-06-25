@@ -1,26 +1,30 @@
 {
-    "name": "@apexseo/workers",
-    "version": "0.0.0",
-    "main": "./dist/worker.js",
-    "scripts": {
-        "build": "tsc",
-        "start": "node dist/worker.js",
-        "dev": "ts-node-dev --respawn --transpile-only src/worker.ts",
-        "lint": "eslint ."
-    },
-    "dependencies": {
-        "@apexseo/shared": "*",
-        "@temporalio/activity": "^1.0.0",
-        "@temporalio/client": "^1.0.0",
-        "@temporalio/worker": "^1.0.0",
-        "dotenv": "^16.0.0",
-        "zod": "^3.25.76"
-    },
-    "devDependencies": {
-        "@types/node": "^20.0.0",
-        "eslint": "^8.0.0",
-        "eslint-config-custom": "*",
-        "ts-node-dev": "^2.0.0",
-        "typescript": "^5.0.0"
-    }
+  "name": "@apexseo/workers",
+  "version": "0.0.0",
+  "main": "./dist/worker.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/worker.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/worker.ts",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@apexseo/shared": "*",
+    "@temporalio/activity": "^1.0.0",
+    "@temporalio/client": "^1.0.0",
+    "@temporalio/worker": "^1.0.0",
+    "dotenv": "^16.0.0",
+    "zod": "^3.25.76",
+    "@apexseo/database": "^0.0.0",
+    "bullmq": "^5.65.1",
+    "ioredis": "^5.8.2",
+    "stripe": "^20.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-custom": "*",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.0.0"
+  }
 }

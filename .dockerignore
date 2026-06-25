@@ -1,7 +1,11 @@
-node_modules
-.next
-dist
-.git
-.DS_Store
-.env.local
+**/node_modules
+**/.next/cache
+**/out
+**/dist
+**/build
+**/.git
+**/.DS_Store
+**/*.tfstate
 .env
+.env.local
+.env.staging

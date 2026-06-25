@@ -113,6 +113,32 @@ SELECT
 FROM pages
 GROUP BY site_id, date;
 
+-- Rankings Daily Table
+CREATE TABLE IF NOT EXISTS rankings_daily (
+    date Date,
+    project_id String,
+    keyword_id String,
+    rank UInt32,
+    url String CODEC(ZSTD(1))
+) ENGINE = MergeTree()
+PARTITION BY toYYYYMM(date)
+ORDER BY (project_id, keyword_id, date)
+SETTINGS index_granularity = 8192;
+
+-- Traffic Daily Table
+CREATE TABLE IF NOT EXISTS traffic_daily (
+    date Date,
+    project_id String,
+    page_id String,
+    page_path String CODEC(ZSTD(1)),
+    sessions UInt32,
+    users UInt32,
+    views UInt32
+) ENGINE = MergeTree()
+PARTITION BY toYYYYMM(date)
+ORDER BY (project_id, page_id, date)
+SETTINGS index_granularity = 8192;
+
 -- API Usage Logs
 CREATE TABLE IF NOT EXISTS api_usage_logs (
     request_id String,

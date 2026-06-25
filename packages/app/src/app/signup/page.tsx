@@ -34,6 +34,18 @@ export default function SignupPage() {
                             placeholder="••••••••"
                         />
 
+                        <div className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                id="newsletter"
+                                className="rounded border-gray-700 bg-gray-900/50 text-blue-600 focus:ring-blue-500"
+                                defaultChecked
+                            />
+                            <label htmlFor="newsletter" className="text-sm text-gray-400 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                Subscribe to product updates and newsletter
+                            </label>
+                        </div>
+
                         <Button className="w-full mt-2" size="lg">Create account</Button>
 
                         <div className="relative my-6">

@@ -12,7 +12,7 @@ if (fs.existsSync(envPath)) {
 async function main() {
     console.log("Initializing ClickHouse Schema...");
 
-    const url = process.env.CLICKHOUSE_URL;
+    let url = process.env.CLICKHOUSE_URL;
     const password = process.env.CLICKHOUSE_PASSWORD;
 
     if (!url) {
@@ -20,11 +20,15 @@ async function main() {
         process.exit(1);
     }
 
+    if (!url.startsWith('http')) {
+        url = `https://${url}`;
+    }
+
     const client = createClient({
         url,
         username: 'default',
         password,
-        request_timeout: 60000,
+        request_timeout: 90000,
     });
 
     const schemaPath = path.resolve(process.cwd(), 'packages/database/clickhouse/schema.sql');
